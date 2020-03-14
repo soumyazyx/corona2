@@ -46,12 +46,18 @@ body {
 <body>
     {{ data|json_script:"hello-data" }}
   <!-- Swiper -->
-  <div class="swiper-container">
-    <div class="swiper-wrapper">
+  <div class="swiper-container" style="background-color:red">
+    <div class="swiper-wrapper" style="background-color:green">
       
       <div class="swiper-slide"><img src="http://placehold.it/350x65" alt="Slide 2"></div>
-      <div class="swiper-slide"><canvas id='globe' height=450 width=450></canvas></div>
-      <div class="swiper-slide">Slide 4</div>
+      <div class="swiper-slide"><canvas id='globe' height=500 width=500></canvas></div>
+      <div class="swiper-slide">
+        <div>
+            <div>
+                <span id="todayspark5" class="spark"><canvas width="250" height="30" style="display: inline-block; width: 250px; height: 30px; vertical-align: top;"></canvas></span></div>
+                <div class="datas-text">12,000000 visitors every Month</div>
+            </div>
+        </div>
       <div class="swiper-slide"><img src="http://placehold.it/450x350" alt="Slide 2"></div>
       
     </div>
@@ -120,7 +126,7 @@ body {
     }));
 
     // Make the planet fit well in its canvas
-    planet.projection.scale(200).translate([200, 200]);
+    planet.projection.scale(250).translate([250, 250]);
     var canvas = document.getElementById('globe');
     planet.draw(canvas);
 
