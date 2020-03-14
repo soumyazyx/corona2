@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Corona COVID-19</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style type="text/css">
+        html, body {
+            background-color: #ccc;
+			width: 100%;
+            height: 100%;
+            margin: 0px;
+            padding: 0px;
+            border: 0;
+            overflow: hidden; /*  Disable scrollbars */
+            display: block;  /* No floating content on sides */
+        }
+        canvas{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);               
+            /* width:100%; */
+            /* height:100%; */
+        } 
+		
+    
+    
+    </style>
+</head>
+<body>
+    
+        
+  <canvas id='globe' height=500 width=500></canvas>
+  
+  <script type='text/javascript' src='https://d3js.org/d3.v3.min.js'></script>
+  <script type='text/javascript' src='https://d3js.org/topojson.v1.min.js'></script>
+  <script type='text/javascript' src='https://cdn.rawgit.com/BinaryMuse/planetary.js/v1.1.2/dist/planetaryjs.min.js'></script>
+  {{ data|json_script:"hello-data" }}
+
+  <script type="text/javascript">
+    var arr = JSON.parse(document.getElementById('hello-data').textContent);
+    var planet = planetaryjs.planet();
+    
+    // You can remove this statement if `world-110m.json` is in the same path as the HTML page:
+    planet.loadPlugin(planetaryjs.plugins.earth({
+    topojson: { file: 'https://raw.githubusercontent.com/BinaryMuse/planetary.js/v1.1.2/dist/world-110m.json' },
+        /* Let's add some color to the globe */
+        oceans:   { fill:   '#000011' },
+        land:     { fill:   '#4CAF50' },
+        borders:  { stroke: '#1B5E20' }
+    }));
+
+    // Load our custom autorotate plugin
+    planet.loadPlugin(autorotate(10));
+
+    // Load the `pings` plugin to draw animated pings on the globe
+    planet.loadPlugin(planetaryjs.plugins.pings({
+      color: '#ff0000', ttl: 1000, angle: 10
+    }));
+
+    // Make the planet fit well in its canvas
+    planet.projection.scale(250).translate([250, 250]);
+    var canvas = document.getElementById('globe');
+    planet.draw(canvas);
+
+    // This plugin will automatically rotate the globe around its vertical
+    // axis a configured number of degrees every second.
+    function autorotate(degPerSec) {
+      // Planetary.js plugins are functions that take a `planet` instance
+      // as an argument...
+      return function(planet) {
+        var lastTick = null;
+        var paused = false;
+        planet.plugins.autorotate = {
+          pause:  function() { paused = true;  },
+          resume: function() { paused = false; }
+        };
+        // ...and configure hooks into certain pieces of its lifecycle.
+        planet.onDraw(function() {
+          if (paused || !lastTick) {
+            lastTick = new Date();
+          } else {
+            var now = new Date();
+            var delta = now - lastTick;
+            // This plugin uses the built-in projection (provided by D3)
+            // to rotate the globe each time we draw it.
+            var rotation = planet.projection.rotate();
+            rotation[0] += degPerSec * delta / 1000;
+            if (rotation[0] >= 180) rotation[0] -= 360;
+            planet.projection.rotate(rotation);
+            lastTick = now;
+          }
+        });
+      };
+    };
+
+
+    for (var i = 0; i < arr.length; i++){
+        var obj = arr[i];
+        // console.log(obj.country_region)            
+        // console.log(obj.longitude)
+        // console.log(obj.latitude)
+    }
+
+    setInterval(function() {
+        for (var i = 0; i < arr.length; i++){
+            var obj = arr[i];
+            lng = obj.longitude;
+            lat = obj.latitude;
+            planet.plugins.pings.add(lng, lat, { color: 'red', ttl: 1500, angle: 4});        
+        }
+    }, 1000);
+
+
+  </script>
+</body>
+</html>
