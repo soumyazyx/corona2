@@ -1,9 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 # from csv import reader
-import csv    
-
-
+import csv
 import requests
 import pandas as pd
 from core.models import Record
@@ -20,19 +18,21 @@ def home(request):
 
 def sync(request):
 
+    # Truncate the table
+    Record.objects.all().delete()
     # Recovered
-    # recovered_url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv'
-    # populateDb(stats_type='recovered',  url=recovered_url)
+    recovered_url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv'
+    populateDb(stats_type='recovered',  url=recovered_url)
 
     # Deaths
-    # deaths_url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv'
-    # populateDb(stats_type='deaths',  url=deaths_url)
+    deaths_url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv'
+    populateDb(stats_type='deaths',  url=deaths_url)
 
     # Confirmed
     confirmed_url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv'
     populateDb(stats_type='confirmed',  url=confirmed_url)
 
-    return HttpResponse('wow')    
+    return HttpResponse('Sync complete!')    
 
 
 def populateDb(url, stats_type):
@@ -51,7 +51,7 @@ def populateDb(url, stats_type):
     latest_stats_date = header_row[-1]
     stats_dates_csv   = ",".join(header_row)
 
-    for row in my_list[:5]:
+    for row in my_list[:]:
         state_province = row.pop(0)
         country_region = row.pop(0)
         latitude = row.pop(0)
