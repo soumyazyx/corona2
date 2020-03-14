@@ -15,6 +15,14 @@ def home(request):
     }
     return render(request, "index.html", context)
 
+def test(request):
+
+    model_values = Record.objects.all().filter(stats_type='confirmed').values('latitude','longitude','country_region')
+    context = {
+        "data": list(model_values)
+    }
+    return render(request, "index2.html", context)
+
 
 def sync(request):
 
