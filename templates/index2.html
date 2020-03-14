@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,27 +44,132 @@ body {
 }
 </style>
 <body>
+    {{ data|json_script:"hello-data" }}
   <!-- Swiper -->
   <div class="swiper-container">
     <div class="swiper-wrapper">
-      <div class="swiper-slide"><img src="http://placehold.it/450x350" alt="Slide 2"></div>
-      <div class="swiper-slide">Slide 2</div>
-      <div class="swiper-slide"><img src="http://placehold.it/350x150" alt="Slide 2"></div>
-      <div class="swiper-slide"><img src="http://placehold.it/200x100" alt="Slide 2"></div>
-      <div class="swiper-slide"><img src="http://placehold.it/140x100" alt="Slide 2"></div>
+      
       <div class="swiper-slide"><img src="http://placehold.it/350x65" alt="Slide 2"></div>
-      <div class="swiper-slide">Slide 3</div>
+      <div class="swiper-slide"><canvas id='globe' height=450 width=450></canvas></div>
       <div class="swiper-slide">Slide 4</div>
       <div class="swiper-slide"><img src="http://placehold.it/450x350" alt="Slide 2"></div>
-      <div class="swiper-slide">Slide 6</div>
-      <div class="swiper-slide">Slide 7</div>
+      
     </div>
     <!-- Add Pagination -->
     <div class="swiper-pagination"></div>
   </div>
 
+  <script src="{% static 'js/jquery.js' %}"></script>
+  <script src="{% static 'js/jquery-ui-1.10.4.min.js' %}"></script>
+  <script src="{% static 'js/jquery-1.8.3.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/jquery-ui-1.9.2.custom.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/jquery.scrollTo.min.js' %}"></script>
+  <script src="{% static 'js/jquery.nicescroll.js' %}" type="text/javascript"></script>
+  <script src="{% static 'assets/jquery-knob/js/jquery.knob.js' %}"></script>
+  <script src="{% static 'js/jquery.sparkline.js' %}" type="text/javascript"></script>
+  <script src="{% static 'assets/jquery-easy-pie-chart/jquery.easy-pie-chart.js' %}"></script>
+  <script src="{% static 'js/owl.carousel.js' %}"></script>
+  <script src="{% static 'js/fullcalendar.min.js' %}"></script>
+  <script src="{% static 'assets/fullcalendar/fullcalendar/fullcalendar.js' %}"></script>
+  <script src="{% static 'js/calendar-custom.js' %}"></script>
+  <script src="{% static 'js/jquery.rateit.min.js' %}"></script>
+  <script src="{% static 'js/jquery.customSelect.min.js' %}"></script>
+  <script src="{% static 'assets/chart-master/Chart.js' %}"></script>
+  <script src="{% static 'js/scripts.js' %}"></script>
+  <script src="{% static 'js/sparkline-chart.js' %}"></script>
+  <script src="{% static 'js/easy-pie-chart.js' %}"></script>
+  <script src="{% static 'js/jquery-jvectormap-1.2.2.min.js' %}"></script>
+  <script src="{% static 'js/jquery-jvectormap-world-mill-en.js' %}"></script>
+  <script src="{% static 'js/xcharts.min.js' %}"></script>
+  <script src="{% static 'js/jquery.autosize.min.js' %}"></script>
+  <script src="{% static 'js/jquery.placeholder.min.js' %}"></script>
+  <script src="{% static 'js/gdp-data.js' %}"></script>
+  <script src="{% static 'js/morris.min.js' %}"></script>
+  <script src="{% static 'js/sparklines.js' %}"></script>
+  <script src="{% static 'js/charts.js' %}"></script>
+  <script src="{% static 'js/jquery.slimscroll.min.js' %}"></script>
+  <script type='text/javascript' src='https://d3js.org/d3.v3.min.js'></script>
+  <script type='text/javascript' src='https://d3js.org/topojson.v1.min.js'></script>
+  <script type='text/javascript' src='https://cdn.rawgit.com/BinaryMuse/planetary.js/v1.1.2/dist/planetaryjs.min.js'></script>
+
   <!-- Swiper JS -->
   <script src="https://unpkg.com/swiper/js/swiper.min.js"></script>
+  <script type="text/javascript">
+    var arr = JSON.parse(document.getElementById('hello-data').textContent);
+    var planet = planetaryjs.planet();    
+
+    // You can remove this statement if `world-110m.json` is in the same path as the HTML page:
+    planet.loadPlugin(
+        planetaryjs.plugins.earth({
+            topojson: { 
+                file: 'https://raw.githubusercontent.com/BinaryMuse/planetary.js/v1.1.2/dist/world-110m.json' 
+            },
+            oceans:   { fill:   '#000011' },
+            land:     { fill:   '#4CAF50' },
+            borders:  { stroke: '#1B5E20' }
+        })
+    );
+
+    // Load our custom autorotate plugin
+    planet.loadPlugin(autorotate(10));
+
+    // Load the `pings` plugin to draw animated pings on the globe
+    planet.loadPlugin(planetaryjs.plugins.pings({
+        color: '#ff0000', ttl: 1000, angle: 10
+    }));
+
+    // Make the planet fit well in its canvas
+    planet.projection.scale(200).translate([200, 200]);
+    var canvas = document.getElementById('globe');
+    planet.draw(canvas);
+
+    // This plugin will automatically rotate the globe around its vertical
+    // axis a configured number of degrees every second.
+    function autorotate(degPerSec) {
+        // Planetary.js plugins are functions that take a `planet` instance
+        // as an argument...
+        return function(planet) {
+            var lastTick = null;
+            var paused = false;
+            planet.plugins.autorotate = {
+                pause:  function() { paused = true;  },
+                resume: function() { paused = false; }
+            };
+            // ...and configure hooks into certain pieces of its lifecycle.
+            planet.onDraw(function() {
+                if (paused || !lastTick) {
+                    lastTick = new Date();
+                } else {
+                    var now = new Date();
+                    var delta = now - lastTick;
+                    // This plugin uses the built-in projection (provided by D3)
+                    // to rotate the globe each time we draw it.
+                    var rotation = planet.projection.rotate();
+                    rotation[0] += degPerSec * delta / 1000;
+                    if (rotation[0] >= 180) rotation[0] -= 360;
+                    planet.projection.rotate(rotation);
+                    lastTick = now;
+                }
+            });
+        };            
+    };
+    
+    // for (var i = 0; i < arr.length; i++){
+    //     var obj = arr[i];
+    //     // console.log(obj.country_region)            
+    //     // console.log(obj.longitude)
+    //     // console.log(obj.latitude)
+    // }
+    setInterval(function() {
+        for (var i = 0; i < arr.length; i++){
+            var obj = arr[i];
+            lng = obj.longitude;
+            lat = obj.latitude;
+            planet.plugins.pings.add(lng, lat, { color: 'red', ttl: 1500, angle: 4});        
+        }
+    }, 1000);
+</script>
 
   <!-- Initialize Swiper -->
   <script>
