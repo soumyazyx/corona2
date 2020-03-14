@@ -9,7 +9,7 @@ from core.models import Record
 
 def home(request):
 
-    model_values = Record.objects.all().filter(stats_type='confirmed').exclude(country_region='US').values('latitude','longitude','country_region')
+    model_values = Record.objects.all().filter(stats_type='confirmed').values('latitude','longitude','country_region')
     context = {
         "data": list(model_values)
     }
