@@ -52,7 +52,7 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-12 col-12 text-center">
-                        <canvas id='globe' height=500 width=500></canvas>
+                        <canvas id='globe' height=450 width=450></canvas>
                     </div>
                 </div>
                 <div class="row">
@@ -163,7 +163,7 @@
         }));
 
         // Make the planet fit well in its canvas
-        planet.projection.scale(250).translate([250, 250]);
+        planet.projection.scale(200).translate([200, 200]);
         var canvas = document.getElementById('globe');
         planet.draw(canvas);
 
