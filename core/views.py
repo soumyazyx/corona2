@@ -46,18 +46,7 @@ def sync(request):
     # confirmed_url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv'
     # populateDb(stats_type='confirmed', url=confirmed_url)
 
-    # Handle Summary table
     summary = updateSummaryTable()
-
-    # Truncate summary table
-    print("Truncating summary table..")
-    Summary.objects.all().delete()
-    print("Truncating summary table..Done")
-    # Update Summary table
-    print("Updating summary table..")
-    obj = Summary(json_string=json.dumps(summary))
-    obj.save()
-    print("Updating summary table..Done")
     return JsonResponse(summary)
 
 
@@ -110,6 +99,16 @@ def updateSummaryTable():
     details['countriesSorted_Deaths']    = findCountriesSorted(stats_type='deaths')
     details['countriesSorted_Recovered'] = findCountriesSorted(stats_type='recovered')
     details['countriesSorted_Confirmed'] = findCountriesSorted(stats_type='confirmed')
+
+    # Truncate summary table
+    print("Truncating summary table..")
+    Summary.objects.all().delete()
+    print("Truncating summary table..Done")
+    # Update Summary table
+    print("Updating summary table..")
+    obj = Summary(json_string=json.dumps(details))
+    obj.save()
+    print("Updating summary table..Done")
     return details
 
 
