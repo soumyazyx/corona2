@@ -3,5 +3,4 @@ gunicorn
 django-heroku
 requests
 pandas
-json
 datetime
