@@ -29,6 +29,7 @@
 
 <body>
     {{ data|json_script:"hello-data" }}
+    {{ summary|json_script:"summary-data" }}
     
     <section id="container" class="">    
         <header class="header">
@@ -143,6 +144,11 @@
     </script>
     <script type="text/javascript">
         var arr = JSON.parse(document.getElementById('hello-data').textContent);
+        var summary = JSON.parse(document.getElementById('summary-data').textContent);
+
+        console.log(summary);
+        console.log(summary.totals)
+        console.log(summary.utc_dt)
         var planet = planetaryjs.planet();    
     
         // You can remove this statement if `world-110m.json` is in the same path as the HTML page:
@@ -238,7 +244,7 @@
             });
         });
     </script> -->
-    <script>
+    <!-- <script>
     $(document).ready(function() {
         console.log("wow")
         var json = (function () {
@@ -252,11 +258,11 @@
                     json = data;
                 }
             });
-        console.log(json);
-})(); 
+            console.log(json);
+        })(); 
     });
     
-    </script>    
+    </script>     -->
 
 </body>
 </html>

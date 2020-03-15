@@ -14,8 +14,14 @@ from core.models import Record, Summary
 def home(request):
 
     model_values = Record.objects.all().filter(stats_type='confirmed').values('latitude','longitude','country_region')
+    
+    r = requests.get('https://coronazyx.herokuapp.com/api/coronafeed')
+    print(r.json())
+    
+    
     context = {
-        "data": list(model_values)
+        "data": list(model_values),
+        "summary": r.json()
     }
     return render(request, "index.html", context)
 
