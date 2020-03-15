@@ -1,5 +1,6 @@
 import hello.views
-from core.views import sync, home, coronafeed, test
+from core.views import sync, home, test
+from source.views import coronafeed
 from django.urls import path, include
 from django.contrib import admin
 
@@ -10,6 +11,5 @@ urlpatterns = [
     path("test/", test, name="core_test"),
     path("api/coronafeed", coronafeed, name="corona-feed"),
     path("sync/", sync, name="core_sync"),
-    path("admin/", admin.site.urls),
-
+    path("admin/", admin.site.urls)
 ]

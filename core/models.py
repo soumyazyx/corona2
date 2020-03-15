@@ -10,8 +10,17 @@ class Record(models.Model):
     stats_dates_csv    = models.TextField(default='')
     stats_value_csv    = models.TextField(default='')
     latest_stats_date  = models.CharField(max_length=255, default='')
-    latest_stats_value = models.CharField(max_length=255, default='')
+    latest_stats_value = models.IntegerField()
     added_ts           = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return "{}|{}|{}".format(self.added_ts, self.stats_type, self.country_region)
+
+
+class Summary(models.Model):
+    
+    added_ts = models.DateTimeField(auto_now_add=True)
+    json_string = models.TextField(default='')
+
+    def __str__(self):
+        return "{}|{}".format(self.added_ts, self.json_string[:10])
