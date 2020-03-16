@@ -27,6 +27,25 @@
     <title>Corona-Reportings</title>  
     <style>
       body { background:#000;}
+      .info-box {
+        padding: 5px;
+        margin-bottom: 5px;
+        min-height: 0;
+        text-align: center;
+        border-radius: 5px;
+      }
+      .info-box .count {
+        margin-top: 0;
+      }
+      .darkred {
+        color: tomato;
+      }
+      .green {
+        color: #26c281;
+      }
+      .orange {
+        color: orange;
+      }
     </style>
     
 </head>
@@ -51,17 +70,53 @@
     <div class="container">    
       <div class="row">
         <div class="text-center">
-            <canvas id='globe' height=450 width=450></canvas>
+            <canvas id='globe' height=400 width=400></canvas>
         </div>
       </div>
-      <div class="jumbotron">
+
+      <div class="row">
+        
+        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+          <div class="info-box">
+            <div class="count orange" id="confirmed-count">--</div>
+            <div class="title orange">Confirmed</div>
+          </div>
+          <!--/.info-box-->
+        </div>
+        <!--/.col-->
+
+        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+          <div class="info-box">
+            <div class="count green" id="recovered-count">--</div>
+            <div class="title green">Recovered</div>
+          </div>
+          <!--/.info-box-->
+        </div>
+        <!--/.col-->
+
+        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+          <!-- <div class="info-box blue-bg"> -->
+          <div class="info-box">
+            <div class="count darkred" id="deaths-count">--</div>
+            <div class="title darkred">Deaths</div>
+          </div>
+          <!--/.info-box-->
+        </div>
+        <!--/.col-->
+
+      </div>
+
+      <!-- <div class="jumbotron">
         <h1>Navbar example</h1>
         <p>This example is a quick exercise to illustrate how the default, static and fixed to top navbar work. It includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>
         <p>To see the difference between static and fixed top navbars, just scroll.</p>
         <p>
           <a class="btn btn-lg btn-primary" href="../../components/#navbar" role="button">View navbar docs &raquo;</a>
         </p>
-      </div>
+        <span id="spark-1"></span>
+      </div> -->
+
+
     </div> <!-- /container -->
 
 
@@ -147,10 +202,6 @@
     </script>
     <script type="text/javascript">
         var arr = JSON.parse(document.getElementById('hello-data').textContent);
-        var summary = JSON.parse(document.getElementById('summary-data').textContent);
-
-        console.log(summary);
-        console.log(summary.utc_dt)
         var planet = planetaryjs.planet();    
     
         // You can remove this statement if `world-110m.json` is in the same path as the HTML page:
@@ -159,7 +210,7 @@
                 topojson: { 
                     file: 'https://raw.githubusercontent.com/BinaryMuse/planetary.js/v1.1.2/dist/world-110m.json' 
                 },
-                oceans:   { fill:   '#000011' },
+                oceans:   { fill:   '#112' },
                 land:     { fill:   '#4CAF50' },
                 borders:  { stroke: '#1B5E20' }
             })
@@ -224,7 +275,7 @@
             }
         }, 1000);
     </script>
-    <!-- <script>
+    <script>
 
         $(function() {
 
@@ -245,7 +296,14 @@
                 composite: true
             });
         });
-    </script> -->
+    </script>
+    <script>
+      var summary = JSON.parse(document.getElementById('summary-data').textContent);
+      $("#deaths-count").text(summary.totals.total_deaths.toLocaleString())
+      $("#recovered-count").text(summary.totals.total_recovered.toLocaleString())
+      $("#confirmed-count").text(summary.totals.total_confirmed.toLocaleString())
+      
+    </script>
     <!-- <script>
     $(document).ready(function() {
         console.log("wow")
