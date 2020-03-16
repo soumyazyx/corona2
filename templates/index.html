@@ -25,47 +25,81 @@
     <link href="{% static 'css/jquery-ui-1.10.4.min.css' %}" rel="stylesheet">
   
     <title>Corona-Reportings</title>  
+    <style>
+      body { background: #000;}
+    </style>
+    
 </head>
 
 <body>
+
     {{ data|json_script:"hello-data" }}
+  
     {{ summary|json_script:"summary-data" }}
+    <header class="header">
+      <a href="index.html" class="logo" style="color:#00a0df">
+          <span class="profile-ava">
+              <img alt="" src="{% static 'img/avatar1_soumya.jpg' %}">
+          </span>
+          Corona            
+          <span class="lite">
+              <small><small><small>&nbspReportings</small></small></small>
+          </span>
+      </a>
+  </header>
+  
+    <br/>
+  
+    <br/>
+  
+    <br/>
+  
+  
+    <div class="container">
     
-    <section id="container" class="">    
-        <header class="header">
-            <a href="index.html" class="logo" style="color:#00a0df">
-                <span class="profile-ava">
-                    <img alt="" src="{% static 'img/avatar1_soumya.jpg' %}">
-                </span>
-                Corona            
-                <span class="lite">
-                    <small><small><small>&nbspReportings</small></small></small>
-                </span>
-            </a>
-        </header>
-        <section id="main-content">
-            <!-- <section class="wrapper"> -->
-            <section class="wrapper">       
+      
+      <div class="jumbotron">
+        <h1>Navbar example</h1>
+        <p>This example is a quick exercise to illustrate how the default, static and fixed to top navbar work. It includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>
+        <p>To see the difference between static and fixed top navbars, just scroll.</p>
+        <p>
+          <a class="btn btn-lg btn-primary" href="../../components/#navbar" role="button">View navbar docs &raquo;</a>
+        </p>
+      </div>
+
+    </div> <!-- /container -->
+
+
+    
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="page-header text-center">&nbsp; </h3>
+        </div>
+    </div>
                 <div class="row">
-                    <div class="col-lg-12">
-                        <h3 class="page-header text-center"><i class="fa fa-disease"> </i> </h3>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 col-sm-12 col-12 text-center">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-12 text-center card">
                         <canvas id='globe' height=450 width=450></canvas>
                     </div>
                 </div>
                 <div class="row">
+                    
+                    
+                            <a href="index.html" class="logo" style="color:#00a0df">
+                                <span class="profile-ava">
+                                    <img alt="" src="{% static 'img/avatar1_soumya.jpg' %}">
+                                </span>
+                                Corona            
+                                <span class="lite">
+                                    <small><small><small>&nbspReportings</small></small></small>
+                                </span>
+                            </a>
+                    
+                    
+                </div>
+                <div class="row">
                     <span id="spark-1"></span>
                 </div>
-            </section>
-        </section>
-    </section>
-    <!-- <li>
-        <div><span id="todayspark5" class="spark"><canvas width="250" height="30" style="display: inline-block; width: 250px; height: 30px; vertical-align: top;"></canvas></span></div>
-        <div class="datas-text">12,000000 visitors every Month</div>
-      </li>  -->
+
     <script src="{% static 'js/jquery.js' %}"></script>
     <script src="{% static 'js/jquery-ui-1.10.4.min.js' %}"></script>
     <script src="{% static 'js/jquery-1.8.3.min.js' %}"></script>
