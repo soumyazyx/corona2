@@ -33,20 +33,20 @@ def test(request):
 
 def sync(request):
 
-    # # Truncate the table
-    # Record.objects.all().delete()
+    # Truncate the table
+    Record.objects.all().delete()
 
-    # # Recovered
-    # recovered_url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv'
-    # populateDb(stats_type='recovered', url=recovered_url)
+    # Recovered
+    recovered_url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv'
+    populateDb(stats_type='recovered', url=recovered_url)
 
-    # # Deaths
-    # deaths_url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv'
-    # populateDb(stats_type='deaths', url=deaths_url)
+    # Deaths
+    deaths_url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv'
+    populateDb(stats_type='deaths', url=deaths_url)
 
-    # # Confirmed
-    # confirmed_url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv'
-    # populateDb(stats_type='confirmed', url=confirmed_url)
+    # Confirmed
+    confirmed_url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv'
+    populateDb(stats_type='confirmed', url=confirmed_url)
 
     summary = updateSummaryTable()
     return JsonResponse(summary)
