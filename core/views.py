@@ -156,6 +156,6 @@ def findCountriesSorted(stats_type):
     lst = []
     sql = "SELECT 1 as ID, COUNTRY_REGION, SUM(LATEST_STATS_VALUE) AS TOTAL FROM PUBLIC.CORE_RECORD WHERE STATS_TYPE='{}' GROUP BY COUNTRY_REGION ORDER BY TOTAL DESC".format(stats_type)
     qs = Record.objects.raw(sql)
-    for p in qs[:5]:
+    for p in qs:
         lst.append(p.country_region)
     return lst
