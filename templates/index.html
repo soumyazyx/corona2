@@ -26,15 +26,14 @@
   
     <title>Corona-Reportings</title>  
     <style>
-      body { background: #000;}
+      body { background:#000;}
     </style>
     
 </head>
 
 <body>
 
-    {{ data|json_script:"hello-data" }}
-  
+    {{ data|json_script:"hello-data" }}  
     {{ summary|json_script:"summary-data" }}
     <header class="header">
       <a href="index.html" class="logo" style="color:#00a0df">
@@ -46,18 +45,15 @@
               <small><small><small>&nbspReportings</small></small></small>
           </span>
       </a>
-  </header>
+    </header>
   
-    <br/>
-  
-    <br/>
-  
-    <br/>
-  
-  
-    <div class="container">
-    
-      
+    <br/><br/><br/>
+    <div class="container">    
+      <div class="row">
+        <div class="text-center">
+            <canvas id='globe' height=450 width=450></canvas>
+        </div>
+      </div>
       <div class="jumbotron">
         <h1>Navbar example</h1>
         <p>This example is a quick exercise to illustrate how the default, static and fixed to top navbar work. It includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>
@@ -66,40 +62,13 @@
           <a class="btn btn-lg btn-primary" href="../../components/#navbar" role="button">View navbar docs &raquo;</a>
         </p>
       </div>
-
     </div> <!-- /container -->
 
 
     
-    <div class="row">
-        <div class="col-lg-12">
-            <h3 class="page-header text-center">&nbsp; </h3>
-        </div>
-    </div>
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 col-sm-12 col-12 text-center card">
-                        <canvas id='globe' height=450 width=450></canvas>
-                    </div>
-                </div>
-                <div class="row">
-                    
-                    
-                            <a href="index.html" class="logo" style="color:#00a0df">
-                                <span class="profile-ava">
-                                    <img alt="" src="{% static 'img/avatar1_soumya.jpg' %}">
-                                </span>
-                                Corona            
-                                <span class="lite">
-                                    <small><small><small>&nbspReportings</small></small></small>
-                                </span>
-                            </a>
-                    
-                    
-                </div>
-                <div class="row">
-                    <span id="spark-1"></span>
-                </div>
-
+    
+                
+            
     <script src="{% static 'js/jquery.js' %}"></script>
     <script src="{% static 'js/jquery-ui-1.10.4.min.js' %}"></script>
     <script src="{% static 'js/jquery-1.8.3.min.js' %}"></script>
