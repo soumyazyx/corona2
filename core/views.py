@@ -7,7 +7,7 @@ from django.db.models import Sum
 from django.shortcuts import render
 from django.core import serializers
 from django.http import HttpResponse, JsonResponse, response
-# Custom iports
+# Custom imports
 from core.models import Record, Summary
 
 
@@ -20,15 +20,6 @@ def home(request):
         "summary": summary_feed.json()
     }
     return render(request, "index.html", context)
-
-
-def test(request):
-
-    model_values = Record.objects.all().filter(stats_type='confirmed').values('latitude','longitude','country_region')
-    context = {
-        "data": list(model_values)
-    }
-    return render(request, "nikki/index.html", context)
 
 
 def sync(request):
