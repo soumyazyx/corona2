@@ -13,7 +13,7 @@ from core.models import Record, Summary
 
 def home(request):
 
-    model_values = Record.objects.all().filter(stats_type='confirmed').values('latitude','longitude','country_region')    
+    model_values = Record.objects.all().filter(stats_type='deaths').values('latitude','longitude','country_region')
     summary_feed = requests.get('https://coronazyx.herokuapp.com/api/coronafeed')
     context = {
         "data": list(model_values),
@@ -24,7 +24,7 @@ def home(request):
 
 def home_test(request):
 
-    model_values = Record.objects.all().filter(stats_type='confirmed').values('latitude','longitude','country_region')    
+    model_values = Record.objects.all().filter(stats_type='confirmed').values('latitude','longitude','country_region')
     summary_feed = requests.get('https://coronazyx.herokuapp.com/api/coronafeed')
     context = {
         "data": list(model_values),
@@ -36,16 +36,16 @@ def home_test(request):
 def sync(request):
     print("---------------------------------------------------")
     print("{}:Syncing records from web..".format(datetime.now()))
-    
+
     # Truncate the table
     print("{}:Truncating [RECORD] table..".format(datetime.now()))
     Record.objects.all().delete()
     print("{}:Truncating [RECORD] table..Done".format(datetime.now()))
-    
-    # Recovered 
+
+    # Recovered
     recovered_url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv'
     populateDb(stats_type='recovered', url=recovered_url)
-    
+
     # Deaths
     deaths_url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv'
     populateDb(stats_type='deaths', url=deaths_url)
@@ -61,7 +61,7 @@ def sync(request):
 
 
 def populateDb(url, stats_type):
-    
+
     print("{}:Fetching content for stats_type [{}]..".format(datetime.now(), stats_type))
     print("{}:URL in use [{}]".format(datetime.now(), url))
     with requests.Session() as s:
@@ -76,7 +76,7 @@ def populateDb(url, stats_type):
     header_row.pop(0)  # Remove the value 'Lat'
     header_row.pop(0)  # Remove the value 'Long'
     latest_stats_date = header_row[-1]
-    stats_dates_csv   = ",".join(header_row)    
+    stats_dates_csv   = ",".join(header_row)
 
     print("{}:Creating objects..".format(datetime.now()))
     objects_list = []
@@ -100,7 +100,7 @@ def populateDb(url, stats_type):
             stats_dates_csv    = stats_dates_csv,
             stats_value_csv    = stats_value_csv,
         )
-        objects_list.append(obj)        
+        objects_list.append(obj)
     print("{}:Creating objects..Done".format(datetime.now()))
     print("{}:Total objects created = {}".format(datetime.now(), len(objects_list)))
 
@@ -111,12 +111,14 @@ def populateDb(url, stats_type):
 
 def updateSummaryTable():
     
-    
     print("{}: Computing summary from records fetched..".format(datetime.now()))
     details = {}
     details['utc_dt'] = str(datetime.now(timezone.utc))
     details['totals'] = findSumAcrossAllCountries()['totals']
     details['countries'] = findSumAcrossEachCountry()['countries']
+    details['trend_deaths']    = findTrend(stats_type='deaths')
+    details['trend_confirmed'] = findTrend(stats_type='confirmed')
+    details['trend_recovered'] = findTrend(stats_type='recovered')    
     details['countriesSorted_Deaths']    = findCountriesSorted(stats_type='deaths')
     details['countriesSorted_Recovered'] = findCountriesSorted(stats_type='recovered')
     details['countriesSorted_Confirmed'] = findCountriesSorted(stats_type='confirmed')
@@ -144,6 +146,7 @@ def findSumAcrossAllCountries():
     temp['totals']['total_deaths']    = deaths_total['latest_stats_value__sum']
     temp['totals']['total_confirmed'] = confirmed_total['latest_stats_value__sum']
     temp['totals']['total_recovered'] = recovered_total['latest_stats_value__sum']
+
     return temp
 
 
@@ -179,3 +182,21 @@ def findCountriesSorted(stats_type):
     for p in qs:
         lst.append(p.country_region)
     return lst
+
+
+def findTrend(stats_type):
+    # Find the trend by counting sum of deaths/confirmed/recovered 
+    # across ALL countries for EACH date
+    records = Record.objects.all().filter(stats_type=stats_type).values('stats_value_csv')
+    trend = []
+    # summ = [0 for i in range(15)]
+    for record in records:
+        for index, value in enumerate(record['stats_value_csv'].split(",")):
+            try:
+                trend[index] = trend[index] + int(value)
+            except IndexError:
+                trend.append(0)
+                trend[index] = trend[index] + int(value)
+
+    return trend
+    
