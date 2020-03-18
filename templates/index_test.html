@@ -51,6 +51,11 @@
           max-height: 150px;
           overflow:auto;
       }
+      .height-150{
+          max-height: 150px;
+          overflow:auto;
+      }
+
       .transparent {
           background: transparent;
       }
@@ -74,7 +79,7 @@
           </span>
           Corona            
           <span class="lite">
-              <small><small><small>&nbsp;</small></small></small>
+              <small><small><small>&nbsp;TEST</small></small></small>
           </span>
       </a>
     </header>
@@ -148,8 +153,8 @@
             </section>
           </div>
           <div class="col-sm-6">
-            <section class="panel table-resp-150 transparent">
-              wow
+            <section class="panel height-150 transparent">
+              <span id="spark-1"></span>
             </section>
           </div>          
         </div>
@@ -331,19 +336,31 @@
 
             var data1 = [10,8,5,7,4,4,1,5,3,7,4,5,6,3];
             var data2 = [30,4,6,3,8,9,5,4,3,2,3,2,4,6,7];
+            var data3 = [4,3,2,3,2,4,6,7,30,4,6,3,8,9,5];
 
             $('#spark-1').sparkline(data1, {
-                height: 100,
-                width: 300,
+                height: 120,
+                width: '100%',
                 changeRangeMin: -10, 
                 chartRangeMax: 10,
+                fillColor: false,
+                lineColor: "orange"
+
             });
 
             $('#spark-1').sparkline(data2, {
-                changeRangeMin: -10, 
-            chartRangeMax: 10,
-            lineColor: "green",
-                composite: true
+              changeRangeMin: -10, 
+              chartRangeMax: 10,
+              lineColor: "#26c281",
+              composite: true,
+              fillColor: false
+            });
+            $('#spark-1').sparkline(data3, {
+              changeRangeMin: -10, 
+              chartRangeMax: 10,
+              lineColor: "tomato",
+              composite: true,
+              fillColor: false
             });
         });
     </script>

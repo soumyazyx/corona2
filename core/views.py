@@ -22,6 +22,17 @@ def home(request):
     return render(request, "index.html", context)
 
 
+def home_test(request):
+
+    model_values = Record.objects.all().filter(stats_type='confirmed').values('latitude','longitude','country_region')    
+    summary_feed = requests.get('https://coronazyx.herokuapp.com/api/coronafeed')
+    context = {
+        "data": list(model_values),
+        "summary": summary_feed.json()
+    }
+    return render(request, "index_test.html", context)
+
+
 def sync(request):
     print("---------------------------------------------------")
     print("{}:Syncing records from web..".format(datetime.now()))
