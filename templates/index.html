@@ -242,6 +242,7 @@
     <script type='text/javascript' src='https://d3js.org/topojson.v1.min.js'></script>
     <script type='text/javascript' src='https://cdn.rawgit.com/BinaryMuse/planetary.js/v1.1.2/dist/planetaryjs.min.js'></script>
     <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    
     <script type="text/javascript">
         var arr = JSON.parse(document.getElementById('hello-data').textContent);
         var planet = planetaryjs.planet();
@@ -251,8 +252,7 @@
                 topojson: {
                     file: 'https://raw.githubusercontent.com/BinaryMuse/planetary.js/v1.1.2/dist/world-110m.json'
                 },
-                // oceans:   { fill:   '#112' },
-                oceans:   { fill:   '#00212f' },
+                oceans:   { fill:   '#000' },
                 land:     { fill:   '#4CAF50' },
                 borders:  { stroke: '#1B5E20' }
             })
@@ -263,7 +263,7 @@
 
         // Load the `pings` plugin to draw animated pings on the globe
         planet.loadPlugin(planetaryjs.plugins.pings({
-            color: '#ff0000', ttl: 1000, angle: 10
+            color: 'tomato', ttl: 2000, angle: 1
         }));
 
         // Make the planet fit well in its canvas
@@ -302,18 +302,21 @@
             };
         };
 
-        // for (var i = 0; i < arr.length; i++){
-        //     var obj = arr[i];
-        //     // console.log(obj.country_region)
-        //     // console.log(obj.longitude)
-        //     // console.log(obj.latitude)
-        // }
         setInterval(function() {
             for (var i = 0; i < arr.length; i++){
                 var obj = arr[i];
                 lng = obj.longitude;
                 lat = obj.latitude;
-                planet.plugins.pings.add(lng, lat, { color: 'red', ttl: 1500, angle: 4});
+                latestDeathCount = obj.latest_stats_value;
+                computedAngle = latestDeathCount%100;
+                // console.log("Computed:" + computedAngle);
+                // Set the angle at minimum of 3
+                if (computedAngle < 2){ computedAngle = 2}
+                if (computedAngle > 30){ computedAngle = 30}
+                if (computedAngle > 20){                    
+                }
+                // console.log("defaulted:" + computedAngle);
+                planet.plugins.pings.add(lng, lat, { color: 'red', ttl: 1500, angle: computedAngle});
             }
         }, 1000);
     </script>
