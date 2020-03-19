@@ -101,6 +101,11 @@
           <!--/.info-box-->
         </div>
         <!--/.col-->
+        <div class="col-sm-12 col-xs-12">
+          <section class="panel height-150 transparent" style="border:1px solid #000">
+            <span id="spark-1"></span>
+          </section>            
+        </div>          
 
         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
           <div class="info-box">
@@ -121,7 +126,7 @@
         </div>
         <!--/.col-->
 
-      </div>
+      </div> <!-- /.row -->
       <section class="wrapper">
         <!-- page start-->
         <div class="row">
@@ -153,7 +158,7 @@
           </div>
           <div class="col-sm-6" style="display: none">
             <section class="panel height-150 transparent" style="border:1px solid #DDD">
-              <span id="spark-1" style="display: none"></span>
+              <span id="spark-1-test" style="display: none"></span>
             </section>            
           </div>          
         </div>
@@ -315,9 +320,9 @@
       });
       
       // Spark lines
-      // console.log(summary.trend_deaths);
-      // console.log(summary.trend_confirmed);
-      // console.log(summary.trend_recovered);
+      console.log(summary.trend_deaths);
+      console.log(summary.trend_confirmed);
+      console.log(summary.trend_recovered);
 
     var trend_deaths    = summary.trend_deaths;
     var trend_confirmed = summary.trend_confirmed;
@@ -331,20 +336,23 @@
       fillColor: false,
       lineColor: "orange"
     });
-    $('#spark-1').sparkline(trend_recovered, {
-      // changeRangeMin: -10, 
-      // chartRangeMax: 10,
-      lineColor: "#26c281",
-      composite: true,
-      fillColor: false
-    });
-    $('#spark-1').sparkline(trend_deaths, {
-      // changeRangeMin: -10, 
-      // chartRangeMax: 10,
-      lineColor: "tomato",
-      composite: true,
-      fillColor: false
-    });
+    
+    
+    // $('#spark-1').sparkline(trend_recovered, {
+    //   // changeRangeMin: -10, 
+    //   // chartRangeMax: 10,
+    //   lineColor: "#26c281",
+    //   composite: true,
+    //   fillColor: false
+    // });
+    // $('#spark-1').sparkline(trend_deaths, {
+    //   // changeRangeMin: -10, 
+    //   // chartRangeMax: 10,
+    //   lineColor: "tomato",
+    //   composite: true,
+    //   fillColor: false
+    // });
+    
     </script>
     <!-- <script>
     $(document).ready(function() {
