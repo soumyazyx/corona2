@@ -8,33 +8,33 @@
     <meta name="author" content="Soumya">
     <meta name="keyword" content="Corona, globe, world, covid, covid19">
     <link rel="shortcut icon" href="{% static 'img/favicon.png' %}">
-    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">  
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/bootstrap-theme.css' %}" rel="stylesheet">
     <link href="{% static 'css/elegant-icons-style.css' %}" rel="stylesheet" />
     <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" />
     <link href="{% static 'assets/fullcalendar/fullcalendar/bootstrap-fullcalendar.css' %}" rel="stylesheet" />
-    <link href="{% static 'assets/fullcalendar/fullcalendar/fullcalendar.css' %}" rel="stylesheet" />    
-    <link href="{% static 'assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css' %}" rel="stylesheet" type="text/css" media="screen" />    
+    <link href="{% static 'assets/fullcalendar/fullcalendar/fullcalendar.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css' %}" rel="stylesheet" type="text/css" media="screen" />
     <link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}" type="text/css">
-    <link href="{% static 'css/jquery-jvectormap-1.2.2.css' %}" rel="stylesheet">    
+    <link href="{% static 'css/jquery-jvectormap-1.2.2.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/fullcalendar.css' %}">
     <link href="{% static 'css/widgets.css' %}" rel="stylesheet">
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
     <link href="{% static 'css/style-responsive.css' %}" rel="stylesheet" />
     <link href="{% static 'css/xcharts.min.css' %}" rel=" stylesheet">
     <link href="{% static 'css/jquery-ui-1.10.4.min.css' %}" rel="stylesheet">
-    
-    <title>Corona</title>  
+
+    <title>Corona</title>
     <style>
       body { background:#222;}
       .info-box {
         padding: 5px;
         margin-bottom: 5px;
         min-height: 0;
-        text-align: center;        
+        text-align: center;
         border: 0;
         box-shadow: none;
-      }   
+      }
       .info-box .count {
         margin-top: 0;
       }
@@ -71,94 +71,94 @@
       #table-deaths {
         background: black;
       }
-      
+
     </style>
-    
+
 </head>
 
 <body>
 
-    {{ data|json_script:"hello-data" }}  
+    {{ data|json_script:"hello-data" }}
     {{ summary|json_script:"summary-data" }}
     <header class="header">
       <a href="mailto:soumyazyx@gmail.com?Subject=Hi%20There" target="_top" class="logo" style="color:#00a0df">
           <span class="profile-ava">
               <img alt="" src="{% static 'img/avatar1_soumya.jpg' %}">
           </span>
-          Corona            
+          Corona
           <span class="lite">
               <small><small><small>&nbsp;</small></small></small>
           </span>
       </a>
     </header>
-  
+
     <br/><br/><br/>
-    <div class="container">    
+    <div class="container">
+      
+      <!-- Place the globe at center -->
       <div class="row">
         <div class="text-center">
-            <canvas id='globe' height=400 width=400></canvas>
+          <canvas id='globe' height=400 width=400></canvas>
         </div>
       </div>
-
+      <!-- Info-box and spark line for confirmed -->
       <div class="row">
-        
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
           <div class="info-box">
             <div class="count orange" id="confirmed-count">--</div>
             <div class="title orange">Confirmed</div>
           </div>
-          <!--/.info-box-->
         </div>
-        <!--/.col-->
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
           <section class="panel transparent">
             <span id="spark-confirmed"></span>
-          </section>            
-        </div>          
-
+          </section>
+        </div>
+      </div>
+      <!-- Info-box and spark line for recovered -->
+      <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
           <div class="info-box">
             <div class="count green" id="recovered-count">--</div>
             <div class="title green">Recovered</div>
           </div>
-          <!--/.info-box-->
         </div>
-        <!--/.col-->
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
           <section class="panel transparent">
             <span id="spark-recovered"></span>
-          </section>            
+          </section>
         </div>
-
+      </div>
+      <!-- Info-box and spark line for deaths -->
+      <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-          <!-- <div class="info-box blue-bg"> -->
           <div class="info-box">
             <div class="count darkred" id="deaths-count">--</div>
             <div class="title darkred">Deaths</div>
           </div>
-          <!--/.info-box-->
         </div>
-        <!--/.col-->
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
           <section class="panel transparent" >
             <span id="spark-deaths"></span>
-          </section>            
+          </section>
         </div>
-
       </div> <!-- /.row -->
+
+
+
       <section class="wrapper">
         <!-- page start-->
         <div class="row" >
           <div class="col-sm-6" style="margin-bottom:20px;">
-            
+
             <table id="table-confirmed" class="display" cellspacing="0" width="100%" >
               <thead>
                 <tr style="background:black">
                   <th></th>
                   <th class="orange" style='text-align:right'>Confirmed</th>
                 </tr>
-              </thead>          
-              <tbody>                
+              </thead>
+              <tbody>
               </tbody>
             </table>
           </div>
@@ -169,11 +169,11 @@
                   <th></th>
                   <th class="darkred" style='text-align:right'>Deaths</th>
                 </tr>
-              </thead>          
-              <tbody>                
+              </thead>
+              <tbody>
               </tbody>
             </table>
-          </div>          
+          </div>
         </div>
         <div class="row">
           <div class="col-sm-6" style="margin-bottom:20px;">
@@ -183,16 +183,16 @@
                   <th></th>
                   <th class="green" style='text-align:right'>Recovered</th>
                 </tr>
-              </thead>          
-              <tbody>                
+              </thead>
+              <tbody>
               </tbody>
             </table>
           </div>
           <div class="col-sm-6" style="display: none">
             <section class="panel height-150 transparent" style="border:1px solid #DDD">
               <span id="spark-1-test" style="display: none"></span>
-            </section>            
-          </div>          
+            </section>
+          </div>
         </div>
       </section>
 
@@ -209,11 +209,11 @@
 
     </div> <!-- /container -->
 
-    
-    
-    
-                
-            
+
+
+
+
+
     <script src="{% static 'js/jquery.js' %}"></script>
     <script src="{% static 'js/jquery-ui-1.10.4.min.js' %}"></script>
     <script src="{% static 'js/jquery-1.8.3.min.js' %}"></script>
@@ -250,12 +250,12 @@
     <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript">
         var arr = JSON.parse(document.getElementById('hello-data').textContent);
-        var planet = planetaryjs.planet();    
+        var planet = planetaryjs.planet();
         // You can remove this statement if `world-110m.json` is in the same path as the HTML page:
         planet.loadPlugin(
             planetaryjs.plugins.earth({
-                topojson: { 
-                    file: 'https://raw.githubusercontent.com/BinaryMuse/planetary.js/v1.1.2/dist/world-110m.json' 
+                topojson: {
+                    file: 'https://raw.githubusercontent.com/BinaryMuse/planetary.js/v1.1.2/dist/world-110m.json'
                 },
                 // oceans:   { fill:   '#112' },
                 oceans:   { fill:   '#000' },
@@ -305,12 +305,12 @@
                         lastTick = now;
                     }
                 });
-            };            
+            };
         };
-        
+
         // for (var i = 0; i < arr.length; i++){
         //     var obj = arr[i];
-        //     // console.log(obj.country_region)            
+        //     // console.log(obj.country_region)
         //     // console.log(obj.longitude)
         //     // console.log(obj.latitude)
         // }
@@ -319,7 +319,7 @@
                 var obj = arr[i];
                 lng = obj.longitude;
                 lat = obj.latitude;
-                planet.plugins.pings.add(lng, lat, { color: 'red', ttl: 1500, angle: 4});        
+                planet.plugins.pings.add(lng, lat, { color: 'red', ttl: 1500, angle: 4});
             }
         }, 1000);
     </script>
@@ -328,12 +328,12 @@
       $("#deaths-count").text(summary.totals.total_deaths.toLocaleString())
       $("#recovered-count").text(summary.totals.total_recovered.toLocaleString())
       $("#confirmed-count").text(summary.totals.total_confirmed.toLocaleString())
-      
+
       //Populate confirmed table
       $.each( summary.countriesSorted_Confirmed, function( index, value ){
         country = value;
         confirmed = summary.countries[value].confirmed;
-        $("#table-confirmed").last().append("<tr><td>"+value+"</td><td class='orange' style='text-align:right'><b>" + confirmed.toLocaleString() +"</b></td></tr>");        
+        $("#table-confirmed").last().append("<tr><td>"+value+"</td><td class='orange' style='text-align:right'><b>" + confirmed.toLocaleString() +"</b></td></tr>");
       });
       //Populate deaths table
       $.each( summary.countriesSorted_Deaths, function( index, value ){
@@ -348,7 +348,7 @@
         $("#table-recovered").last().append(
           "<tr style='background:black'><td>"+value +"</td><td class='green' style='text-align:right'><b>" + recovered.toLocaleString() +"</b></td></tr>");
       });
-      
+
       // Spark lines
       // console.log(summary.trend_deaths);
       // console.log(summary.trend_confirmed);
@@ -376,23 +376,23 @@
       fillColor: false,
       lineColor: "tomato"
     });
-    
-    
+
+
     // $('#spark-1').sparkline(trend_recovered, {
-    //   // changeRangeMin: -10, 
+    //   // changeRangeMin: -10,
     //   // chartRangeMax: 10,
     //   lineColor: "#26c281",
     //   composite: true,
     //   fillColor: false
     // });
     // $('#spark-1').sparkline(trend_deaths, {
-    //   // changeRangeMin: -10, 
+    //   // changeRangeMin: -10,
     //   // chartRangeMax: 10,
     //   lineColor: "tomato",
     //   composite: true,
     //   fillColor: false
     // });
-    
+
     </script>
     <!-- <script>
     $(document).ready(function() {
@@ -409,9 +409,9 @@
                 }
             });
             console.log(json);
-        })(); 
+        })();
     });
-    
+
       </script>     -->
       <script>
         $(function() {
