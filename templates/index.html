@@ -72,7 +72,7 @@
     {{ data|json_script:"hello-data" }}  
     {{ summary|json_script:"summary-data" }}
     <header class="header">
-      <a href="index.html" class="logo" style="color:#00a0df">
+      <a href="mailto:soumyazyx@gmail.com?Subject=Hi%20There" target="_top" class="logo" style="color:#00a0df">
           <span class="profile-ava">
               <img alt="" src="{% static 'img/avatar1_soumya.jpg' %}">
           </span>
@@ -103,11 +103,11 @@
         <!--/.col-->
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
           <section class="panel transparent" style="border:1px solid #000;">
-            <span id="spark-1"></span>
+            <span id="spark-confirmed"></span>
           </section>            
         </div>          
 
-        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
           <div class="info-box">
             <div class="count green" id="recovered-count">--</div>
             <div class="title green">Recovered</div>
@@ -115,8 +115,13 @@
           <!--/.info-box-->
         </div>
         <!--/.col-->
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+          <section class="panel transparent" style="border:1px solid #000;">
+            <span id="spark-recovered"></span>
+          </section>            
+        </div>
 
-        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
           <!-- <div class="info-box blue-bg"> -->
           <div class="info-box">
             <div class="count darkred" id="deaths-count">--</div>
@@ -125,6 +130,11 @@
           <!--/.info-box-->
         </div>
         <!--/.col-->
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+          <section class="panel transparent" style="border:1px solid #000;">
+            <span id="spark-deaths"></span>
+          </section>            
+        </div>
 
       </div> <!-- /.row -->
       <section class="wrapper">
@@ -328,13 +338,23 @@
     var trend_confirmed = summary.trend_confirmed;
     var trend_recovered = summary.trend_recovered;
 
-    $('#spark-1').sparkline(trend_confirmed, {
+    $('#spark-confirmed').sparkline(trend_confirmed, {
       height: 50,
       width: '100%',
-      // changeRangeMin: -10, 
-      // chartRangeMax: 10,
       fillColor: false,
       lineColor: "orange"
+    });
+    $('#spark-recovered').sparkline(trend_recovered, {
+      height: 50,
+      width: '100%',
+      fillColor: false,
+      lineColor: "#26c281"
+    });
+    $('#spark-deaths').sparkline(trend_deaths, {
+      height: 50,
+      width: '100%',
+      fillColor: false,
+      lineColor: "tomato"
     });
     
     
