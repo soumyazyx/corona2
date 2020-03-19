@@ -101,6 +101,7 @@
           <canvas id='globe' height=400 width=400></canvas>
         </div>
       </div>
+
       <!-- Info-box and spark line for confirmed -->
       <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
@@ -145,12 +146,10 @@
       </div> <!-- /.row -->
 
 
-
+      <!-- This section houses the tables  -->
       <section class="wrapper">
-        <!-- page start-->
         <div class="row" >
-          <div class="col-sm-6" style="margin-bottom:20px;">
-
+          <div class="col-sm-6" style="margin-bottom:40px;">
             <table id="table-confirmed" class="display" cellspacing="0" width="100%" >
               <thead>
                 <tr style="background:black">
@@ -162,21 +161,7 @@
               </tbody>
             </table>
           </div>
-          <div class="col-sm-6" style="margin-bottom:20px;">
-            <table id="table-deaths" class="display" cellspacing="0" width="100%">
-              <thead>
-                <tr style="background:black">
-                  <th></th>
-                  <th class="darkred" style='text-align:right'>Deaths</th>
-                </tr>
-              </thead>
-              <tbody>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-6" style="margin-bottom:20px;">
+          <div class="col-sm-6" style="margin-bottom:40px;">
             <table id="table-recovered" class="display" cellspacing="0" width="100%">
               <thead>
                 <tr style="background:black">
@@ -188,12 +173,21 @@
               </tbody>
             </table>
           </div>
-          <div class="col-sm-6" style="display: none">
-            <section class="panel height-150 transparent" style="border:1px solid #DDD">
-              <span id="spark-1-test" style="display: none"></span>
-            </section>
-          </div>
         </div>
+        <div class="row">
+          <div class="col-sm-6" style="margin-bottom:40px;">
+            <table id="table-deaths" class="display" cellspacing="0" width="100%">
+              <thead>
+                <tr style="background:black">
+                  <th></th>
+                  <th class="darkred" style='text-align:right'>Deaths</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>          
+        </div> <!-- ./row -->
       </section>
 
       <!-- <div class="jumbotron">
@@ -258,7 +252,7 @@
                     file: 'https://raw.githubusercontent.com/BinaryMuse/planetary.js/v1.1.2/dist/world-110m.json'
                 },
                 // oceans:   { fill:   '#112' },
-                oceans:   { fill:   '#000' },
+                oceans:   { fill:   '#00212f' },
                 land:     { fill:   '#4CAF50' },
                 borders:  { stroke: '#1B5E20' }
             })
