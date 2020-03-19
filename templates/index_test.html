@@ -23,10 +23,10 @@
     <link href="{% static 'css/style-responsive.css' %}" rel="stylesheet" />
     <link href="{% static 'css/xcharts.min.css' %}" rel=" stylesheet">
     <link href="{% static 'css/jquery-ui-1.10.4.min.css' %}" rel="stylesheet">
-  
+    
     <title>Corona</title>  
     <style>
-      body { background:#000;}
+      body { background:#222;}
       .info-box {
         padding: 5px;
         margin-bottom: 5px;
@@ -55,13 +55,21 @@
           max-height: 150px;
           overflow:auto;
       }
-
       .transparent {
           background: transparent;
       }
       td, th {
           padding: 2px !important;
           border-top: 1px solid #444 !important;
+      }
+      #table-confirmed {
+        background: black;
+      }
+      #table-recovered {
+        background: black;
+      }
+      #table-deaths {
+        background: black;
       }
       
     </style>
@@ -79,7 +87,7 @@
           </span>
           Corona            
           <span class="lite">
-              <small><small><small>&nbsp;TEST</small></small></small>
+              <small><small><small>&nbsp;</small></small></small>
           </span>
       </a>
     </header>
@@ -125,37 +133,52 @@
       </div>
       <section class="wrapper">
         <!-- page start-->
-        <div class="row">
-          <div class="col-sm-6">
-            <section class="panel table-resp-150 transparent">
-              <table class="table transparent" id="table-confirmed">
-                <tbody>                  
-                </tbody>
-              </table>
-            </section>
+        <div class="row" >
+          <div class="col-sm-6" style="margin-bottom:20px;">
+            
+            <table id="table-confirmed" class="display" cellspacing="0" width="100%" >
+              <thead>
+                <tr style="background:black">
+                  <th></th>
+                  <th class="orange" style='text-align:right'>Confirmed</th>
+                </tr>
+              </thead>          
+              <tbody>                
+              </tbody>
+            </table>
+            <br><br><br>
+          
           </div>
-          <div class="col-sm-6">
-            <section class="panel table-resp-150 transparent">
-              <table class="table transparent" id="table-deaths">
-                <tbody>                  
-                </tbody>
-              </table>
-            </section>
+          <div class="col-sm-6" style="margin-bottom:20px;">
+            <table id="table-deaths" class="display" cellspacing="0" width="100%">
+              <thead>
+                <tr style="background:black">
+                  <th></th>
+                  <th class="darkred" style='text-align:right'>Deaths</th>
+                </tr>
+              </thead>          
+              <tbody>                
+              </tbody>
+            </table>
           </div>          
         </div>
         <div class="row">
-          <div class="col-sm-6">
-            <section class="panel table-resp-150 transparent">
-              <table class="table transparent" id="table-recovered">
-                <tbody>                  
-                </tbody>
-              </table>
-            </section>
+          <div class="col-sm-6" style="margin-bottom:20px;">
+            <table id="table-recovered" class="display" cellspacing="0" width="100%">
+              <thead>
+                <tr style="background:black">
+                  <th></th>
+                  <th class="green" style='text-align:right'>Recovered</th>
+                </tr>
+              </thead>          
+              <tbody>                
+              </tbody>
+            </table>
           </div>
-          <div class="col-sm-6">
-            <section class="panel height-150 transparent">
-              <span id="spark-1"></span>
-            </section>
+          <div class="col-sm-6" style="display: none">
+            <section class="panel height-150 transparent" style="border:1px solid #DDD">
+              <span id="spark-1" style="display: none"></span>
+            </section>            
           </div>          
         </div>
       </section>
@@ -173,7 +196,7 @@
 
     </div> <!-- /container -->
 
-
+    
     
     
                 
@@ -211,53 +234,10 @@
     <script type='text/javascript' src='https://d3js.org/d3.v3.min.js'></script>
     <script type='text/javascript' src='https://d3js.org/topojson.v1.min.js'></script>
     <script type='text/javascript' src='https://cdn.rawgit.com/BinaryMuse/planetary.js/v1.1.2/dist/planetaryjs.min.js'></script>
-
-    <script>
-    //knob
-    $(function() {
-        $(".knob").knob({
-            'draw': function() {
-                $(this.i).val(this.cv + '%')
-            }
-        })
-    });
-
-    //carousel
-    $(document).ready(function() {
-        $("#owl-slider").owlCarousel({
-            navigation: true,
-            slideSpeed: 300,
-            paginationSpeed: 400,
-            singleItem: true
-        });
-    });
-
-    $(function() {
-        $('select.styled').customSelect();
-    });
-
-    /* ---------- Map ---------- */
-    $(function() {
-        $('#map').vectorMap({
-            map: 'world_mill_en',
-            series: {
-                regions: [{
-                values: gdpData,
-                scale: ['#000', '#000'],
-                normalizeFunction: 'polynomial'
-                }]
-            },
-            backgroundColor: '#eef3f7',
-            onLabelShow: function(e, el, code) {
-                el.html(el.html() + ' (GDP - ' + gdpData[code] + ')');
-            }
-        });
-    });
-    </script>
+    <script src="http://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript">
         var arr = JSON.parse(document.getElementById('hello-data').textContent);
         var planet = planetaryjs.planet();    
-    
         // You can remove this statement if `world-110m.json` is in the same path as the HTML page:
         planet.loadPlugin(
             planetaryjs.plugins.earth({
@@ -331,75 +311,66 @@
         }, 1000);
     </script>
     <script>
-
-        $(function() {
-
-            var data1 = [10,8,5,7,4,4,1,5,3,7,4,5,6,3];
-            var data2 = [30,4,6,3,8,9,5,4,3,2,3,2,4,6,7];
-            var data3 = [4,3,2,3,2,4,6,7,30,4,6,3,8,9,5];
-
-            $('#spark-1').sparkline(data1, {
-                height: 120,
-                width: '100%',
-                changeRangeMin: -10, 
-                chartRangeMax: 10,
-                fillColor: false,
-                lineColor: "orange"
-
-            });
-
-            $('#spark-1').sparkline(data2, {
-              changeRangeMin: -10, 
-              chartRangeMax: 10,
-              lineColor: "#26c281",
-              composite: true,
-              fillColor: false
-            });
-            $('#spark-1').sparkline(data3, {
-              changeRangeMin: -10, 
-              chartRangeMax: 10,
-              lineColor: "tomato",
-              composite: true,
-              fillColor: false
-            });
-        });
-    </script>
-    <script>
       var summary = JSON.parse(document.getElementById('summary-data').textContent);
       $("#deaths-count").text(summary.totals.total_deaths.toLocaleString())
       $("#recovered-count").text(summary.totals.total_recovered.toLocaleString())
       $("#confirmed-count").text(summary.totals.total_confirmed.toLocaleString())
       
-
-      
       //Populate confirmed table
-      $("#table-confirmed").last().append("<tr><td></td><td class='orange'><b>Confirmed</b></td></tr>");
       $.each( summary.countriesSorted_Confirmed, function( index, value ){
         country = value;
         confirmed = summary.countries[value].confirmed;
-        $("#table-confirmed").last().append("<tr><td>"+value +"</td><td class='orange'><b>" + confirmed +"</b></td></tr>");
+        $("#table-confirmed").last().append("<tr><td>"+value+"</td><td class='orange' style='text-align:right'><b>" + confirmed.toLocaleString() +"</b></td></tr>");        
       });
       //Populate deaths table
-      $("#table-deaths").last().append("<tr><td></td><td class='darkred'><b>Deaths</b></td></tr>");
       $.each( summary.countriesSorted_Deaths, function( index, value ){
         country = value;
         deaths = summary.countries[value].deaths;
-        $("#table-deaths").last().append("<tr><td>"+value +"</td><td class='darkred'><b>" + deaths +"</b></td></tr>");
+        $("#table-deaths").last().append("<tr><td>"+value +"</td><td class='darkred' style='text-align:right'><b>" + deaths.toLocaleString() +"</b></td></tr>");
       });
- 
       //Populate recoverd table
-      $("#table-recovered").last().append("<tr><td></td><td class='green'><b>Recovered</b></td></tr>");
       $.each( summary.countriesSorted_Recovered, function( index, value ){
         country = value;
         recovered = summary.countries[value].recovered;
-        $("#table-recovered").last().append("<tr><td>"+value +"</td><td class='green'><b>" + recovered +"</b></td></tr>");
+        $("#table-recovered").last().append(
+          "<tr style='background:black'><td>"+value +"</td><td class='green' style='text-align:right'><b>" + recovered.toLocaleString() +"</b></td></tr>");
       });
- 
- 
+      
+      // Spark lines
+      // console.log(summary.trend_deaths);
+      // console.log(summary.trend_confirmed);
+      // console.log(summary.trend_recovered);
+
+    var trend_deaths    = summary.trend_deaths;
+    var trend_confirmed = summary.trend_confirmed;
+    var trend_recovered = summary.trend_recovered;
+
+    $('#spark-1').sparkline(trend_confirmed, {
+      height: 120,
+      width: '100%',
+      // changeRangeMin: -10, 
+      // chartRangeMax: 10,
+      fillColor: false,
+      lineColor: "orange"
+    });
+    $('#spark-1').sparkline(trend_recovered, {
+      // changeRangeMin: -10, 
+      // chartRangeMax: 10,
+      lineColor: "#26c281",
+      composite: true,
+      fillColor: false
+    });
+    $('#spark-1').sparkline(trend_deaths, {
+      // changeRangeMin: -10, 
+      // chartRangeMax: 10,
+      lineColor: "tomato",
+      composite: true,
+      fillColor: false
+    });
     </script>
     <!-- <script>
     $(document).ready(function() {
-        console.log("wow")
+        console.log("`")
         var json = (function () {
             var json = null;
             $.ajax({
@@ -415,7 +386,34 @@
         })(); 
     });
     
-    </script>     -->
-
+      </script>     -->
+      <script>
+        $(function() {
+          $('#table-recovered').DataTable({
+            scrollY: 150,
+            scrollCollapse: true,
+            paging: false,
+            searching: false,
+            ordering: false,
+            info: false
+          });
+          $('#table-confirmed').DataTable({
+            scrollY: 150,
+            scrollCollapse: true,
+            paging: false,
+            searching: false,
+            ordering: false,
+            info: false
+          });
+          $('#table-deaths').DataTable({
+            scrollY: 150,
+            scrollCollapse: true,
+            paging: false,
+            searching: false,
+            ordering: false,
+            info: false
+          });
+        });
+      </script>
 </body>
 </html>
