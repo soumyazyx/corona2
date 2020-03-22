@@ -345,7 +345,7 @@
           col-12    offset-0">
           <div class="cardbox shadow-222 ">
             <div class="cardbox-item text-center">
-              <canvas id='globe' height=400 width=400></canvas>
+              <canvas id='globe' height=350 width=350></canvas>
             </div><!--/ cardbox-item -->
           </div><!--/ cardbox -->
         </div><!--/ col-lg-6 -->
@@ -444,6 +444,27 @@
   <script>
     $(function() {
       console.log("wow");
+      
+      // var canvas = document.getElementById("globe");  
+      // canvas.width = window.innerWidth;
+      // canvas.height = window.innerHeight;
+      // console.log(canvas.height);
+      // console.log(canvas.width);
+
+      // var w = window,
+      // d = document,
+      // e = d.documentElement,
+      // g = d.getElementsByTagName('body')[0],
+      // xS = w.innerWidth || e.clientWidth || g.clientWidth,
+      // yS = w.innerHeight|| e.clientHeight|| g.clientHeight;
+      // console.log(xS + ' × ' + yS);
+      // canvas.width = xS;
+      // canvas.height = yS;
+
+
+
+      
+
       var summary = JSON.parse(document.getElementById('summary-data').textContent);
       var trend_deaths    = summary.trend_deaths;
       var trend_confirmed = summary.trend_confirmed;
@@ -474,6 +495,9 @@
 
 
       // Globe
+      
+
+
       var arr = JSON.parse(document.getElementById('hello-data').textContent);
         var planet = planetaryjs.planet();
         // You can remove this statement if `world-110m.json` is in the same path as the HTML page:
@@ -497,7 +521,7 @@
         }));
 
         // Make the planet fit well in its canvas
-        planet.projection.scale(200).translate([200, 200]);
+        planet.projection.scale(175).translate([175, 175]);
         var canvas = document.getElementById('globe');
         planet.draw(canvas);
 
