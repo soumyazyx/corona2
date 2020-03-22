@@ -332,7 +332,26 @@
   <body>
     {{ data|json_script:"hello-data" }}
     {{ summary|json_script:"summary-data" }}
-    <br><br>
+    <br>
+    <br>
+    
+    <section class="hero">
+      <div class="row">
+        <div class="
+          col-xl-12 offset-xl-0
+          col-lg-12 offset-lg-0
+          col-md-12 offset-md-0
+          col-sm-12 offset-sm-0
+          col-12    offset-0">
+          <div class="cardbox shadow-222 ">
+            <div class="cardbox-item text-center">
+              <canvas id='globe' height=400 width=400></canvas>
+            </div><!--/ cardbox-item -->
+          </div><!--/ cardbox -->
+        </div><!--/ col-lg-6 -->
+      </div><!--/ row -->
+    </section>
+
     <section class="hero">
       <div class="cardbox shadow-222">
         <div class="cardbox-item">
@@ -393,6 +412,8 @@
       </div><!--/ cardbox -->        
     </section>
     
+    
+    
     <section class="hero">
       <div class="row">
         <div class="
@@ -411,7 +432,10 @@
     </section>
 
   </body>
-  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+  <script type='text/javascript' src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+  <script type='text/javascript' src='https://d3js.org/d3.v3.min.js'></script>
+  <script type='text/javascript' src='https://d3js.org/topojson.v1.min.js'></script>
+  <script type='text/javascript' src='https://cdn.rawgit.com/BinaryMuse/planetary.js/v1.1.2/dist/planetaryjs.min.js'></script>
   <script src="{% static 'js/jquery-1.8.3.min.js' %}"></script>
   <script src="{% static 'js/sparklines.js' %}"></script>
   <script src="{% static 'js/jquery.sparkline.js' %}" type="text/javascript"></script>
@@ -447,6 +471,85 @@
         fillColor: false,
         lineColor: "tomato"
       });
+
+
+      // Globe
+      var arr = JSON.parse(document.getElementById('hello-data').textContent);
+        var planet = planetaryjs.planet();
+        // You can remove this statement if `world-110m.json` is in the same path as the HTML page:
+        planet.loadPlugin(
+            planetaryjs.plugins.earth({
+                topojson: {
+                    file: 'https://raw.githubusercontent.com/BinaryMuse/planetary.js/v1.1.2/dist/world-110m.json'
+                },
+                oceans:   { fill:   '#000' },
+                land:     { fill:   '#4CAF50' },
+                borders:  { stroke: '#1B5E20' }
+            })
+        );
+
+        // Load our custom autorotate plugin
+        planet.loadPlugin(autorotate(10));
+
+        // Load the `pings` plugin to draw animated pings on the globe
+        planet.loadPlugin(planetaryjs.plugins.pings({
+            color: 'tomato', ttl: 2000, angle: 1
+        }));
+
+        // Make the planet fit well in its canvas
+        planet.projection.scale(200).translate([200, 200]);
+        var canvas = document.getElementById('globe');
+        planet.draw(canvas);
+
+        // This plugin will automatically rotate the globe around its vertical
+        // axis a configured number of degrees every second.
+        function autorotate(degPerSec) {
+            // Planetary.js plugins are functions that take a `planet` instance
+            // as an argument...
+            return function(planet) {
+                var lastTick = null;
+                var paused = false;
+                planet.plugins.autorotate = {
+                    pause:  function() { paused = true;  },
+                    resume: function() { paused = false; }
+                };
+                // ...and configure hooks into certain pieces of its lifecycle.
+                planet.onDraw(function() {
+                    if (paused || !lastTick) {
+                        lastTick = new Date();
+                    } else {
+                        var now = new Date();
+                        var delta = now - lastTick;
+                        // This plugin uses the built-in projection (provided by D3)
+                        // to rotate the globe each time we draw it.
+                        var rotation = planet.projection.rotate();
+                        rotation[0] += degPerSec * delta / 1000;
+                        if (rotation[0] >= 180) rotation[0] -= 360;
+                        planet.projection.rotate(rotation);
+                        lastTick = now;
+                    }
+                });
+            };
+        };
+
+        setInterval(function() {
+            for (var i = 0; i < arr.length; i++){
+                var obj = arr[i];
+                lng = obj.longitude;
+                lat = obj.latitude;
+                latestDeathCount = obj.latest_stats_value;
+                computedAngle = latestDeathCount%100;
+                // console.log("Computed:" + computedAngle);
+                // Set the angle at minimum of 3
+                if (computedAngle < 2){ computedAngle = 2}
+                if (computedAngle > 30){ computedAngle = 30}
+                if (computedAngle > 20){                    
+                }
+                // console.log("defaulted:" + computedAngle);
+                planet.plugins.pings.add(lng, lat, { color: 'red', ttl: 1500, angle: computedAngle});
+            }
+        }, 1000);
+      // End-Globe
     
     });
   </script>
