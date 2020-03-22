@@ -1,5 +1,6 @@
 import json
 import csv
+import folium
 import requests
 import pandas as pd
 from datetime import datetime, timezone
@@ -29,13 +30,21 @@ def home(request):
 
 def home_test(request):
 
-    model_values = Record.objects.all().filter(stats_type='confirmed').values('latitude','longitude','country_region')
+    model_values = Record.objects.all().filter(stats_type='deaths').values(
+        'latitude',
+        'longitude',
+        'country_region',
+        'latest_stats_value'
+    )
     summary_feed = requests.get('https://coronazyx.herokuapp.com/api/coronafeed')
+    m = folium.Map()
+    map_html = m.get_root().render()
     context = {
         "data": list(model_values),
-        "summary": summary_feed.json()
+        "summary": summary_feed.json(),
+        'map_html': map_html
     }
-    return render(request, "index2.html", context)
+    return render(request, "index-a.html", context)
 
 
 def sync(request):

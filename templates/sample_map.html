@@ -1,16 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <body>
-    iFrame starts<br/>
     <iframe id="foo" srcdoc='{{map_html|safe}}'></iframe>
-    <br/>iFrame ends
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <script>
-    $(document).ready(function() {
-        var iframe = document.getElementById('foo'),
-        iframedoc = iframe.contentDocument || iframe.contentWindow.document;
-        
-    });
-    </script>
+    
 </body>
 </html>
