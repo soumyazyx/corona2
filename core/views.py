@@ -35,7 +35,7 @@ def home_test(request):
         "data": list(model_values),
         "summary": summary_feed.json()
     }
-    return render(request, "index_test.html", context)
+    return render(request, "index2.html", context)
 
 
 def sync(request):
