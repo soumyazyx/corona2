@@ -314,9 +314,7 @@
                 // console.log("Computed:" + computedAngle);
                 // Set the angle at minimum of 3
                 if (computedAngle < 2){ computedAngle = 2}
-                if (computedAngle > 30){ computedAngle = 30}
-                if (computedAngle > 20){                    
-                }
+                if (computedAngle > 15){ computedAngle = 15}
                 // console.log("defaulted:" + computedAngle);
                 planet.plugins.pings.add(lng, lat, { color: 'red', ttl: 1500, angle: computedAngle});
             }
