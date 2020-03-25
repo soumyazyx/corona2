@@ -58,8 +58,10 @@ def sync(request):
     print("{}:Truncating [RECORD] table..Done".format(datetime.now()))
 
     # Recovered
-    recovered_url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv'
-    populateDb(stats_type='recovered', url=recovered_url)
+    populateDb(
+        stats_type='recovered',
+        url='https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv'
+    )
 
     # Deaths
     deaths_url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv'
@@ -76,6 +78,7 @@ def sync(request):
     summary = updateSummaryTable()
     print("---------------------------------------------------")
     return JsonResponse(summary)
+    
 
 
 def populateDb(url, stats_type):
@@ -105,7 +108,7 @@ def populateDb(url, stats_type):
         longitude = row.pop(0)
         stats_type = stats_type
         stats_value_csv = ",".join(row)
-        latest_stats_value = row[-1]
+        latest_stats_value = row[-1] or 0
         # Create model Record instances
         obj = Record(
             state_province     = state_province,
@@ -119,6 +122,7 @@ def populateDb(url, stats_type):
             stats_value_csv    = stats_value_csv,
         )
         objects_list.append(obj)
+        
     print("{}:Creating objects..Done".format(datetime.now()))
     print("{}:Total objects created = {}".format(datetime.now(), len(objects_list)))
 
@@ -130,9 +134,9 @@ def populateDb(url, stats_type):
 def populateIndiaStats(url):
 
     Record.objects.filter(country_region='India').delete()
-    
+
     # Globals
-    states_lat_long = {        
+    states_lat_long = {
         "India" : {"lat":20.5937, "long":78.9629},
         "Andhra Pradesh" : {"lat":15.9129, "long":79.7400},
         "Assam" : {"lat":26.244156, "long":92.537842},
@@ -163,7 +167,7 @@ def populateIndiaStats(url):
     }
 
     state_wise_stats = {}
-    # Fetch JSON data from url    
+    # Fetch JSON data from url
     r = requests.get(url)
     r_json = r.json()
     for data in r_json['data']:
@@ -190,7 +194,7 @@ def populateIndiaStats(url):
             state_wise_stats[state]['recovered_csv']    = state_wise_stats[state]['recovered_csv'] + str(regional['discharged']) + ","
             state_wise_stats[state]['confirmed_csv']    = state_wise_stats[state]['confirmed_csv'] + str(regional['confirmedCasesIndian'] + regional['confirmedCasesForeign']) + ","
             state_wise_stats[state]['deaths_csv']       = state_wise_stats[state]['deaths_csv'] + str(regional['deaths']) + ","
-            state_wise_stats[state]['dates_csv']        = state_wise_stats[state]['dates_csv'] + str(date) + ","            
+            state_wise_stats[state]['dates_csv']        = state_wise_stats[state]['dates_csv'] + str(date) + ","
             state_wise_stats[state]['confirmed_latest'] = regional['confirmedCasesIndian'] + regional['confirmedCasesForeign']
             state_wise_stats[state]['recovered_latest'] = regional['discharged']
             state_wise_stats[state]['deaths_latest']    = regional['deaths']
@@ -200,7 +204,7 @@ def populateIndiaStats(url):
     # Bulk insert requires array of objects to be created
     objects_list = []
     for state in state_wise_stats:
-        # For each state, we create 3 objects - 1.Confirmed 2.Recovered 3.Deaths        
+        # For each state, we create 3 objects - 1.Confirmed 2.Recovered 3.Deaths
         obj = Record(
             state_province     = state,
             country_region     = 'India',
@@ -224,7 +228,7 @@ def populateIndiaStats(url):
             stats_dates_csv    = state_wise_stats[state]['dates_csv'].rstrip(','),
             stats_value_csv    = state_wise_stats[state]['deaths_csv'].rstrip(','),
         )
-        objects_list.append(obj)        
+        objects_list.append(obj)
         obj = Record(
             latitude           = state_wise_stats[state]['lat'],
             longitude          = state_wise_stats[state]['long'],
@@ -237,7 +241,7 @@ def populateIndiaStats(url):
             latest_stats_value = state_wise_stats[state]['recovered_latest']
         )
         objects_list.append(obj)
-    
+
     print("{}:Inserting INDIA records..".format(datetime.now()))
     Record.objects.bulk_create(objects_list)
     print("{}:Inserting INDIA records..Done".format(datetime.now()))
@@ -330,6 +334,10 @@ def findTrend(stats_type):
     # summ = [0 for i in range(15)]
     for record in records:
         for index, value in enumerate(record['stats_value_csv'].split(",")):
+            if(value):
+                pass 
+            else:
+                value = 0
             try:
                 trend[index] = trend[index] + int(value)
             except IndexError:

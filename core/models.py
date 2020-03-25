@@ -10,7 +10,7 @@ class Record(models.Model):
     stats_dates_csv    = models.TextField(default='')
     stats_value_csv    = models.TextField(default='')
     latest_stats_date  = models.CharField(max_length=255, default='')
-    latest_stats_value = models.IntegerField()
+    latest_stats_value = models.IntegerField(default=0)
     added_ts           = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
