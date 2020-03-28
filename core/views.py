@@ -397,7 +397,7 @@ def home_test(request):
     color_dict = {key: linearrrr(unemployment_dict[key]) for key in unemployment_dict.keys()}
     # print(color_dict)
     color_dict['USA'] = color_dict['US']
-    m = folium.Map([20.5937, 78.9629], zoom_start=1, tiles='CartoDB dark_matter') 
+    m = folium.Map([20.5937, 78.9629], zoom_start=1) 
     # tooltip=GeoJsonTooltip(
     #     fields=["name"],
     #     aliases=["name"],
