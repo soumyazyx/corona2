@@ -11,7 +11,7 @@
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <link href="https://fonts.googleapis.com/css?family=Rokkitt" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round&display=swap" rel="stylesheet">    
     <style>
       /*
       *
@@ -274,7 +274,7 @@
       /* Custom css */
       body { 
         line-height:1;
-        background:#222;
+        /* background:#222; */
       } 
       .info-box {
         padding: 5px;
@@ -283,12 +283,16 @@
         text-align: center;
         border: 0;
         box-shadow: none;
+        text-transform: uppercase;
+        font-family: 'Varela Round', sans-serif;
       }
       .info-box .count {
-        margin-top: 0;
-        padding-bottom: .1em;;
-        font-size: 34px;
-        font-weight: 700;
+        
+        /* margin-top: 0; */
+        /* padding-bottom: .1em;; */
+        /* font-size: 34px; */
+        /* font-weight: 300; */
+        font-weight: bold
       }
       .darkred {
         color: tomato;
@@ -333,9 +337,58 @@
     {{ data|json_script:"hello-data" }}
     {{ summary|json_script:"summary-data" }}
     <br>
-    <br>
-    
-    <section class="hero">
+    <div class="bs-example">
+      <div class="accordion" id="accordionExample">
+          <div class="card" style="border: none">
+              <div class="card-header" id="headingOne" style="background: none;border:none">
+                  <h2 class="mb-0">
+                      <button 
+                        type="button" 
+                        class="btn" 
+                        data-toggle="collapse" 
+                        data-target="#collapseOne"
+                        style="padding:0; margin:0; width:100%; background:none; box-shadow: 0 0 0 0.1rem #eee;">
+                        
+                        <div class="row">                          
+                          <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+                            <div class="info-box">
+                              
+                              <div class="title orange">Confirmed</div>
+                              <div class="count orange" id="confirmed-count">--</div>                
+                              <span id="spark-confirmed"></span>
+                            </div>
+                          </div><!--/ col-lg-4 -->            
+                          <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+                            <div class="info-box">
+                              <div class="title green">Recovered</div>
+                              <div class="count green" id="recovered-count">--</div>
+                              <span id="spark-recovered"></span>
+                            </div>
+                          </div><!--/ col-lg-4 -->            
+                          <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+                            <div class="info-box">
+                              <div class="title darkred">Deaths</div>
+                              <div class="count darkred" id="deaths-count">--</div>                
+                              <span id="spark-deaths"></span>
+                            </div>
+                          </div><!--/ col-lg-4 -->            
+                        </div> <!--/ row -->
+                        <i class="fa fa-plus"></i> 
+                      </button>									
+                  </h2>
+              </div>
+              <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                  <div class="card-body">
+                      <p>HTML stands for HyperText Markup Language. HTML is the standard markup language for describing the structure of web pages. <a href="https://www.tutorialrepublic.com/html-tutorial/" target="_blank">Learn more.</a></p>
+                  </div>
+              </div>
+          </div>
+          
+          
+      </div>
+  </div>
+  
+    <section class="">
       <div class="row">
         <div class="
           col-xl-12 offset-xl-0
@@ -343,7 +396,7 @@
           col-md-12 offset-md-0
           col-sm-12 offset-sm-0
           col-12    offset-0">
-          <div class="cardbox shadow-222 ">
+          <div class="cardbox">
             <div class="cardbox-item text-center">
               <canvas id='globe' height=350 width=350></canvas>
             </div><!--/ cardbox-item -->
@@ -370,67 +423,51 @@
       </div><!--/ row -->
     </section>
 
-    <section class="hero">
-      <div class="cardbox shadow-222">
-        <div class="cardbox-item">
-          <div class="row">
-            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
-              <div class="info-box">
-                <div class="count orange" id="confirmed-count">--</div>
-                <div class="title orange">Confirmed</div>
-              </div>
-            </div><!--/ col-lg-6 -->
-            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
-              <section style="padding:.5rem"  class="panel transparent">
-                <span id="spark-confirmed"></span>
-              </section>
-            </div><!--/ col-lg-6 -->
-          </div> <!--/ row -->
-        </div><!--/ cardbox-item -->
-      </div><!--/ cardbox -->        
-    </section>
     
-    <section class="hero">
-      <div class="cardbox shadow-222 ">
-        <div class="cardbox-item">
-          <div class="row">
-            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
-              <div class="info-box">
-                <div class="count green" id="recovered-count">--</div>
-                <div class="title green">Recovered</div>
-              </div>
-            </div><!--/ col-lg-6 -->
-            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
-              <section style="padding:.5rem"  class="panel transparent">
-                <span id="spark-recovered"></span>
-              </section>
-            </div><!--/ col-lg-6 -->
-          </div> <!--/ row -->
-        </div><!--/ cardbox-item -->
-      </div><!--/ cardbox -->        
-    </section>
-    
-    <section class="hero">
-      <div class="cardbox shadow-222 ">
-        <div class="cardbox-item">
-          <div class="row">
-            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
-              <div class="info-box">
-                <div class="count darkred" id="deaths-count">--</div>
-                <div class="title darkred">Deaths</div>
-              </div>
-            </div><!--/ col-lg-6 -->
-            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
-              <section style="padding:.5rem"  class="panel transparent">
-                <span id="spark-deaths"></span>
-              </section>
-            </div><!--/ col-lg-6 -->
-          </div> <!--/ row -->
-        </div><!--/ cardbox-item -->
-      </div><!--/ cardbox -->        
-    </section>
-    
-    
+    <!-- This section houses the tables  -->
+    <section class="wrapper">
+        <div class="row" >
+          <div class="col-sm-6" style="margin-bottom:40px;">
+            <table id="table-confirmed" class="display" cellspacing="0" width="100%" >
+              <thead>
+                <tr style="background:black">
+                  <th></th>
+                  <th class="orange" style='text-align:right'>Confirmed</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-sm-6" style="margin-bottom:40px;">
+            <table id="table-recovered" class="display" cellspacing="0" width="100%">
+              <thead>
+                <tr style="background:black">
+                  <th></th>
+                  <th class="green" style='text-align:right'>Recovered</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6" style="margin-bottom:40px;">
+            <table id="table-deaths" class="display" cellspacing="0" width="100%">
+              <thead>
+                <tr style="background:black">
+                  <th></th>
+                  <th class="darkred" style='text-align:right'>Deaths</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>          
+        </div> <!-- ./row -->
+      </section>
+
     
     <!-- <section class="hero">
       <div class="row">
@@ -454,14 +491,35 @@
   <script type='text/javascript' src='https://d3js.org/d3.v3.min.js'></script>
   <script type='text/javascript' src='https://d3js.org/topojson.v1.min.js'></script>
   <script type='text/javascript' src='https://cdn.rawgit.com/BinaryMuse/planetary.js/v1.1.2/dist/planetaryjs.min.js'></script>
-  <script src="{% static 'js/jquery-1.8.3.min.js' %}"></script>
+  <!-- <script src="{% static 'js/jquery-1.8.3.min.js' %}"></script> -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="{% static 'js/sparklines.js' %}"></script>
   <script src="{% static 'js/jquery.sparkline.js' %}" type="text/javascript"></script>
   <script src="{% static 'js/sparkline-chart.js' %}"></script>
+  <script src="{% static 'js/jquery.scrollTo.min.js' %}"></script>
+  <script src="{% static 'js/jquery.nicescroll.js' %}" type="text/javascript"></script>
+  <script src="{% static 'js/jquery.slimscroll.min.js' %}"></script>
+  <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>  
+  <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> -->
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+  
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script> -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
   <script>
     $(function() {
       console.log("wow");
+      // Add minus icon for collapse element which is open by default
+      $(".collapse.show").each(function(){
+        	$(this).prev(".card-header").find(".fa").addClass("fa-minus").removeClass("fa-plus");
+        });
+        
+        // Toggle plus minus icon on show hide of collapse element
+        $(".collapse").on('show.bs.collapse', function(){
+        	$(this).prev(".card-header").find(".fa").removeClass("fa-plus").addClass("fa-minus");
+        }).on('hide.bs.collapse', function(){
+        	$(this).prev(".card-header").find(".fa").removeClass("fa-minus").addClass("fa-plus");
+        });
       
       // var canvas = document.getElementById("globe");  
       // canvas.width = window.innerWidth;
@@ -492,6 +550,26 @@
       $("#recovered-count").text(summary.totals.total_recovered.toLocaleString())
       $("#confirmed-count").text(summary.totals.total_confirmed.toLocaleString())
 
+      //Populate confirmed table
+      $.each( summary.countriesSorted_Confirmed, function( index, value ){
+        country = value;
+        confirmed = summary.countries[value].confirmed;
+        $("#table-confirmed").last().append("<tr><td>"+value+"</td><td class='orange' style='text-align:right'><b>" + confirmed.toLocaleString() +"</b></td></tr>");
+      });
+      //Populate deaths table
+      $.each( summary.countriesSorted_Deaths, function( index, value ){
+        country = value;
+        deaths = summary.countries[value].deaths;
+        $("#table-deaths").last().append("<tr><td>"+value +"</td><td class='darkred' style='text-align:right'><b>" + deaths.toLocaleString() +"</b></td></tr>");
+      });
+      //Populate recoverd table
+      $.each( summary.countriesSorted_Recovered, function( index, value ){
+        country = value;
+        recovered = summary.countries[value].recovered;
+        $("#table-recovered").last().append(
+          "<tr style='background:black'><td>"+value +"</td><td class='green' style='text-align:right'><b>" + recovered.toLocaleString() +"</b></td></tr>");
+      });
+  
       $('#spark-confirmed').sparkline(trend_confirmed, {
         height: 50,
         width: '100%',
@@ -592,6 +670,30 @@
       // End-Globe
     
     });
+    $('#table-recovered').DataTable({
+            scrollY: 150,
+            scrollCollapse: true,
+            paging: false,
+            searching: false,
+            ordering: false,
+            info: false
+          });
+          $('#table-confirmed').DataTable({
+            scrollY: 150,
+            scrollCollapse: true,
+            paging: false,
+            searching: false,
+            ordering: false,
+            info: false
+          });
+          $('#table-deaths').DataTable({
+            scrollY: 150,
+            scrollCollapse: true,
+            paging: false,
+            searching: false,
+            ordering: false,
+            info: false
+          });
   </script>
     
 
