@@ -3,7 +3,8 @@ import csv
 import folium
 from folium import plugins
 from folium.features import GeoJson, GeoJsonTooltip
-from branca.colormap import linear
+# from branca.colormap import linear
+import branca.colormap as cm
 import pandas as pd
 import numpy as np
 from io import StringIO
@@ -32,82 +33,6 @@ def home(request):
         "summary": summary_feed.json()
     }
     return render(request, "index.html", context)
-
-
-def home_test_choropleth(request):
-
-    model_values = Record.objects.all().filter(stats_type='deaths').values(
-        'latitude',
-        'longitude',
-        'country_region',
-        'latest_stats_value'
-    )
-    summary_feed = requests.get('https://coronazyx.herokuapp.com/api/coronafeed')
-
-    # url = 'https://raw.githubusercontent.com/python-visualization/folium/master/examples/data'
-    # state_geo = f'{url}/us-states.json'
-    state_geo = 'https://raw.githubusercontent.com/python-visualization/folium/master/examples/data/world-countries.json'
-    
-    # state_unemployment = f'{url}/US_Unemployment_Oct2012.csv'
-    
-    beep = "Pakistanzyx|7"
-    beep = beep + "\n" + "Indiazyx|10"
-    # print(beep)
-    summary_json = summary_feed.json()
-
-    # print(summary_json['countries'])
-    for country in summary_json['countries']:
-        # print(country)
-        confirmed = 0
-        if ('confirmed' in summary_json['countries'][country]):
-            confirmed = summary_json['countries'][country]['confirmed']
-            
-        beep = beep + "\n" + "{}|{}".format(country, confirmed)
-
-    # print(beep)
-#     state_unemployment = StringIO('''
-# State,Unemployment
-# Pakistan,7
-# Bangladesh,8
-# India,10
-# ''')
-    state_unemployment = StringIO(beep)
-    state_data = pd.read_csv(state_unemployment, sep="|", names=["State","Unemployment"])
-    # print(state_data)
-    
-    m = folium.Map(tiles="")
-    # plugins.LocateControl(auto_start=True).add_to(m)
-    folium.raster_layers.TileLayer('OpenStreetMap').add_to(m)
-    # folium.raster_layers.TileLayer('Stamen Terrain').add_to(m)
-    # folium.raster_layers.TileLayer('Stamen Watercolor').add_to(m)
-    # folium.raster_layers.TileLayer('CartoDB positron').add_to(m)
-    # folium.raster_layers.TileLayer('CartoDB dark_matter').add_to(m)
-    # folium.LayerControl().add_to(m)
-
-    folium.Choropleth(
-        geo_data=state_geo,        
-        data=state_data,
-        columns=['State', 'Unemployment'],
-        key_on='feature.properties.name',
-        fill_color='YlOrRd',
-        fill_opacity=0.7,
-        line_opacity=0.2,
-        nan_fill_color='white',
-        nan_fill_opacity=0,
-        # legend_name='Unemployment Rate (%)',
-        line_color='red',
-        # control_scale=False,
-    ).add_to(m)
-
-    # folium.LayerControl().add_to(m)
-    map_html = m.get_root().render()
-
-    context = {
-        'map_html': map_html,
-        "data": list(model_values),
-        "summary": summary_feed.json()
-    }
-    return render(request, "index-a.html", context)
 
 
 def sync(request):
@@ -304,10 +229,6 @@ def populateIndiaStats(url):
     print("{}:Inserting INDIA records..Done".format(datetime.now()))
 
 
-
-
-
-
 def updateSummaryTable():
 
     print("{}: Computing summary from records fetched..".format(datetime.now()))
@@ -404,7 +325,6 @@ def findTrend(stats_type):
     return trend
 
 
-
 def home_test(request):
 
     model_values = Record.objects.all().filter(stats_type='deaths').values(
@@ -413,102 +333,99 @@ def home_test(request):
         'country_region',
         'latest_stats_value'
     )
+
     summary_feed = requests.get('https://coronazyx.herokuapp.com/api/coronafeed')
+    summary_json = summary_feed.json()
+    geo_json_data = json.loads(requests.get('https://raw.githubusercontent.com/python-visualization/folium/master/examples/data/world-countries.json').text)
+    for obj in geo_json_data['features']:
+        geo_json_country = obj['properties']['name']
+        summary_json_country = ''
 
-    url = 'https://raw.githubusercontent.com/python-visualization/folium/master/examples/data'
-    us_states = f'{url}/us-states.json'
-    geo_json_data = json.loads(requests.get(us_states).text)
+        if (geo_json_country == 'United States of America'):
+            summary_json_country = 'US'
+        else:
+            summary_json_country = geo_json_country
 
-    TESTDATA = StringIO("""
-State,Unemployment
-AL,7.1
-AK,6.8
-AZ,8.1
-AR,7.2
-CA,10.1
-CO,7.7
-CT,8.4
-DE,7.1
-FL,8.2
-GA,8.8
-HI,5.4
-ID,6.6
-IL,8.8
-IN,8.4
-IA,5.1
-KS,5.6
-KY,8.1
-LA,5.9
-ME,7.2
-MD,6.8
-MA,6.7
-MI,9.1
-MN,5.6
-MS,9.1
-MO,6.7
-MT,5.8
-NE,3.9
-NV,10.3
-NH,5.7
-NJ,9.6
-NM,6.8
-NY,8.4
-NC,9.4
-ND,3.2
-OH,6.9
-OK,5.2
-OR,8.5
-PA,8
-RI,10.1
-SC,8.8
-SD,4.4
-TN,7.8
-TX,6.4
-UT,5.5
-VT,5
-VA,5.8
-WA,7.8
-WV,7.5
-WI,6.8
-WY,5.1
-""")
-    # CSV_FILE_NAME = 'temp_file.csv'  # Consider creating temp file, look URL below
-    # with open(CSV_FILE_NAME, 'w') as outfile:
-    #     outfile.write(TESTDATA)
-    # unemployment = pd.read_csv(CSV_FILE_NAME, sep=',')
+        try:
+            obj['properties']['confirmed'] = summary_json['countries'][summary_json_country]['confirmed']
+            obj['properties']['recovered'] = summary_json['countries'][summary_json_country]['recovered']
+            obj['properties']['deaths']    = summary_json['countries'][summary_json_country]['deaths']
+        except:
+            pass
+            # print(">>>{}".format(country)) # THIS SHOWS THE CNTRIES WHICH ARE NOT IN DUMMRY JSON
+            # CHECK FOR CGTRIES WHICH ARE IN SUMMARY_JSON BUT NOT IN OBJ
+    # print(geo_json_data)
+    countries_df = get_country_dataframes()
+    # print(countries_df)
+    
+    beep = "Dummy|0"
+    for country in summary_json['countries']:
+        deaths    = 0
+        confirmed = 0
+        recovered = 0
+        if ('deaths' in summary_json['countries'][country]):
+            deaths = summary_json['countries'][country]['deaths']
+        if ('confirmed' in summary_json['countries'][country]):
+            confirmed = summary_json['countries'][country]['confirmed']
+        if ('recovered' in summary_json['countries'][country]):
+            recovered = summary_json['countries'][country]['recovered']
+        try:
+            beep = beep + "\n" + "{}|{}".format(countries_df.loc[country,'alpha3'], confirmed)
+        except:
+            beep = beep + "\n" + "{}|{}".format(country, confirmed)
+            print(country)
 
-    unemployment = pd.read_csv(TESTDATA)
-    print(unemployment)
-    colormap = linear.YlGn_09.scale(
-    unemployment.Unemployment.min(),
-    unemployment.Unemployment.max())
-    unemployment_dict = unemployment.set_index('State')['Unemployment']
-    color_dict = {key: colormap(unemployment_dict[key]) for key in unemployment_dict.keys()}
-    m = folium.Map([43, -100], zoom_start=4)
-    tooltip=GeoJsonTooltip(
-        fields=["name"],
-        aliases=["name"],
-        localize=True,
-        sticky=False,
-        labels=True,
-        style="""
-            background-color: #F0EFEF;
-            border: 2px solid black;
-            border-radius: 3px;
-            box-shadow: 3px;
-        """,
+    TESTDATA = StringIO(beep)
+    unemployment_df = pd.read_csv(
+        TESTDATA,
+        sep="|",
+        names=["State","Unemployment"]
     )
-
+    # print(unemployment_df)
+    # print(colormap.linear.OrRd_09)
+    # colormap = linear.OrRd_09.scale(
+    #     unemployment_df.Unemployment.min(),
+    #     unemployment_df.Unemployment.max()
+    # )
+    linearrrr = cm.LinearColormap(
+        ['maroon','red'],
+        vmin=unemployment_df.Unemployment.min(), 
+        vmax=unemployment_df.Unemployment.max()
+    )
+    
+    unemployment_dict = unemployment_df.set_index('State')['Unemployment']
+    color_dict = {key: linearrrr(unemployment_dict[key]) for key in unemployment_dict.keys()}
+    # print(color_dict)
+    color_dict['USA'] = color_dict['US']
+    m = folium.Map([20.5937, 78.9629], zoom_start=1, tiles='CartoDB dark_matter') 
+    # tooltip=GeoJsonTooltip(
+    #     fields=["name"],
+    #     aliases=["name"],
+    #     localize=True,
+    #     sticky=False,
+    #     labels=True,
+    #     style="""
+    #         background-color: #F0EFEF;
+    #         border: 2px solid black;
+    #         border-radius: 3px;
+    #         box-shadow: 3px;
+    #     """,
+    # )
+    # print(color_dict.keys())
     folium.GeoJson(
         geo_json_data,
         style_function=lambda feature: {
-            'fillColor': color_dict[feature['id']],
-            'color': 'black',
-            'weight': 1,
-            'dashArray': '5, 5',
-            'fillOpacity': 0.9,
+            'fillColor':color_dict[feature['id']] if feature['id'] in color_dict.keys() else '#262626',
+            'color': 'white',
+            'weight': 0.3,
+            # 'dashArray': '5, 5',
+            'fillOpacity': 0.5,
         },
-        tooltip=tooltip
+        tooltip=folium.GeoJsonTooltip(
+            fields=['name','confirmed','recovered','deaths'],
+            aliases=['Country','Confirmed', 'Recovered', 'Deaths'],
+            localize=True
+        )
     ).add_to(m)
 
     # folium.LayerControl().add_to(m)
@@ -522,3 +439,266 @@ WY,5.1
         "summary": summary_feed.json()
     }
     return render(request, "index-a.html", context)
+
+
+def get_country_dataframes( ):
+
+    TESTDATA = StringIO("""
+Afghanistan|AFG
+Albania|ALB
+Algeria|DZA
+American Samoa|ASM
+Andorra|AND
+Angola|AGO
+Anguilla|AIA
+Antarctica|ATA
+Antigua and Barbuda|ATG
+Argentina|ARG
+Armenia|ARM
+Aruba|ABW
+Australia|AUS
+Austria|AUT
+Azerbaijan|AZE
+Bahamas|BHS
+Bahrain|BHR
+Bangladesh|BGD
+Barbados|BRB
+Belarus|BLR
+Belgium|BEL
+Belize|BLZ
+Benin|BEN
+Bermuda|BMU
+Bhutan|BTN
+Bolivia|BOL
+Bonaire, Sint Eustatius and Saba|BES
+Bosnia and Herzegovina|BIH
+Botswana|BWA
+Bouvet Island|BVT
+Brazil|BRA
+British Indian Ocean Territory (the)|IOT
+Brunei|BRN
+Bulgaria|BGR
+Burkina Faso|BFA
+Burundi|BDI
+Cabo Verde|CPV
+Cambodia|KHM
+Cameroon|CMR
+Canada|CAN
+Cayman Islands (the)|CYM
+Central African Republic|CAF
+Chad|TCD
+Chile|CHL
+China|CHN
+Christmas Island|CXR
+Cocos (Keeling) Islands (the)|CCK
+Colombia|COL
+Comoros (the)|COM
+Congo (Kinshasa)|COD
+Congo (Brazzaville)|COG
+Cook Islands (the)|COK
+Costa Rica|CRI
+Croatia|HRV
+Cuba|CUB
+Curaçao|CUW
+Cyprus|CYP
+Czechia|CZE
+Cote d'Ivoire|CIV
+Denmark|DNK
+Djibouti|DJI
+Dominica|DMA
+Dominican Republic|DOM
+Ecuador|ECU
+Egypt|EGY
+El Salvador|SLV
+Equatorial Guinea|GNQ
+Eritrea|ERI
+Estonia|EST
+Eswatini|SWZ
+Ethiopia|ETH
+Falkland Islands (the) [Malvinas]|FLK
+Faroe Islands (the)|FRO
+Fiji|FJI
+Finland|FIN
+France|FRA
+French Guiana|GUF
+French Polynesia|PYF
+French Southern Territories (the)|ATF
+Gabon|GAB
+Gambia|GMB
+Georgia|GEO
+Germany|DEU
+Ghana|GHA
+Gibraltar|GIB
+Greece|GRC
+Greenland|GRL
+Grenada|GRD
+Guadeloupe|GLP
+Guam|GUM
+Guatemala|GTM
+Guernsey|GGY
+Guinea|GIN
+Guinea-Bissau|GNB
+Guyana|GUY
+Haiti|HTI
+Heard Island and McDonald Islands|HMD
+Holy See|VAT
+Honduras|HND
+Hong Kong|HKG
+Hungary|HUN
+Iceland|ISL
+India|IND
+Indonesia|IDN
+Iran|IRN
+Iraq|IRQ
+Ireland|IRL
+Isle of Man|IMN
+Israel|ISR
+Italy|ITA
+Jamaica|JAM
+Japan|JPN
+Jersey|JEY
+Jordan|JOR
+Kazakhstan|KAZ
+Kenya|KEN
+Kiribati|KIR
+Korea, North|PRK
+Korea, South|KOR
+Kuwait|KWT
+Kyrgyzstan|KGZ
+Laos|LAO
+Latvia|LVA
+Lebanon|LBN
+Lesotho|LSO
+Liberia|LBR
+Libya|LBY
+Liechtenstein|LIE
+Lithuania|LTU
+Luxembourg|LUX
+Macao|MAC
+Madagascar|MDG
+Malawi|MWI
+Malaysia|MYS
+Maldives|MDV
+Mali|MLI
+Malta|MLT
+Marshall Islands (the)|MHL
+Martinique|MTQ
+Mauritania|MRT
+Mauritius|MUS
+Mayotte|MYT
+Mexico|MEX
+Micronesia (Federated States of)|FSM
+Moldova|MDA
+Monaco|MCO
+Mongolia|MNG
+Montenegro|MNE
+Montserrat|MSR
+Morocco|MAR
+Mozambique|MOZ
+Myanmar|MMR
+Burma|MMR
+Namibia|NAM
+Nauru|NRU
+Nepal|NPL
+Netherlands|NLD
+New Caledonia|NCL
+New Zealand|NZL
+Nicaragua|NIC
+Niger|NER
+Nigeria|NGA
+Niue|NIU
+Norfolk Island|NFK
+Northern Mariana Islands (the)|MNP
+Norway|NOR
+Oman|OMN
+Pakistan|PAK
+Palau|PLW
+Palestine, State of|PSE
+Panama|PAN
+Papua New Guinea|PNG
+Paraguay|PRY
+Peru|PER
+Philippines|PHL
+Pitcairn|PCN
+Poland|POL
+Portugal|PRT
+Puerto Rico|PRI
+Qatar|QAT
+North Macedonia|MKD
+Romania|ROU
+Russia|RUS
+Rwanda|RWA
+Réunion|REU
+Saint Barthélemy|BLM
+Saint Helena, Ascension and Tristan da Cunha|SHN
+Saint Kitts and Nevis|KNA
+Saint Lucia|LCA
+Saint Martin (French part)|MAF
+Saint Pierre and Miquelon|SPM
+Saint Vincent and the Grenadines|VCT
+Samoa|WSM
+San Marino|SMR
+Sao Tome and Principe|STP
+Saudi Arabia|SAU
+Senegal|SEN
+Serbia|SRB
+Seychelles|SYC
+Sierra Leone|SLE
+Singapore|SGP
+Sint Maarten (Dutch part)|SXM
+Slovakia|SVK
+Slovenia|SVN
+Solomon Islands|SLB
+Somalia|SOM
+South Africa|ZAF
+South Georgia and the South Sandwich Islands|SGS
+South Sudan|SSD
+Spain|ESP
+Sri Lanka|LKA
+Sudan|SDN
+Suriname|SUR
+Svalbard and Jan Mayen|SJM
+Sweden|SWE
+Switzerland|CHE
+Syria|SYR
+Taiwan*|TWN
+Tajikistan|TJK
+Tanzania|TZA
+Thailand|THA
+Timor-Leste|TLS
+Togo|TGO
+Tokelau|TKL
+Tonga|TON
+Trinidad and Tobago|TTO
+Tunisia|TUN
+Turkey|TUR
+Turkmenistan|TKM
+Turks and Caicos Islands (the)|TCA
+Tuvalu|TUV
+Uganda|UGA
+Ukraine|UKR
+United Arab Emirates|ARE
+United Kingdom|GBR
+United States Minor Outlying Islands (the)|UMI
+United States of America|USA
+Uruguay|URY
+Uzbekistan|UZB
+Vanuatu|VUT
+Venezuela|VEN
+Vietnam|VNM
+Virgin Islands (British)|VGB
+Virgin Islands (U.S.)|VIR
+Wallis and Futuna|WLF
+Western Sahara|ESH
+Yemen|YEM
+Zambia|ZMB
+Zimbabwe|ZWE
+Åland Islands|ALA
+""")
+    countries_df = pd.read_csv(
+        TESTDATA,
+        sep="|",
+        names=["Country","alpha3"]
+    )
+    countries_df.set_index('Country',inplace=True)
+    return countries_df
