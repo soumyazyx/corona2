@@ -388,7 +388,7 @@ def home_test(request):
     #     unemployment_df.Unemployment.max()
     # )
     linearrrr = cm.LinearColormap(
-        ['maroon','red'],
+        ['#fac4c4','#f8302e'],
         vmin=unemployment_df.Unemployment.min(), 
         vmax=unemployment_df.Unemployment.max()
     )
@@ -419,7 +419,7 @@ def home_test(request):
             'color': 'white',
             'weight': 0.3,
             # 'dashArray': '5, 5',
-            'fillOpacity': 0.5,
+            'fillOpacity': 0.9,
         },
         tooltip=folium.GeoJsonTooltip(
             fields=['name','confirmed','recovered','deaths'],
