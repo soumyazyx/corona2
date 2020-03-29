@@ -96,46 +96,6 @@
       }
 
       /* ------------------------------- */
-      /* Media Section
-      ---------------------------------- */
-      .media {
-        display: -ms-flexbox;
-        display: flex;
-        -ms-flex-align: start;
-        align-items: flex-start;
-      }
-      .d-flex {
-        display: -ms-flexbox !important;
-        display: flex !important;
-      }
-      .media .mr-3{
-        margin-right: 1rem !important;
-      }
-      .media img{
-        width: 48px !important;
-        height: 48px !important;
-        padding: 2px;
-        border: 2px solid #f4f4f4;
-      }
-      .media-body {
-        -ms-flex: 1;
-        flex: 1;
-        padding: .4rem !important;
-      }
-      .media-body p{
-        font-family: 'Rokkitt', serif;
-        font-weight: 500 !important;
-        font-size: 14px;
-        color: #88898a;
-      }
-      .media-body small span{
-        font-family: 'Rokkitt', serif;
-        font-size: 12px;
-        color: #aaa;
-        margin-right: 10px;
-      }
-
-      /* ------------------------------- */
       /* Cardbox Item
       ---------------------------------- */
       .cardbox .cardbox-item {
@@ -207,86 +167,6 @@
         border: 2px solid #fff;
       }
 
-
-      /* ------------------------------- */
-      /* Cardbox Comments
-      ---------------------------------- */
-      .cardbox-comments{
-        padding: 10px 40px 20px 40px !important;
-        font-size: 0px;
-        text-align: center;
-        display: inline-block;
-      }
-      .cardbox-comments .comment-avatar img{
-        margin-top: 1px;
-        margin-right: 10px;
-        position: relative;
-        display: inline-block;
-        text-align: center;
-        width: 40px;
-        height: 40px;
-      }
-      .cardbox-comments .comment-body {
-        overflow: auto;
-      }
-      .search {
-      position: relative;
-      right: -60px;
-      top: -40px;
-      margin-bottom: -40px;
-      border: 2px solid #f4f4f4;
-      width: 100%;
-      overflow: hidden;
-      }
-      .search input[type="text"] {
-      background-color: #fff;
-      line-height: 10px;
-      padding: 15px 60px 20px 10px;
-      border: none;
-      border-radius: 4px;
-      width: 350px;
-      font-family: 'Rokkitt', serif;
-      font-size: 14px;
-      color: #8d8d8d;
-      height: inherit;
-      font-weight: 700;
-      }
-      .search button {
-      position: absolute;
-      right: 0;
-      top: 0px;
-      border: none;
-      background-color: transparent;
-      color: #bbbbbb;
-      padding: 15px 25px;
-      cursor: pointer;
-
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      }
-      .search button i {
-      font-size: 20px;
-      line-height: 30px;
-      display: block;
-      }
-
-
-      /* ------------------------------- */
-      /* Author
-      ---------------------------------- */
-      .author a{
-      font-family: 'Rokkitt', serif;
-      font-size: 16px;
-      color: #00C4CF;
-      }
-      .author p{
-      font-family: 'Rokkitt', serif;
-      font-size: 16px;
-      color: #8d8d8d;
-      }
 
       /* Custom css */
       body {
@@ -374,8 +254,7 @@
                           <div class="col-xl-11 col-lg-11 col-md-11 col-sm-11 col-11">
                             <div class="row">
                               <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4">
-                                <div class="info-box">
-    
+                                <div class="info-box">    
                                   <div class="title orange">Confirmed</div>
                                   <div class="count orange" id="confirmed-count">--</div>
                                   <span id="spark-confirmed"></span>
@@ -411,13 +290,15 @@
                       <div class="row" >
                         <div class="col-sm-6" style="margin-bottom:40px;">
                           <table id="table-confirmed" class="table table-striped display" cellspacing="0" width="100%" >
-                            <thead>
-                              <tr>
-                                <th></th>
-                                <th class="orange" style='text-align:right'>Confirmed</th>
-                              </tr>
-                            </thead>
                             <tbody>
+                            
+                              <tr>
+                                <th width="35%">Country</th>
+                                <th style="text-align:right" class="orange"  width="20%">Confirmed</th>
+                                <th style="text-align:right" class="darkred" width="20%">Deaths</th>
+                                <th style="text-align:right" class="green"   width="25%">Recovered</th>
+                              </tr>
+                            
                             </tbody>
                           </table>
                         </div>
@@ -968,7 +849,6 @@
         Covid Map <br><small>Click on the country to know latest stats</small>
       </div>
     </div>
-    <br>
     <section>
       <div class="row">
         <div class="
@@ -987,26 +867,6 @@
     </section>
 
 
-    <!-- This section houses the tables  -->
-
-
-    <!-- <section class="hero">
-      <div class="row">
-        <div class="
-          col-xl-8 offset-xl-2
-          col-lg-8 offset-lg-2
-          col-md-12 offset-md-0
-          col-sm-12 offset-sm-0
-          col-12    offset-0">
-          <div class="cardbox shadow-222 ">
-            <div class="cardbox-item">
-              <img class="img-fluid" src="http://www.themashabrand.com/templates/bootsnipp/post/assets/img/1.jpg" alt="Image" style="width:100%">
-            </div>
-          </div>
-        </div>
-      </div>
-    </section> -->
-  
   </body>
   <script type='text/javascript' src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
   <script type='text/javascript' src='https://d3js.org/d3.v3.min.js'></script>
@@ -1071,7 +931,7 @@
 
 
 
-      var summary = JSON.parse(document.getElementById('summary-data').textContent);
+      var summary = JSON.parse(document.getElementById('summary-data').textContent);console.log(summary)
       var trend_deaths    = summary.trend_deaths;
       var trend_confirmed = summary.trend_confirmed;
       var trend_recovered = summary.trend_recovered;
@@ -1081,12 +941,21 @@
       $("#confirmed-count").text(summary.totals.total_confirmed.toLocaleString())
 
       //Populate confirmed table
-      $("#table-confirmed tr").remove();
+      // $("#table-confirmed tr").remove();
       $.each( summary.countriesSorted_Confirmed, function( index, value ){
         country = value;
         confirmed = summary.countries[value].confirmed;
-        $("#table-confirmed").last().append("<tr><td>"+value+"</td><td class='orange' style='text-align:right'><b>" + confirmed.toLocaleString() +"</b></td></tr>");
+        recovered = summary.countries[value].recovered;
+        deaths    = summary.countries[value].deaths;
+        $("#table-confirmed").last().append(
+          "<tr>" +
+            "<td>" + value + "</td>" +
+            "<td style='text-align:right' class='orange'>" + confirmed.toLocaleString() + "</td>" +            
+            "<td style='text-align:right' class='darkred'>" + deaths.toLocaleString()    + "</td>" +
+            "<td style='text-align:right' class='green'>"  + recovered.toLocaleString() + "</td>" +
+          "</tr>");
       });
+      
       //Populate deaths table
       $("#table-deaths tr").remove();
       $.each( summary.countriesSorted_Deaths, function( index, value ){
@@ -1213,6 +1082,7 @@
       // End-Globe
 
     });
+    
     $('#table-recovered').DataTable({
             scrollY: 150,
             scrollCollapse: true,
@@ -1221,14 +1091,8 @@
             ordering: false,
             info: false
           });
-          $('#table-confirmed').DataTable({
-            scrollY: 150,
-            scrollCollapse: true,
-            paging: false,
-            searching: false,
-            ordering: false,
-            info: false
-          });
+          
+          // $('#table-confirmed').DataTable();
           $('#table-deaths').DataTable({
             scrollY: 150,
             scrollCollapse: true,
@@ -1237,6 +1101,8 @@
             ordering: false,
             info: false
           });
+          // table.ajax.reload();
+          $('#table-confirmed').DataTable();
   </script>
 
 

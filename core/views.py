@@ -326,7 +326,6 @@ def findTrend(stats_type):
 
 
 def home_test(request):
-    return render(request, "jpopup.html", {'context':'a'})
     model_values = Record.objects.all().filter(stats_type='deaths').values(
         'latitude',
         'longitude',
@@ -438,6 +437,7 @@ def home_test(request):
         "data": list(model_values),
         "summary": summary_feed.json()
     }
+          
     return render(request, "index-a.html", context)
 
 def home(request):
