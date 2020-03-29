@@ -288,15 +288,18 @@
                   <div class="card-body" style="padding:0">
                     <section class="wrapper">
                       <div class="row" >
-                        <div class="col-sm-6" style="margin-bottom:1rem;padding:0">
+                        <div class="col-sm-12 col-lg-12" style="margin-bottom:1rem;padding:0">
                           <table id="table-confirmed" class="table table-striped display" cellspacing="0" width="100%" >
-                            <tbody>                            
+                            <thead>
                               <tr>
-                                <td width="35%">Country</td>
-                                <td style="text-align:right" class="orange"  width="20%">Confirmed</td>
-                                <td style="text-align:right" class="darkred" width="20%">Deaths</td>
-                                <td style="text-align:right" class="green"   width="25%">Recovered</td>
-                              </tr>                            
+                                <th width="30%">Country</th>
+                                <th width="25%" style="text-align:left" class="orange" >Confirmed</th>
+                                <th width="20%" style="text-align:left" class="darkred">Deaths</th>
+                                <th width="25%" style="text-align:left" class="green"  >Recovered</th>
+                              </tr>
+                            </thead>
+                            <tbody>                            
+                              
                             </tbody>
                           </table>
                         </div>
@@ -916,18 +919,31 @@
 
       //Populate confirmed table
       // $("#table-confirmed tr").remove();
+      var table = $('#table-confirmed').DataTable({
+        "columns": [
+          { className: "dummy"},
+          { className: "orange"},
+          { className: "darkred"},
+          { className: "green"}
+        ],
+        "info": false,
+        "paging": false,
+        "searching": false,
+        "order": [[ 1, "desc" ]]
+      }); 
       $.each( summary.countriesSorted_Confirmed, function( index, value ){
         country = value;
         confirmed = summary.countries[value].confirmed;
         recovered = summary.countries[value].recovered;
         deaths    = summary.countries[value].deaths;
-        $("#table-confirmed").last().append(
-          "<tr>" +
-            "<td>" + value + "</td>" +
-            "<td style='text-align:right' class='orange'>" + confirmed.toLocaleString() + "</td>" +            
-            "<td style='text-align:right' class='darkred'>" + deaths.toLocaleString()    + "</td>" +
-            "<td style='text-align:right' class='green'>"  + recovered.toLocaleString() + "</td>" +
-          "</tr>");
+        table.row.add([country, confirmed, deaths, recovered]).draw();
+        // $("#table-confirmed").last().append(
+        //   "<tr>" +
+        //     "<td>" + value + "</td>" +
+        //     "<td style='text-align:right' class='orange'>" + confirmed.toLocaleString() + "</td>" +            
+        //     "<td style='text-align:right' class='darkred'>" + deaths.toLocaleString()    + "</td>" +
+        //     "<td style='text-align:right' class='green'>"  + recovered.toLocaleString() + "</td>" +
+        //   "</tr>");
       });
       
       //Populate deaths table
@@ -1067,16 +1083,10 @@
           });
           
           // $('#table-confirmed').DataTable();
-          $('#table-deaths').DataTable({
-            scrollY: 150,
-            scrollCollapse: true,
-            paging: false,
-            searching: false,
-            ordering: false,
-            info: false
-          });
+          
+          // $('#table-confirmed').DataTable().reload();
           // table.ajax.reload();
-          $('#table-confirmed').DataTable();
+          // $('#table-confirmed').ajax.DataTable();
   </script>
 
 
