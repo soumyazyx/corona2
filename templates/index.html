@@ -1,42 +1,312 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Corona globe">
     <meta name="author" content="Soumya">
     <meta name="keyword" content="Corona, globe, world, covid, covid19">
-    <link rel="shortcut icon" href="{% static 'img/favicon.png' %}">
-    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
-    <link href="{% static 'css/bootstrap-theme.css' %}" rel="stylesheet">
-    <link href="{% static 'css/elegant-icons-style.css' %}" rel="stylesheet" />
-    <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" />
-    <link href="{% static 'assets/fullcalendar/fullcalendar/bootstrap-fullcalendar.css' %}" rel="stylesheet" />
-    <link href="{% static 'assets/fullcalendar/fullcalendar/fullcalendar.css' %}" rel="stylesheet" />
-    <link href="{% static 'assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css' %}" rel="stylesheet" type="text/css" media="screen" />
-    <link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}" type="text/css">
-    <link href="{% static 'css/jquery-jvectormap-1.2.2.css' %}" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/fullcalendar.css' %}">
-    <link href="{% static 'css/widgets.css' %}" rel="stylesheet">
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
-    <link href="{% static 'css/style-responsive.css' %}" rel="stylesheet" />
-    <link href="{% static 'css/xcharts.min.css' %}" rel=" stylesheet">
-    <link href="{% static 'css/jquery-ui-1.10.4.min.css' %}" rel="stylesheet">
 
-    <title>Corona</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="https://fonts.googleapis.com/css?family=Rokkitt" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Barlow&display=swap" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet">
+
     <style>
-      body { background:#222;}
+      /*
+      *
+      * ===========================================================
+      *     HERO SECTION
+      * ===========================================================
+      *
+      */
+      @import url(https://fonts.googleapis.com/css?family=Lato:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
+      @import url(line-icons.css);
+
+      body {
+        padding: 1rem;
+        font-family:'Varela Round', sans-serif
+      }
+      .separator {
+        padding:.5rem;
+        /* font-weight: bold; */
+        color:white;
+        font-size: 1rem;
+        /* text-transform: uppercase; */
+        letter-spacing: .1rem;
+        background-color: rgba(209, 187, 149, .8)
+      
+      }
+      .hero {
+        /* padding: 6.25rem 0px !important; */
+        padding: 0 1rem !important;
+        /* margin: 1rem !important; */
+      }
+      .cardbox {
+        border-radius: 3px;
+        margin-bottom: 20px;
+        padding: 0px !important;
+      }
+
+      /* ------------------------------- */
+      /* Cardbox Heading
+      ---------------------------------- */
+      .cardbox .cardbox-heading {
+        padding: 16px;
+        margin: 0;
+      }
+      .cardbox .btn-flat.btn-flat-icon {
+      border-radius: 50%;
+      font-size: 24px;
+      height: 32px;
+      width: 32px;
+      padding: 0;
+      overflow: hidden;
+      color: #fff !important;
+      background: #b5b6b6;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      }
+      .cardbox .float-right .dropdown-menu{
+        position: relative;
+        left: 13px !important;
+      }
+      .cardbox .float-right a:hover{
+        background: #f4f4f4 !important;
+      }
+      .cardbox .float-right a.dropdown-item {
+        display: block;
+        width: 100%;
+        padding: 4px 0px 4px 10px;
+        clear: both;
+        font-weight: 400;
+        font-family: 'Abhaya Libre', serif;
+        font-size: 14px !important;
+        color: #848484;
+        text-align: inherit;
+        white-space: nowrap;
+        background: 0 0;
+        border: 0;
+      }
+
+      /* ------------------------------- */
+      /* Media Section
+      ---------------------------------- */
+      .media {
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-align: start;
+        align-items: flex-start;
+      }
+      .d-flex {
+        display: -ms-flexbox !important;
+        display: flex !important;
+      }
+      .media .mr-3{
+        margin-right: 1rem !important;
+      }
+      .media img{
+        width: 48px !important;
+        height: 48px !important;
+        padding: 2px;
+        border: 2px solid #f4f4f4;
+      }
+      .media-body {
+        -ms-flex: 1;
+        flex: 1;
+        padding: .4rem !important;
+      }
+      .media-body p{
+        font-family: 'Rokkitt', serif;
+        font-weight: 500 !important;
+        font-size: 14px;
+        color: #88898a;
+      }
+      .media-body small span{
+        font-family: 'Rokkitt', serif;
+        font-size: 12px;
+        color: #aaa;
+        margin-right: 10px;
+      }
+
+      /* ------------------------------- */
+      /* Cardbox Item
+      ---------------------------------- */
+      .cardbox .cardbox-item {
+          position: relative;
+          display: block;
+      }
+      .cardbox .cardbox-item img{
+      }
+      .img-responsive{
+          display: block;
+          max-width: 100%;
+          height: auto;
+      }
+      .fw {
+      width: 100% !important;
+      height: auto;
+      }
+
+
+      /* ------------------------------- */
+      /* Cardbox Base
+      ---------------------------------- */
+      .cardbox-base{
+      border-bottom: 2px solid #f4f4f4;
+      }
+      .cardbox-base ul{
+      margin: 10px 0px 10px 15px!important;
+      padding: 10px !important;
+      font-size: 0px;
+        display: inline-block;
+      }
+      .cardbox-base li {
+        list-style: none;
+        margin: 0px 0px 0px -8px !important;
+        padding: 0px 0px 0px 0px !important;
+        display: inline-block;
+      }
+
+      .cardbox-base li a{
+        margin: 0px !important;
+        padding: 0px !important;
+      }
+      .cardbox-base li a i{
+      position: relative;
+      top: 4px;
+      font-size: 16px;
+      color: #8d8d8d;
+      margin-right: 15px;
+      }
+      .cardbox-base li a span{
+      font-family: 'Rokkitt', serif;
+      font-size: 14px;
+      color: #8d8d8d;
+      margin-left: 20px;
+      position: relative;
+      top: 5px;
+      }
+      .cardbox-base li a em{
+      font-family: 'Rokkitt', serif;
+      font-size: 14px;
+      color: #8d8d8d;
+      position: relative;
+      top: 3px;
+      }
+      .cardbox-base li a img{
+        width: 25px;
+        height: 25px;
+        margin: 0px !important;
+        border: 2px solid #fff;
+      }
+
+
+      /* ------------------------------- */
+      /* Cardbox Comments
+      ---------------------------------- */
+      .cardbox-comments{
+        padding: 10px 40px 20px 40px !important;
+        font-size: 0px;
+        text-align: center;
+        display: inline-block;
+      }
+      .cardbox-comments .comment-avatar img{
+        margin-top: 1px;
+        margin-right: 10px;
+        position: relative;
+        display: inline-block;
+        text-align: center;
+        width: 40px;
+        height: 40px;
+      }
+      .cardbox-comments .comment-body {
+        overflow: auto;
+      }
+      .search {
+      position: relative;
+      right: -60px;
+      top: -40px;
+      margin-bottom: -40px;
+      border: 2px solid #f4f4f4;
+      width: 100%;
+      overflow: hidden;
+      }
+      .search input[type="text"] {
+      background-color: #fff;
+      line-height: 10px;
+      padding: 15px 60px 20px 10px;
+      border: none;
+      border-radius: 4px;
+      width: 350px;
+      font-family: 'Rokkitt', serif;
+      font-size: 14px;
+      color: #8d8d8d;
+      height: inherit;
+      font-weight: 700;
+      }
+      .search button {
+      position: absolute;
+      right: 0;
+      top: 0px;
+      border: none;
+      background-color: transparent;
+      color: #bbbbbb;
+      padding: 15px 25px;
+      cursor: pointer;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      }
+      .search button i {
+      font-size: 20px;
+      line-height: 30px;
+      display: block;
+      }
+
+
+      /* ------------------------------- */
+      /* Author
+      ---------------------------------- */
+      .author a{
+      font-family: 'Rokkitt', serif;
+      font-size: 16px;
+      color: #00C4CF;
+      }
+      .author p{
+      font-family: 'Rokkitt', serif;
+      font-size: 16px;
+      color: #8d8d8d;
+      }
+
+      /* Custom css */
+      body {
+        line-height:1;
+      }
       .info-box {
         padding: 5px;
-        margin-bottom: 5px;
         min-height: 0;
         text-align: center;
         border: 0;
         box-shadow: none;
+        text-transform: uppercase;
       }
       .info-box .count {
-        margin-top: 0;
+
+        /* margin-top: 0; */
+        /* padding-bottom: .1em;; */
+        /* font-size: 34px; */
+        /* font-weight: 300; */
+        font-weight: bold
       }
       .darkred {
         color: tomato;
@@ -47,10 +317,6 @@
       .orange {
         color: orange;
       }
-      .table-resp-150{
-          max-height: 150px;
-          overflow:auto;
-      }
       .height-150{
           max-height: 150px;
           overflow:auto;
@@ -60,193 +326,816 @@
       }
       td, th {
           padding: 2px !important;
-          border-top: 1px solid #444 !important;
+          border-top: 1px solid #EEE !important;
       }
-      #table-confirmed {
-        background: black;
+      table.dataTable thead th, table.dataTable thead td {
+        border: none
       }
-      #table-recovered {
-        background: black;
+      .btn.focus, .btn:focus {
+          box-shadow: none;
       }
-      #table-deaths {
-        background: black;
-      }
-
     </style>
+  </head>
 
-</head>
-
-<body>
-
+  <body>
     {{ data|json_script:"hello-data" }}
     {{ summary|json_script:"summary-data" }}
-    <header class="header">
-      <a href="mailto:soumyazyx@gmail.com?Subject=Hi%20There" target="_top" class="logo" style="color:#00a0df">
-          <span class="profile-ava">
-              <img alt="" src="{% static 'img/avatar1_soumya.jpg' %}">
-          </span>
-          Corona
-          <span class="lite">
-              <small><small><small>&nbsp;</small></small></small>
-          </span>
-      </a>
-    </header>
+    <br><br>
+    <div class=row>
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12"
+      style="
+        padding:.5rem;
+        font-weight: bold;
+        color:rgba(209, 187, 149, 1);
+        font-size: 1.5rem;
+        text-transform: uppercase;
+        letter-spacing: 2.5px;">
+        COVID-19
+      </div>
+    </div>
+    <div class=row>
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 separator">
+        GLOBAL SITUATION
+      </div>
+    </div>
+    <div class="bs-example">
+      <div class="accordion" id="accordionExample">
+          <div class="card" style="border: none">
+              <div class="card-header" id="headingOne" style="background: none;border:none">
+                  <h2 class="mb-0">
+                      <button
+                        type="button"
+                        class="btn"
+                        data-toggle="collapse"
+                        data-target="#collapseOne"
+                        style="padding:0; margin:0; width:100%; background:none;">
 
-    <br/><br/><br/>
-
+                        <div class="row">
+                          <div class="col-xl-11 col-lg-11 col-md-11 col-sm-11 col-11">
+                            <div class="row">
+                              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+                                <div class="info-box">
     
-    <div class="container">
-      
-      <!-- Place the globe at center -->
+                                  <div class="title orange">Confirmed</div>
+                                  <div class="count orange" id="confirmed-count">--</div>
+                                  <span id="spark-confirmed"></span>
+                                </div>
+                              </div><!--/ col-lg-4 -->
+                              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+                                <div class="info-box">
+                                  <div class="title green">Recovered</div>
+                                  <div class="count green" id="recovered-count">--</div>
+                                  <span id="spark-recovered"></span>
+                                </div>
+                              </div><!--/ col-lg-4 -->
+                              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+                                <div class="info-box">
+                                  <div class="title darkred">Deaths</div>
+                                  <div class="count darkred" id="deaths-count">--</div>
+                                  <span id="spark-deaths"></span>
+                                </div>
+                              </div><!--/ col-lg-4 -->
+                            </div>
+                          </div>                          
+                          <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-1">
+                            <i class="fa fa-angle-right fa-2x text-blue" style="margin-top:20px;color:#708090"></i>
+                          </div>
+                        </div> <!--/ row -->
+                        
+                      </button>
+                  </h2>
+              </div>
+              <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                  <div class="card-body">
+                    <section class="wrapper">
+                      <div class="row" >
+                        <div class="col-sm-6" style="margin-bottom:40px;">
+                          <table id="table-confirmed" class="table table-striped display" cellspacing="0" width="100%" >
+                            <thead>
+                              <tr>
+                                <th></th>
+                                <th class="orange" style='text-align:right'>Confirmed</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                          </table>
+                        </div>
+                        <div class="col-sm-6" style="margin-bottom:40px;">
+                          <table id="table-recovered" class="table table-striped display" cellspacing="0" width="100%">
+                            <thead>
+                              <tr>
+                                <th></th>
+                                <th class="green" style='text-align:right'>Recovered</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-6" style="margin-bottom:40px;">
+                          <table id="table-deaths" class="table table-striped display" cellspacing="0" width="100%">
+                            <thead>
+                              <tr>
+                                <th></th>
+                                <th class="darkred" style='text-align:right'>Deaths</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div> <!-- ./row -->
+                      <div class="row" style="display: none">
+                        <div class="col-sm-6" style="margin-bottom:40px;">
+                         <table id="dtBasicExample" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                           <thead>
+                             <tr>
+                               <th class="th-sm">wow
+                               </th>
+                               <th class="th-sm">Position
+                               </th>
+                               <th class="th-sm">Office
+                               </th>
+                               <th class="th-sm">Age
+                               </th>
+                               <th class="th-sm">Start date
+                               </th>
+                               <th class="th-sm">Salary
+                               </th>
+                             </tr>
+                           </thead>
+                           <tbody>
+                             <tr>
+                               <td>Tiger Nixon</td>
+                               <td>System Architect</td>
+                               <td>Edinburgh</td>
+                               <td>61</td>
+                               <td>2011/04/25</td>
+                               <td>$320,800</td>
+                             </tr>
+                             <tr>
+                               <td>Garrett Winters</td>
+                               <td>Accountant</td>
+                               <td>Tokyo</td>
+                               <td>63</td>
+                               <td>2011/07/25</td>
+                               <td>$170,750</td>
+                             </tr>
+                             <tr>
+                               <td>Ashton Cox</td>
+                               <td>Junior Technical Author</td>
+                               <td>San Francisco</td>
+                               <td>66</td>
+                               <td>2009/01/12</td>
+                               <td>$86,000</td>
+                             </tr>
+                             <tr>
+                               <td>Cedric Kelly</td>
+                               <td>Senior Javascript Developer</td>
+                               <td>Edinburgh</td>
+                               <td>22</td>
+                               <td>2012/03/29</td>
+                               <td>$433,060</td>
+                             </tr>
+                             <tr>
+                               <td>Airi Satou</td>
+                               <td>Accountant</td>
+                               <td>Tokyo</td>
+                               <td>33</td>
+                               <td>2008/11/28</td>
+                               <td>$162,700</td>
+                             </tr>
+                             <tr>
+                               <td>Brielle Williamson</td>
+                               <td>Integration Specialist</td>
+                               <td>New York</td>
+                               <td>61</td>
+                               <td>2012/12/02</td>
+                               <td>$372,000</td>
+                             </tr>
+                             <tr>
+                               <td>Herrod Chandler</td>
+                               <td>Sales Assistant</td>
+                               <td>San Francisco</td>
+                               <td>59</td>
+                               <td>2012/08/06</td>
+                               <td>$137,500</td>
+                             </tr>
+                             <tr>
+                               <td>Rhona Davidson</td>
+                               <td>Integration Specialist</td>
+                               <td>Tokyo</td>
+                               <td>55</td>
+                               <td>2010/10/14</td>
+                               <td>$327,900</td>
+                             </tr>
+                             <tr>
+                               <td>Colleen Hurst</td>
+                               <td>Javascript Developer</td>
+                               <td>San Francisco</td>
+                               <td>39</td>
+                               <td>2009/09/15</td>
+                               <td>$205,500</td>
+                             </tr>
+                             <tr>
+                               <td>Sonya Frost</td>
+                               <td>Software Engineer</td>
+                               <td>Edinburgh</td>
+                               <td>23</td>
+                               <td>2008/12/13</td>
+                               <td>$103,600</td>
+                             </tr>
+                             <tr>
+                               <td>Jena Gaines</td>
+                               <td>Office Manager</td>
+                               <td>London</td>
+                               <td>30</td>
+                               <td>2008/12/19</td>
+                               <td>$90,560</td>
+                             </tr>
+                             <tr>
+                               <td>Quinn Flynn</td>
+                               <td>Support Lead</td>
+                               <td>Edinburgh</td>
+                               <td>22</td>
+                               <td>2013/03/03</td>
+                               <td>$342,000</td>
+                             </tr>
+                             <tr>
+                               <td>Charde Marshall</td>
+                               <td>Regional Director</td>
+                               <td>San Francisco</td>
+                               <td>36</td>
+                               <td>2008/10/16</td>
+                               <td>$470,600</td>
+                             </tr>
+                             <tr>
+                               <td>Haley Kennedy</td>
+                               <td>Senior Marketing Designer</td>
+                               <td>London</td>
+                               <td>43</td>
+                               <td>2012/12/18</td>
+                               <td>$313,500</td>
+                             </tr>
+                             <tr>
+                               <td>Tatyana Fitzpatrick</td>
+                               <td>Regional Director</td>
+                               <td>London</td>
+                               <td>19</td>
+                               <td>2010/03/17</td>
+                               <td>$385,750</td>
+                             </tr>
+                             <tr>
+                               <td>Michael Silva</td>
+                               <td>Marketing Designer</td>
+                               <td>London</td>
+                               <td>66</td>
+                               <td>2012/11/27</td>
+                               <td>$198,500</td>
+                             </tr>
+                             <tr>
+                               <td>Paul Byrd</td>
+                               <td>Chief Financial Officer (CFO)</td>
+                               <td>New York</td>
+                               <td>64</td>
+                               <td>2010/06/09</td>
+                               <td>$725,000</td>
+                             </tr>
+                             <tr>
+                               <td>Gloria Little</td>
+                               <td>Systems Administrator</td>
+                               <td>New York</td>
+                               <td>59</td>
+                               <td>2009/04/10</td>
+                               <td>$237,500</td>
+                             </tr>
+                             <tr>
+                               <td>Bradley Greer</td>
+                               <td>Software Engineer</td>
+                               <td>London</td>
+                               <td>41</td>
+                               <td>2012/10/13</td>
+                               <td>$132,000</td>
+                             </tr>
+                             <tr>
+                               <td>Dai Rios</td>
+                               <td>Personnel Lead</td>
+                               <td>Edinburgh</td>
+                               <td>35</td>
+                               <td>2012/09/26</td>
+                               <td>$217,500</td>
+                             </tr>
+                             <tr>
+                               <td>Jenette Caldwell</td>
+                               <td>Development Lead</td>
+                               <td>New York</td>
+                               <td>30</td>
+                               <td>2011/09/03</td>
+                               <td>$345,000</td>
+                             </tr>
+                             <tr>
+                               <td>Yuri Berry</td>
+                               <td>Chief Marketing Officer (CMO)</td>
+                               <td>New York</td>
+                               <td>40</td>
+                               <td>2009/06/25</td>
+                               <td>$675,000</td>
+                             </tr>
+                             <tr>
+                               <td>Caesar Vance</td>
+                               <td>Pre-Sales Support</td>
+                               <td>New York</td>
+                               <td>21</td>
+                               <td>2011/12/12</td>
+                               <td>$106,450</td>
+                             </tr>
+                             <tr>
+                               <td>Doris Wilder</td>
+                               <td>Sales Assistant</td>
+                               <td>Sidney</td>
+                               <td>23</td>
+                               <td>2010/09/20</td>
+                               <td>$85,600</td>
+                             </tr>
+                             <tr>
+                               <td>Angelica Ramos</td>
+                               <td>Chief Executive Officer (CEO)</td>
+                               <td>London</td>
+                               <td>47</td>
+                               <td>2009/10/09</td>
+                               <td>$1,200,000</td>
+                             </tr>
+                             <tr>
+                               <td>Gavin Joyce</td>
+                               <td>Developer</td>
+                               <td>Edinburgh</td>
+                               <td>42</td>
+                               <td>2010/12/22</td>
+                               <td>$92,575</td>
+                             </tr>
+                             <tr>
+                               <td>Jennifer Chang</td>
+                               <td>Regional Director</td>
+                               <td>Singapore</td>
+                               <td>28</td>
+                               <td>2010/11/14</td>
+                               <td>$357,650</td>
+                             </tr>
+                             <tr>
+                               <td>Brenden Wagner</td>
+                               <td>Software Engineer</td>
+                               <td>San Francisco</td>
+                               <td>28</td>
+                               <td>2011/06/07</td>
+                               <td>$206,850</td>
+                             </tr>
+                             <tr>
+                               <td>Fiona Green</td>
+                               <td>Chief Operating Officer (COO)</td>
+                               <td>San Francisco</td>
+                               <td>48</td>
+                               <td>2010/03/11</td>
+                               <td>$850,000</td>
+                             </tr>
+                             <tr>
+                               <td>Shou Itou</td>
+                               <td>Regional Marketing</td>
+                               <td>Tokyo</td>
+                               <td>20</td>
+                               <td>2011/08/14</td>
+                               <td>$163,000</td>
+                             </tr>
+                             <tr>
+                               <td>Michelle House</td>
+                               <td>Integration Specialist</td>
+                               <td>Sidney</td>
+                               <td>37</td>
+                               <td>2011/06/02</td>
+                               <td>$95,400</td>
+                             </tr>
+                             <tr>
+                               <td>Suki Burks</td>
+                               <td>Developer</td>
+                               <td>London</td>
+                               <td>53</td>
+                               <td>2009/10/22</td>
+                               <td>$114,500</td>
+                             </tr>
+                             <tr>
+                               <td>Prescott Bartlett</td>
+                               <td>Technical Author</td>
+                               <td>London</td>
+                               <td>27</td>
+                               <td>2011/05/07</td>
+                               <td>$145,000</td>
+                             </tr>
+                             <tr>
+                               <td>Gavin Cortez</td>
+                               <td>Team Leader</td>
+                               <td>San Francisco</td>
+                               <td>22</td>
+                               <td>2008/10/26</td>
+                               <td>$235,500</td>
+                             </tr>
+                             <tr>
+                               <td>Martena Mccray</td>
+                               <td>Post-Sales support</td>
+                               <td>Edinburgh</td>
+                               <td>46</td>
+                               <td>2011/03/09</td>
+                               <td>$324,050</td>
+                             </tr>
+                             <tr>
+                               <td>Unity Butler</td>
+                               <td>Marketing Designer</td>
+                               <td>San Francisco</td>
+                               <td>47</td>
+                               <td>2009/12/09</td>
+                               <td>$85,675</td>
+                             </tr>
+                             <tr>
+                               <td>Howard Hatfield</td>
+                               <td>Office Manager</td>
+                               <td>San Francisco</td>
+                               <td>51</td>
+                               <td>2008/12/16</td>
+                               <td>$164,500</td>
+                             </tr>
+                             <tr>
+                               <td>Hope Fuentes</td>
+                               <td>Secretary</td>
+                               <td>San Francisco</td>
+                               <td>41</td>
+                               <td>2010/02/12</td>
+                               <td>$109,850</td>
+                             </tr>
+                             <tr>
+                               <td>Vivian Harrell</td>
+                               <td>Financial Controller</td>
+                               <td>San Francisco</td>
+                               <td>62</td>
+                               <td>2009/02/14</td>
+                               <td>$452,500</td>
+                             </tr>
+                             <tr>
+                               <td>Timothy Mooney</td>
+                               <td>Office Manager</td>
+                               <td>London</td>
+                               <td>37</td>
+                               <td>2008/12/11</td>
+                               <td>$136,200</td>
+                             </tr>
+                             <tr>
+                               <td>Jackson Bradshaw</td>
+                               <td>Director</td>
+                               <td>New York</td>
+                               <td>65</td>
+                               <td>2008/09/26</td>
+                               <td>$645,750</td>
+                             </tr>
+                             <tr>
+                               <td>Olivia Liang</td>
+                               <td>Support Engineer</td>
+                               <td>Singapore</td>
+                               <td>64</td>
+                               <td>2011/02/03</td>
+                               <td>$234,500</td>
+                             </tr>
+                             <tr>
+                               <td>Bruno Nash</td>
+                               <td>Software Engineer</td>
+                               <td>London</td>
+                               <td>38</td>
+                               <td>2011/05/03</td>
+                               <td>$163,500</td>
+                             </tr>
+                             <tr>
+                               <td>Sakura Yamamoto</td>
+                               <td>Support Engineer</td>
+                               <td>Tokyo</td>
+                               <td>37</td>
+                               <td>2009/08/19</td>
+                               <td>$139,575</td>
+                             </tr>
+                             <tr>
+                               <td>Thor Walton</td>
+                               <td>Developer</td>
+                               <td>New York</td>
+                               <td>61</td>
+                               <td>2013/08/11</td>
+                               <td>$98,540</td>
+                             </tr>
+                             <tr>
+                               <td>Finn Camacho</td>
+                               <td>Support Engineer</td>
+                               <td>San Francisco</td>
+                               <td>47</td>
+                               <td>2009/07/07</td>
+                               <td>$87,500</td>
+                             </tr>
+                             <tr>
+                               <td>Serge Baldwin</td>
+                               <td>Data Coordinator</td>
+                               <td>Singapore</td>
+                               <td>64</td>
+                               <td>2012/04/09</td>
+                               <td>$138,575</td>
+                             </tr>
+                             <tr>
+                               <td>Zenaida Frank</td>
+                               <td>Software Engineer</td>
+                               <td>New York</td>
+                               <td>63</td>
+                               <td>2010/01/04</td>
+                               <td>$125,250</td>
+                             </tr>
+                             <tr>
+                               <td>Zorita Serrano</td>
+                               <td>Software Engineer</td>
+                               <td>San Francisco</td>
+                               <td>56</td>
+                               <td>2012/06/01</td>
+                               <td>$115,000</td>
+                             </tr>
+                             <tr>
+                               <td>Jennifer Acosta</td>
+                               <td>Junior Javascript Developer</td>
+                               <td>Edinburgh</td>
+                               <td>43</td>
+                               <td>2013/02/01</td>
+                               <td>$75,650</td>
+                             </tr>
+                             <tr>
+                               <td>Cara Stevens</td>
+                               <td>Sales Assistant</td>
+                               <td>New York</td>
+                               <td>46</td>
+                               <td>2011/12/06</td>
+                               <td>$145,600</td>
+                             </tr>
+                             <tr>
+                               <td>Hermione Butler</td>
+                               <td>Regional Director</td>
+                               <td>London</td>
+                               <td>47</td>
+                               <td>2011/03/21</td>
+                               <td>$356,250</td>
+                             </tr>
+                             <tr>
+                               <td>Lael Greer</td>
+                               <td>Systems Administrator</td>
+                               <td>London</td>
+                               <td>21</td>
+                               <td>2009/02/27</td>
+                               <td>$103,500</td>
+                             </tr>
+                             <tr>
+                               <td>Jonas Alexander</td>
+                               <td>Developer</td>
+                               <td>San Francisco</td>
+                               <td>30</td>
+                               <td>2010/07/14</td>
+                               <td>$86,500</td>
+                             </tr>
+                             <tr>
+                               <td>Shad Decker</td>
+                               <td>Regional Director</td>
+                               <td>Edinburgh</td>
+                               <td>51</td>
+                               <td>2008/11/13</td>
+                               <td>$183,000</td>
+                             </tr>
+                             <tr>
+                               <td>Michael Bruce</td>
+                               <td>Javascript Developer</td>
+                               <td>Singapore</td>
+                               <td>29</td>
+                               <td>2011/06/27</td>
+                               <td>$183,000</td>
+                             </tr>
+                             <tr>
+                               <td>Donna Snider</td>
+                               <td>Customer Support</td>
+                               <td>New York</td>
+                               <td>27</td>
+                               <td>2011/01/25</td>
+                               <td>$112,000</td>
+                             </tr>
+                           </tbody>
+
+                         </table>
+
+
+                        </div>
+                      </div> <!-- ./row -->
+                    </section>
+
+                  </div>
+              </div>
+          </div>
+
+
+      </div>
+  </div>
+  <div class=row>
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 separator">
+      COVID GLOBE
+      <br><small> Ping radius reflects count of confirmed cases
+    </div>
+  </div>
+  <br>
+    <section class="">
       <div class="row">
-        <div class="text-center">
-          <canvas id='globe' height=400 width=400></canvas>
+        <div class="
+          col-xl-12 offset-xl-0
+          col-lg-12 offset-lg-0
+          col-md-12 offset-md-0
+          col-sm-12 offset-sm-0
+          col-12    offset-0">
+          <div class="cardbox">
+            <div class="cardbox-item text-center">
+              <canvas id='globe' height=350 width=350></canvas>
+            </div><!--/ cardbox-item -->
+          </div><!--/ cardbox -->
+        </div><!--/ col-lg-6 -->
+      </div><!--/ row -->
+    </section>
+    <div class=row>
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 separator">
+        COVID MAP <br><small>Click on country to know latest stats</small>
+      </div>
+    </div>
+    <section>
+      <div class="row">
+        <div class="
+          col-xl-12 offset-xl-0
+          col-lg-12 offset-lg-0
+          col-md-12 offset-md-0
+          col-sm-12 offset-sm-0
+          col-12    offset-0" style="padding: 0">
+          <div class="cardbox">
+            <div class="cardbox-item text-center">
+              <iframe frameBorder="0" id="foo" style="width:100%;height:350px;" srcdoc='{{map_html|escape}}'></iframe>
+            </div><!--/ cardbox-item -->
+          </div><!--/ cardbox -->
+        </div><!--/ col-lg-6 -->
+      </div><!--/ row -->
+    </section>
+
+
+    <!-- This section houses the tables  -->
+
+
+    <!-- <section class="hero">
+      <div class="row">
+        <div class="
+          col-xl-8 offset-xl-2
+          col-lg-8 offset-lg-2
+          col-md-12 offset-md-0
+          col-sm-12 offset-sm-0
+          col-12    offset-0">
+          <div class="cardbox shadow-222 ">
+            <div class="cardbox-item">
+              <img class="img-fluid" src="http://www.themashabrand.com/templates/bootsnipp/post/assets/img/1.jpg" alt="Image" style="width:100%">
+            </div>
+          </div>
         </div>
       </div>
+    </section> -->
+  
+  </body>
+  <script type='text/javascript' src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+  <script type='text/javascript' src='https://d3js.org/d3.v3.min.js'></script>
+  <script type='text/javascript' src='https://d3js.org/topojson.v1.min.js'></script>
+  <script type='text/javascript' src='https://cdn.rawgit.com/BinaryMuse/planetary.js/v1.1.2/dist/planetaryjs.min.js'></script>
+  <!-- <script src="{% static 'js/jquery-1.8.3.min.js' %}"></script> -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="{% static 'js/sparklines.js' %}"></script>
+  <script src="{% static 'js/jquery.sparkline.js' %}" type="text/javascript"></script>
+  <script src="{% static 'js/sparkline-chart.js' %}"></script>
+  <script src="{% static 'js/jquery.scrollTo.min.js' %}"></script>
+  <script src="{% static 'js/jquery.nicescroll.js' %}" type="text/javascript"></script>
+  <script src="{% static 'js/jquery.slimscroll.min.js' %}"></script>
+  <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+  <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> -->
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
 
-      <!-- Info-box and spark line for confirmed -->
-      <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-          <div class="info-box">
-            <div class="count orange" id="confirmed-count">--</div>
-            <div class="title orange">Confirmed</div>
-          </div>
-        </div>
-        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-          <section class="panel transparent">
-            <span id="spark-confirmed"></span>
-          </section>
-        </div>
-      </div>
-      <!-- Info-box and spark line for recovered -->
-      <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-          <div class="info-box">
-            <div class="count green" id="recovered-count">--</div>
-            <div class="title green">Recovered</div>
-          </div>
-        </div>
-        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-          <section class="panel transparent">
-            <span id="spark-recovered"></span>
-          </section>
-        </div>
-      </div>
-      <!-- Info-box and spark line for deaths -->
-      <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-          <div class="info-box">
-            <div class="count darkred" id="deaths-count">--</div>
-            <div class="title darkred">Deaths</div>
-          </div>
-        </div>
-        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-          <section class="panel transparent" >
-            <span id="spark-deaths"></span>
-          </section>
-        </div>
-      </div> <!-- /.row -->
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script> -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
+  <script>
+    $(function() {
+      console.log("wow");
+      $('#dtBasicExample').DataTable({
+        // scrollY: 150,
+        // scrollCollapse: true,
+        info: false,
+        paging: false,
+        searching: false
+      });
+      $('.dataTables_length').addClass('bs-select');
 
-      <!-- This section houses the tables  -->
-      <section class="wrapper">
-        <div class="row" >
-          <div class="col-sm-6" style="margin-bottom:40px;">
-            <table id="table-confirmed" class="display" cellspacing="0" width="100%" >
-              <thead>
-                <tr style="background:black">
-                  <th></th>
-                  <th class="orange" style='text-align:right'>Confirmed</th>
-                </tr>
-              </thead>
-              <tbody>
-              </tbody>
-            </table>
-          </div>
-          <div class="col-sm-6" style="margin-bottom:40px;">
-            <table id="table-recovered" class="display" cellspacing="0" width="100%">
-              <thead>
-                <tr style="background:black">
-                  <th></th>
-                  <th class="green" style='text-align:right'>Recovered</th>
-                </tr>
-              </thead>
-              <tbody>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-6" style="margin-bottom:40px;">
-            <table id="table-deaths" class="display" cellspacing="0" width="100%">
-              <thead>
-                <tr style="background:black">
-                  <th></th>
-                  <th class="darkred" style='text-align:right'>Deaths</th>
-                </tr>
-              </thead>
-              <tbody>
-              </tbody>
-            </table>
-          </div>          
-        </div> <!-- ./row -->
-      </section>
+      // Add minus icon for collapse element which is open by default
+      $(".collapse.show").each(function(){
+        	$(this).prev(".card-header").find(".fa").addClass("fa-angle-up").removeClass("fa-angle-right");
+        });
 
-      <!-- <div class="jumbotron">
-        <h1>Navbar example</h1>
-        <p>This example is a quick exercise to illustrate how the default, static and fixed to top navbar work. It includes the responsive CSS and HTML, so it also adapts to your viewport and device.</p>
-        <p>To see the difference between static and fixed top navbars, just scroll.</p>
-        <p>
-          <a class="btn btn-lg btn-primary" href="../../components/#navbar" role="button">View navbar docs &raquo;</a>
-        </p>
-        <span id="spark-1"></span>
-      </div> -->
+        // Toggle plus minus icon on show hide of collapse element
+        $(".collapse").on('show.bs.collapse', function(){
+        	$(this).prev(".card-header").find(".fa").removeClass("fa-angle-right").addClass("fa-angle-up");
+        }).on('hide.bs.collapse', function(){
+        	$(this).prev(".card-header").find(".fa").removeClass("fa-angle-up").addClass("fa-angle-right");
+        });
 
+      // var canvas = document.getElementById("globe");
+      // canvas.width = window.innerWidth;
+      // canvas.height = window.innerHeight;
+      // console.log(canvas.height);
+      // console.log(canvas.width);
 
-    </div> <!-- /container -->
+      // var w = window,
+      // d = document,
+      // e = d.documentElement,
+      // g = d.getElementsByTagName('body')[0],
+      // xS = w.innerWidth || e.clientWidth || g.clientWidth,
+      // yS = w.innerHeight|| e.clientHeight|| g.clientHeight;
+      // console.log(xS + ' × ' + yS);
+      // canvas.width = xS;
+      // canvas.height = yS;
 
 
 
 
 
+      var summary = JSON.parse(document.getElementById('summary-data').textContent);
+      var trend_deaths    = summary.trend_deaths;
+      var trend_confirmed = summary.trend_confirmed;
+      var trend_recovered = summary.trend_recovered;
 
-    <script src="{% static 'js/jquery.js' %}"></script>
-    <script src="{% static 'js/jquery-ui-1.10.4.min.js' %}"></script>
-    <script src="{% static 'js/jquery-1.8.3.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/jquery-ui-1.9.2.custom.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'js/jquery.scrollTo.min.js' %}"></script>
-    <script src="{% static 'js/jquery.nicescroll.js' %}" type="text/javascript"></script>
-    <script src="{% static 'assets/jquery-knob/js/jquery.knob.js' %}"></script>
-    <script src="{% static 'js/jquery.sparkline.js' %}" type="text/javascript"></script>
-    <script src="{% static 'assets/jquery-easy-pie-chart/jquery.easy-pie-chart.js' %}"></script>
-    <script src="{% static 'js/owl.carousel.js' %}"></script>
-    <script src="{% static 'js/fullcalendar.min.js' %}"></script>
-    <script src="{% static 'assets/fullcalendar/fullcalendar/fullcalendar.js' %}"></script>
-    <script src="{% static 'js/calendar-custom.js' %}"></script>
-    <script src="{% static 'js/jquery.rateit.min.js' %}"></script>
-    <script src="{% static 'js/jquery.customSelect.min.js' %}"></script>
-    <script src="{% static 'assets/chart-master/Chart.js' %}"></script>
-    <script src="{% static 'js/scripts.js' %}"></script>
-    <script src="{% static 'js/sparkline-chart.js' %}"></script>
-    <script src="{% static 'js/easy-pie-chart.js' %}"></script>
-    <script src="{% static 'js/jquery-jvectormap-1.2.2.min.js' %}"></script>
-    <script src="{% static 'js/jquery-jvectormap-world-mill-en.js' %}"></script>
-    <script src="{% static 'js/xcharts.min.js' %}"></script>
-    <script src="{% static 'js/jquery.autosize.min.js' %}"></script>
-    <script src="{% static 'js/jquery.placeholder.min.js' %}"></script>
-    <script src="{% static 'js/gdp-data.js' %}"></script>
-    <script src="{% static 'js/morris.min.js' %}"></script>
-    <script src="{% static 'js/sparklines.js' %}"></script>
-    <script src="{% static 'js/charts.js' %}"></script>
-    <script src="{% static 'js/jquery.slimscroll.min.js' %}"></script>
-    <script type='text/javascript' src='https://d3js.org/d3.v3.min.js'></script>
-    <script type='text/javascript' src='https://d3js.org/topojson.v1.min.js'></script>
-    <script type='text/javascript' src='https://cdn.rawgit.com/BinaryMuse/planetary.js/v1.1.2/dist/planetaryjs.min.js'></script>
-    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-    
-    <script type="text/javascript">
-        var arr = JSON.parse(document.getElementById('hello-data').textContent);
+      $("#deaths-count").text(summary.totals.total_deaths.toLocaleString())
+      $("#recovered-count").text(summary.totals.total_recovered.toLocaleString())
+      $("#confirmed-count").text(summary.totals.total_confirmed.toLocaleString())
+
+      //Populate confirmed table
+      $("#table-confirmed tr").remove();
+      $.each( summary.countriesSorted_Confirmed, function( index, value ){
+        country = value;
+        confirmed = summary.countries[value].confirmed;
+        $("#table-confirmed").last().append("<tr><td>"+value+"</td><td class='orange' style='text-align:right'><b>" + confirmed.toLocaleString() +"</b></td></tr>");
+      });
+      //Populate deaths table
+      $("#table-deaths tr").remove();
+      $.each( summary.countriesSorted_Deaths, function( index, value ){
+        country = value;
+        deaths = summary.countries[value].deaths;
+        $("#table-deaths").last().append("<tr><td>"+value +"</td><td class='darkred' style='text-align:right'><b>" + deaths.toLocaleString() +"</b></td></tr>");
+      });
+      //Populate recoverd table
+      $("#table-recovered tr").remove();
+      $.each( summary.countriesSorted_Recovered, function( index, value ){
+        country = value;
+        recovered = summary.countries[value].recovered;
+        $("#table-recovered").last().append(
+          "<tr><td>"+value +"</td><td class='green' style='text-align:right'><b>" + recovered.toLocaleString() +"</b></td></tr>");
+      });
+
+      $('#spark-confirmed').sparkline(trend_confirmed, {
+        height: 40,
+        width: '100%',
+        lineWidth: 2,
+        fillColor: false,
+        lineColor: "orange",
+        spotColor: 'orange',
+        spotRadius: 2
+      });
+      $('#spark-recovered').sparkline(trend_recovered, {
+        height: 40,
+        width: '100%',
+        fillColor: false,
+        lineColor: "#26c281",
+        spotColor: '#26c281',
+        spotRadius: 2,
+        lineWidth: 2
+      });
+      $('#spark-deaths').sparkline(trend_deaths, {
+        height: 40,
+        width: '100%',
+        fillColor: false,
+        lineColor: "tomato",
+        spotColor: 'tomato',
+        spotRadius: 2,
+        lineWidth: 2
+      });
+
+
+      // Globe
+
+
+
+      var arr = JSON.parse(document.getElementById('hello-data').textContent);
         var planet = planetaryjs.planet();
         // You can remove this statement if `world-110m.json` is in the same path as the HTML page:
         planet.loadPlugin(
@@ -254,7 +1143,8 @@
                 topojson: {
                     file: 'https://raw.githubusercontent.com/BinaryMuse/planetary.js/v1.1.2/dist/world-110m.json'
                 },
-                oceans:   { fill:   '#000' },
+                // oceans:   { fill:   '#000' },
+                oceans:   { fill:   '#aad3df' },
                 land:     { fill:   '#4CAF50' },
                 borders:  { stroke: '#1B5E20' }
             })
@@ -269,7 +1159,7 @@
         }));
 
         // Make the planet fit well in its canvas
-        planet.projection.scale(200).translate([200, 200]);
+        planet.projection.scale(175).translate([175, 175]);
         var canvas = document.getElementById('globe');
         planet.draw(canvas);
 
@@ -318,101 +1208,11 @@
                 // console.log("defaulted:" + computedAngle);
                 planet.plugins.pings.add(lng, lat, { color: 'red', ttl: 1500, angle: computedAngle});
             }
-        }, 1000);
-    </script>
-    <script>
-      var summary = JSON.parse(document.getElementById('summary-data').textContent);
-      $("#deaths-count").text(summary.totals.total_deaths.toLocaleString())
-      $("#recovered-count").text(summary.totals.total_recovered.toLocaleString())
-      $("#confirmed-count").text(summary.totals.total_confirmed.toLocaleString())
+        }, 1500);
+      // End-Globe
 
-      //Populate confirmed table
-      $.each( summary.countriesSorted_Confirmed, function( index, value ){
-        country = value;
-        confirmed = summary.countries[value].confirmed;
-        $("#table-confirmed").last().append("<tr><td>"+value+"</td><td class='orange' style='text-align:right'><b>" + confirmed.toLocaleString() +"</b></td></tr>");
-      });
-      //Populate deaths table
-      $.each( summary.countriesSorted_Deaths, function( index, value ){
-        country = value;
-        deaths = summary.countries[value].deaths;
-        $("#table-deaths").last().append("<tr><td>"+value +"</td><td class='darkred' style='text-align:right'><b>" + deaths.toLocaleString() +"</b></td></tr>");
-      });
-      //Populate recoverd table
-      $.each( summary.countriesSorted_Recovered, function( index, value ){
-        country = value;
-        recovered = summary.countries[value].recovered;
-        $("#table-recovered").last().append(
-          "<tr style='background:black'><td>"+value +"</td><td class='green' style='text-align:right'><b>" + recovered.toLocaleString() +"</b></td></tr>");
-      });
-
-      // Spark lines
-      // console.log(summary.trend_deaths);
-      // console.log(summary.trend_confirmed);
-      // console.log(summary.trend_recovered);
-
-    var trend_deaths    = summary.trend_deaths;
-    var trend_confirmed = summary.trend_confirmed;
-    var trend_recovered = summary.trend_recovered;
-
-    $('#spark-confirmed').sparkline(trend_confirmed, {
-      height: 50,
-      width: '100%',
-      fillColor: false,
-      lineColor: "orange"
     });
-    $('#spark-recovered').sparkline(trend_recovered, {
-      height: 50,
-      width: '100%',
-      fillColor: false,
-      lineColor: "#26c281"
-    });
-    $('#spark-deaths').sparkline(trend_deaths, {
-      height: 50,
-      width: '100%',
-      fillColor: false,
-      lineColor: "tomato"
-    });
-
-
-    // $('#spark-1').sparkline(trend_recovered, {
-    //   // changeRangeMin: -10,
-    //   // chartRangeMax: 10,
-    //   lineColor: "#26c281",
-    //   composite: true,
-    //   fillColor: false
-    // });
-    // $('#spark-1').sparkline(trend_deaths, {
-    //   // changeRangeMin: -10,
-    //   // chartRangeMax: 10,
-    //   lineColor: "tomato",
-    //   composite: true,
-    //   fillColor: false
-    // });
-
-    </script>
-    <!-- <script>
-    $(document).ready(function() {
-        console.log("`")
-        var json = (function () {
-            var json = null;
-            $.ajax({
-                'async': false,
-                'global': false,
-                'url': 'https://coronazyx.herokuapp.com/api/coronafeed',
-                'dataType': "json",
-                'success': function (data) {
-                    json = data;
-                }
-            });
-            console.log(json);
-        })();
-    });
-
-      </script>     -->
-      <script>
-        $(function() {
-          $('#table-recovered').DataTable({
+    $('#table-recovered').DataTable({
             scrollY: 150,
             scrollCollapse: true,
             paging: false,
@@ -436,7 +1236,11 @@
             ordering: false,
             info: false
           });
-        });
-      </script>
-</body>
+  </script>
+
+
+
 </html>
+
+
+<!-- https://bootsnipp.com/snippets/VgkqV -->
