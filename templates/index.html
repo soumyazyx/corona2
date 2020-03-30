@@ -318,6 +318,19 @@
           angle: 1
         })
       );
+      planet.loadPlugin(planetaryjs.plugins.zoom({
+        scaleExtent: [100, 500]
+      }));
+      planet.loadPlugin(planetaryjs.plugins.drag({
+        // Dragging the globe should pause the
+        // automatic rotation until we release the mouse.
+        onDragStart: function() {
+          this.plugins.autorotate.pause();
+        },
+        onDragEnd: function() {
+          this.plugins.autorotate.resume();
+        }
+      }));
       // Make the planet fit well in its canvas
       planet.projection.scale(175).translate([175, 175]);
       var canvas = document.getElementById('globe');
