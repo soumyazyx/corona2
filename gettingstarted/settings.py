@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = "CHANGE_ME!!!! (P.S. the SECRET_KEY environment variable will be used, if set, instead)."
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -80,13 +80,14 @@ WSGI_APPLICATION = "gettingstarted.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "d8b9v29eemh0dp",
-        "USER": "nfdpvvawqxoudq",
-        "PASSWORD": "40cd295ff43bbe4c2c765ad4e45f359a1c5c22f2b8929be12d4be9dffcb523d6",
-        "HOST": "ec2-54-147-209-121.compute-1.amazonaws.com",
+        "NAME": "d5bbbijocpu6hk",
+        "USER": "lfhryaadvfcvco",
+        "PASSWORD": "5b11e2552491ee96af5fafed86989774b5d9f954266786db2000e152a33cb68f",
+        "HOST": "ec2-34-195-169-25.compute-1.amazonaws.com",
         "PORT": "5432"
     }
 }
+# postgres://lfhryaadvfcvco:5b11e2552491ee96af5fafed86989774b5d9f954266786db2000e152a33cb68f@ec2-34-195-169-25.compute-1.amazonaws.com:5432/d5bbbijocpu6hk
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
