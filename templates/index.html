@@ -81,7 +81,6 @@
   <body>
     {{ data|json_script:"hello-data" }}
     {{ summary|json_script:"summary-data" }}
-    <br><br>
     <div class=row>
       <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12"
         style="
@@ -170,31 +169,7 @@
         </div>
       </div>
     </div>
-    <div class=row>
-      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 separator">
-        <span style="letter-spacing:2px">COVID GLOBE</span>
-        <br>
-        <small> Size of ping reflects count of confirmed cases</small>
-      </div>
-    </div>
-    <br>
-    <!-- Globe section -->
-    <section>
-      <div class="row">
-        <div class="
-          col-xl-12 offset-xl-0
-          col-lg-12 offset-lg-0
-          col-md-12 offset-md-0
-          col-sm-12 offset-sm-0
-          col-12    offset-0">
-          <div class="cardbox">
-            <div class="cardbox-item text-center">
-              <canvas id='globe' height=350 width=350></canvas>
-            </div><!--/ cardbox-item -->
-          </div><!--/ cardbox -->
-        </div><!--/ col-lg-6 -->
-      </div><!--/ row -->
-    </section>
+    
     <!-- Choropleth map -->
     <div class=row>
       <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 separator">
@@ -211,7 +186,7 @@
           col-md-12 offset-md-0
           col-sm-12 offset-sm-0
           col-12    offset-0" style="padding: 0">
-          <div class="cardbox">
+          <div class="">
             <div class="cardbox-item text-center">
               <iframe frameBorder="0" id="foo" style="width:100%;height:350px;" srcdoc='{{map_html|escape}}'></iframe>
             </div><!--/ cardbox-item -->
@@ -219,6 +194,34 @@
         </div><!--/ col-lg-6 -->
       </div><!--/ row -->
     </section>
+
+    <div class=row>
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 separator">
+          <span style="letter-spacing:2px">COVID GLOBE</span>
+          <br>
+          <small> Size of ping reflects count of confirmed cases</small>
+        </div>
+      </div>
+      <br>
+      <!-- Globe section -->
+      <section>
+        <div class="row">
+          <div class="
+            col-xl-12 offset-xl-0
+            col-lg-12 offset-lg-0
+            col-md-12 offset-md-0
+            col-sm-12 offset-sm-0
+            col-12    offset-0">
+            <div class="cardbox">
+              <div class="cardbox-item text-center">
+                <canvas id='globe' height=350 width=350></canvas>
+              </div><!--/ cardbox-item -->
+            </div><!--/ cardbox -->
+          </div><!--/ col-lg-6 -->
+        </div><!--/ row -->
+      </section>
+
+
   </body>
   
   <script type='text/javascript' src='https://d3js.org/d3.v3.min.js'></script>
@@ -371,15 +374,17 @@
           lng = obj.longitude;
           lat = obj.latitude;
           latestDeathCount = obj.latest_stats_value;
-          computedAngle = latestDeathCount%100;
+          computedAngle = latestDeathCount/1000;
+          //   console.log("Count:" + latestDeathCount)
+          //   console.log("Angle:" + computedAngle)
           // console.log("Computed:" + computedAngle);
           // Set the angle at minimum of 3
           if (computedAngle < 2){ computedAngle = 2}
-          if (computedAngle > 15){ computedAngle = 15}
+          if (computedAngle > 5){ computedAngle = 5}
           // console.log("defaulted:" + computedAngle);
-          planet.plugins.pings.add(lng, lat, { color: 'red', ttl: 1500, angle: computedAngle});
+          planet.plugins.pings.add(lng, lat, { color: 'red', ttl: 1000, angle: computedAngle});
         }
-      }, 1500);
+      }, 1000);
     }
 
   </script>

@@ -4,6 +4,7 @@ from django.db import models
 class Record(models.Model):
     state_province     = models.CharField(max_length=255, default='')
     country_region     = models.CharField(max_length=255, default='')
+    country_alpha3     = models.CharField(max_length=3,   default='')
     latitude           = models.CharField(max_length=255, default=0)
     longitude          = models.CharField(max_length=255, default=0)
     stats_type         = models.CharField(max_length=255, default='')
@@ -18,9 +19,10 @@ class Record(models.Model):
 
 
 class Summary(models.Model):
-    
+
     added_ts = models.DateTimeField(auto_now_add=True)
     json_string = models.TextField(default='')
 
     def __str__(self):
         return "{}|{}".format(self.added_ts, self.json_string[:10])
+

@@ -81,6 +81,7 @@
   <body>
     {{ data|json_script:"hello-data" }}
     {{ summary|json_script:"summary-data" }}
+    <br><br>
     <div class=row>
       <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12"
         style="
@@ -169,7 +170,31 @@
         </div>
       </div>
     </div>
-    
+    <div class=row>
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 separator">
+        <span style="letter-spacing:2px">COVID GLOBE</span>
+        <br>
+        <small> Size of ping reflects count of confirmed cases</small>
+      </div>
+    </div>
+    <br>
+    <!-- Globe section -->
+    <section>
+      <div class="row">
+        <div class="
+          col-xl-12 offset-xl-0
+          col-lg-12 offset-lg-0
+          col-md-12 offset-md-0
+          col-sm-12 offset-sm-0
+          col-12    offset-0">
+          <div class="cardbox">
+            <div class="cardbox-item text-center">
+              <canvas id='globe' height=350 width=350></canvas>
+            </div><!--/ cardbox-item -->
+          </div><!--/ cardbox -->
+        </div><!--/ col-lg-6 -->
+      </div><!--/ row -->
+    </section>
     <!-- Choropleth map -->
     <div class=row>
       <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 separator">
@@ -186,7 +211,7 @@
           col-md-12 offset-md-0
           col-sm-12 offset-sm-0
           col-12    offset-0" style="padding: 0">
-          <div class="">
+          <div class="cardbox">
             <div class="cardbox-item text-center">
               <iframe frameBorder="0" id="foo" style="width:100%;height:350px;" srcdoc='{{map_html|escape}}'></iframe>
             </div><!--/ cardbox-item -->
@@ -194,34 +219,6 @@
         </div><!--/ col-lg-6 -->
       </div><!--/ row -->
     </section>
-
-    <div class=row>
-        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 separator">
-          <span style="letter-spacing:2px">COVID GLOBE</span>
-          <br>
-          <small> Size of ping reflects count of confirmed cases</small>
-        </div>
-      </div>
-      <br>
-      <!-- Globe section -->
-      <section>
-        <div class="row">
-          <div class="
-            col-xl-12 offset-xl-0
-            col-lg-12 offset-lg-0
-            col-md-12 offset-md-0
-            col-sm-12 offset-sm-0
-            col-12    offset-0">
-            <div class="cardbox">
-              <div class="cardbox-item text-center">
-                <canvas id='globe' height=350 width=350></canvas>
-              </div><!--/ cardbox-item -->
-            </div><!--/ cardbox -->
-          </div><!--/ col-lg-6 -->
-        </div><!--/ row -->
-      </section>
-
-
   </body>
   
   <script type='text/javascript' src='https://d3js.org/d3.v3.min.js'></script>
@@ -241,18 +238,18 @@
 
   <script>
     $(function() {
-      
-      var cntry = {"AFG":"Afghanistan","ALB":"Albania","DZA":"Algeria","AND":"Andorra","AGO":"Angola","ATG":"AntiguaandBarbuda","ARG":"Argentina","ARM":"Armenia","AUS":"Australia","AUT":"Austria","AZE":"Azerbaijan","BHS":"Bahamas","BHR":"Bahrain","BGD":"Bangladesh","BRB":"Barbados","BLR":"Belarus","BEL":"Belgium","BLZ":"Belize","BEN":"Benin","BTN":"Bhutan","BOL":"Bolivia(PlurinationalStateof)","BIH":"BosniaandHerzegovina","BWA":"Botswana","BRA":"Brazil","BRN":"BruneiDarussalam","BGR":"Bulgaria","BFA":"BurkinaFaso","BDI":"Burundi","CPV":"CaboVerde","KHM":"Cambodia","CMR":"Cameroon","CAN":"Canada","CAF":"CentralAfricanRepublic","TCD":"Chad","CHL":"Chile","CHN":"China","COL":"Colombia","COM":"Comoros","COG":"Congo","COD":"Congo,DemocraticRepublicofthe","CRI":"CostaRica","CIV":"Côted'Ivoire","HRV":"Croatia","CUB":"Cuba","CYP":"Cyprus","CZE":"Czechia","DNK":"Denmark","DJI":"Djibouti","DMA":"Dominica","DOM":"DominicanRepublic","ECU":"Ecuador","EGY":"Egypt","SLV":"ElSalvador","GNQ":"EquatorialGuinea","ERI":"Eritrea","EST":"Estonia","SWZ":"Eswatini","ETH":"Ethiopia","FJI":"Fiji","FIN":"Finland","FRA":"France","GAB":"Gabon","GMB":"Gambia","GEO":"Georgia","DEU":"Germany","GHA":"Ghana","GRC":"Greece","GRD":"Grenada","GTM":"Guatemala","GIN":"Guinea","GNB":"Guinea-Bissau","GUY":"Guyana","HTI":"Haiti","HND":"Honduras","HUN":"Hungary","ISL":"Iceland","IND":"India","IDN":"Indonesia","IRN":"Iran(IslamicRepublicof)","IRQ":"Iraq","IRL":"Ireland","ISR":"Israel","ITA":"Italy","JAM":"Jamaica","JPN":"Japan","JOR":"Jordan","KAZ":"Kazakhstan","KEN":"Kenya","KIR":"Kiribati","PRK":"Korea(DemocraticPeople'sRepublicof)","KOR":"Korea,Republicof","KWT":"Kuwait","KGZ":"Kyrgyzstan","LAO":"LaoPeople'sDemocraticRepublic","LVA":"Latvia","LBN":"Lebanon","LSO":"Lesotho","LBR":"Liberia","LBY":"Libya","LIE":"Liechtenstein","LTU":"Lithuania","LUX":"Luxembourg","MDG":"Madagascar","MWI":"Malawi","MYS":"Malaysia","MDV":"Maldives","MLI":"Mali","MLT":"Malta","MHL":"MarshallIslands","MRT":"Mauritania","MUS":"Mauritius","MEX":"Mexico","FSM":"Micronesia(FederatedStatesof)","MDA":"Moldova,Republicof","MCO":"Monaco","MNG":"Mongolia","MNE":"Montenegro","MAR":"Morocco","MOZ":"Mozambique","MMR":"Myanmar","NAM":"Namibia","NRU":"Nauru","NPL":"Nepal","NLD":"Netherlands","NZL":"NewZealand","NIC":"Nicaragua","NER":"Niger","NGA":"Nigeria","MKD":"NorthMacedonia","NOR":"Norway","OMN":"Oman","PAK":"Pakistan","PLW":"Palau","PAN":"Panama","PNG":"PapuaNewGuinea","PRY":"Paraguay","PER":"Peru","PHL":"Philippines","POL":"Poland","PRT":"Portugal","QAT":"Qatar","ROU":"Romania","RUS":"RussianFederation","RWA":"Rwanda","KNA":"SaintKittsandNevis","LCA":"SaintLucia","VCT":"SaintVincentandtheGrenadines","WSM":"Samoa","SMR":"SanMarino","STP":"SaoTomeandPrincipe","SAU":"SaudiArabia","SEN":"Senegal","SRB":"Serbia","SYC":"Seychelles","SLE":"SierraLeone","SGP":"Singapore","SVK":"Slovakia","SVN":"Slovenia","SLB":"SolomonIslands","SOM":"Somalia","ZAF":"SouthAfrica","SSD":"SouthSudan","ESP":"Spain","LKA":"SriLanka","SDN":"Sudan","SUR":"Suriname","SWE":"Sweden","CHE":"Switzerland","SYR":"SyrianArabRepublic","TJK":"Tajikistan","TZA":"Tanzania,UnitedRepublicof","THA":"Thailand","TLS":"Timor-Leste","TGO":"Togo","TON":"Tonga","TTO":"TrinidadandTobago","TUN":"Tunisia","TUR":"Turkey","TKM":"Turkmenistan","TUV":"Tuvalu","UGA":"Uganda","UKR":"Ukraine","ARE":"UnitedArabEmirates","GBR":"UnitedKingdomofGreatBritainandNorthernIreland","USA":"UnitedStatesofAmerica","URY":"Uruguay","UZB":"Uzbekistan","VUT":"Vanuatu","VEN":"Venezuela(BolivarianRepublicof)","VNM":"VietNam","YEM":"Yemen","ZMB":"Zambia","ZWE":"Zimbabwe"};
-      
       var summary = JSON.parse(document.getElementById('summary-data').textContent);
       jQuery("time.timeago").timeago();
-      
+      console.log(jQuery.timeago(summary.utc_dt));
       $("#lastrefreshed").text(jQuery.timeago(summary.utc_dt));
+      console.log(summary)
       
       var offset = moment().utcOffset();
       var localText = moment.utc(summary.utc_dt).utcOffset(offset).format("L LT");
+      console.log(summary.utc_dt);
+      console.log(localText);
       handleCollapsibleCountSection();
-      handleCountDataTable(summary,cntry);
+      handleCountDataTable(summary);
       handleSparks(summary);
       handleGlobe();
     });
@@ -270,8 +267,8 @@
       });
     }
 
-    function handleCountDataTable(summary,cntry){
-      var cntry = {"AFG":"Afghanistan","ALB":"Albania","DZA":"Algeria","AND":"Andorra","AGO":"Angola","ATG":"Antigua and Barbuda","ARG":"Argentina","ARM":"Armenia","AUS":"Australia","AUT":"Austria","AZE":"Azerbaijan","BHS":"Bahamas","BHR":"Bahrain","BGD":"Bangladesh","BRB":"Barbados","BLR":"Belarus","BEL":"Belgium","BLZ":"Belize","BEN":"Benin","BTN":"Bhutan","BOL":"Bolivia (Plurinational State of)","BIH":"Bosnia and Herzegovina","BWA":"Botswana","BRA":"Brazil","BRN":"Brunei Darussalam","BGR":"Bulgaria","BFA":"Burkina Faso","BDI":"Burundi","CPV":"Cabo Verde","KHM":"Cambodia","CMR":"Cameroon","CAN":"Canada","CAF":"Central African Republic","TCD":"Chad","CHL":"Chile","CHN":"China","COL":"Colombia","COM":"Comoros","COG":"Congo","COD":"Congo, Democratic Republic of the","CRI":"Costa Rica","CIV":"Côte d'Ivoire","HRV":"Croatia","CUB":"Cuba","CYP":"Cyprus","CZE":"Czechia","DNK":"Denmark","DJI":"Djibouti","DMA":"Dominica","DOM":"Dominican Republic","ECU":"Ecuador","EGY":"Egypt","SLV":"El Salvador","GNQ":"Equatorial Guinea","ERI":"Eritrea","EST":"Estonia","SWZ":"Eswatini","ETH":"Ethiopia","FJI":"Fiji","FIN":"Finland","FRA":"France","GAB":"Gabon","GMB":"Gambia","GEO":"Georgia","DEU":"Germany","GHA":"Ghana","GRC":"Greece","GRD":"Grenada","GTM":"Guatemala","GIN":"Guinea","GNB":"Guinea-Bissau","GUY":"Guyana","HTI":"Haiti","HND":"Honduras","HUN":"Hungary","ISL":"Iceland","IND":"India","IDN":"Indonesia","IRN":"Iran (Islamic Republic of)","IRQ":"Iraq","IRL":"Ireland","ISR":"Israel","ITA":"Italy","JAM":"Jamaica","JPN":"Japan","JOR":"Jordan","KAZ":"Kazakhstan","KEN":"Kenya","KIR":"Kiribati","PRK":"Korea (Democratic People's Republic of)","KOR":"Korea, Republic of","KWT":"Kuwait","KGZ":"Kyrgyzstan","LAO":"Lao People's Democratic Republic","LVA":"Latvia","LBN":"Lebanon","LSO":"Lesotho","LBR":"Liberia","LBY":"Libya","LIE":"Liechtenstein","LTU":"Lithuania","LUX":"Luxembourg","MDG":"Madagascar","MWI":"Malawi","MYS":"Malaysia","MDV":"Maldives","MLI":"Mali","MLT":"Malta","MHL":"Marshall Islands","MRT":"Mauritania","MUS":"Mauritius","MEX":"Mexico","FSM":"Micronesia (Federated States of)","MDA":"Moldova, Republic of","MCO":"Monaco","MNG":"Mongolia","MNE":"Montenegro","MAR":"Morocco","MOZ":"Mozambique","MMR":"Myanmar","NAM":"Namibia","NRU":"Nauru","NPL":"Nepal","NLD":"Netherlands","NZL":"New Zealand","NIC":"Nicaragua","NER":"Niger","NGA":"Nigeria","MKD":"North Macedonia","NOR":"Norway","OMN":"Oman","PAK":"Pakistan","PLW":"Palau","PAN":"Panama","PNG":"Papua New Guinea","PRY":"Paraguay","PER":"Peru","PHL":"Philippines","POL":"Poland","PRT":"Portugal","QAT":"Qatar","ROU":"Romania","RUS":"Russian Federation","RWA":"Rwanda","KNA":"Saint Kitts and Nevis","LCA":"Saint Lucia","VCT":"Saint Vincent and the Grenadines","WSM":"Samoa","SMR":"San Marino","STP":"Sao Tome and Principe","SAU":"Saudi Arabia","SEN":"Senegal","SRB":"Serbia","SYC":"Seychelles","SLE":"Sierra Leone","SGP":"Singapore","SVK":"Slovakia","SVN":"Slovenia","SLB":"Solomon Islands","SOM":"Somalia","ZAF":"South Africa","SSD":"South Sudan","ESP":"Spain","LKA":"Sri Lanka","SDN":"Sudan","SUR":"Suriname","SWE":"Sweden","CHE":"Switzerland","SYR":"Syrian Arab Republic","TJK":"Tajikistan","TZA":"Tanzania, United Republic of","THA":"Thailand","TLS":"Timor-Leste","TGO":"Togo","TON":"Tonga","TTO":"Trinidad and Tobago","TUN":"Tunisia","TUR":"Turkey","TKM":"Turkmenistan","TUV":"Tuvalu","UGA":"Uganda","UKR":"Ukraine","ARE":"United Arab Emirates","GBR":"United Kingdom","USA":"United States of America","URY":"Uruguay","UZB":"Uzbekistan","VUT":"Vanuatu","VEN":"Venezuela (Bolivarian Republic of)","VNM":"Viet Nam","YEM":"Yemen","ZMB":"Zambia","ZWE":"Zimbabwe"};
+    function handleCountDataTable(summary){
+      // $('.dataTables_length').addClass('bs-select');
       var table = $('#table-count').DataTable({
         "columns": [
           { className: "dummy"},
@@ -284,13 +281,7 @@
         "paging": false,
       });
       $.each( summary.countriesSorted_Confirmed, function( index, value ){
-        if(value in cntry){
-            country = cntry[value];
-        } else {
-            country = value;
-        }
-            
-        // country = value;
+        country = value;
         confirmed = summary.countries[value].confirmed;
         recovered = summary.countries[value].recovered;
         deaths    = summary.countries[value].deaths;
@@ -379,13 +370,16 @@
           var obj = arr[i];
           lng = obj.longitude;
           lat = obj.latitude;
-          latestDeathCount = obj.latest_stats_value;
-          computedAngle = latestDeathCount/1000;
+          latestConfirmedCount = obj.latest_stats_value;
+          computedAngle = latestConfirmedCount%1000;
+          // console.log("Computed:" + computedAngle);
+          // Set the angle at minimum of 3
           if (computedAngle < 2){ computedAngle = 2}
-          if (computedAngle > 5){ computedAngle = 5}
-          planet.plugins.pings.add(lng, lat, { color: 'red', ttl: 1000, angle: computedAngle});
+          if (computedAngle > 15){ computedAngle = 15}
+          // console.log("defaulted:" + computedAngle);
+          planet.plugins.pings.add(lng, lat, { color: 'red', ttl: 1500, angle: computedAngle});
         }
-      }, 1000);
+      }, 1500);
     }
 
   </script>
