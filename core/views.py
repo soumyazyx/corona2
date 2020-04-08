@@ -18,6 +18,8 @@ from django.core import serializers
 from django.http import HttpResponse, JsonResponse, response
 # Custom imports
 from core.models import Record, Summary
+from lib.sync.sync_utils import rectifyDateFormat
+
 
 def sync(request):
 
@@ -63,16 +65,18 @@ def populateWorldRecords(url, stats_type, countries_df):
         download = s.get(url)
     decoded_content = download.content.decode('utf-8')
 
-    cr = csv.reader(decoded_content.splitlines(), delimiter=',')
+    rows_fetched = list(csv.reader(decoded_content.splitlines(), delimiter=','))
     print("{}:Fetching content for stats_type [{}]..Done".format(datetime.now(), stats_type))
-    my_list = list(cr)
-    header_row = my_list.pop(0)  # Header is the first row.
+
+    # Handle header row
+    header_row = rows_fetched.pop(0)  # Header is the first row.
     header_row.pop(0)  # Remove the value 'Province/State'
     header_row.pop(0)  # Remove the value 'Country/Region'
     header_row.pop(0)  # Remove the value 'Lat'
     header_row.pop(0)  # Remove the value 'Long'
-    latest_stats_date = header_row[-1]
-    stats_dates_csv   = ",".join(header_row)
+    latest_stats_date = rectifyDateFormat(header_row[-1])
+    # stats_dates_csv   = 
+    stats_dates_csv   = rectifyDateFormat(dates_csv=(",".join(header_row)))
 
     print("{}:Creating objects..".format(datetime.now()))
     objects_list = []
@@ -82,7 +86,7 @@ def populateWorldRecords(url, stats_type, countries_df):
         'Kosovo',
         'MS Zaandam'
     ]
-    for row in my_list[:]:
+    for row in rows_fetched[:]:
         state_province = row.pop(0)
         country_region = row.pop(0)
         if (country_region in ignored_countries):
@@ -158,8 +162,7 @@ def populateIndiaRecords(url):
     r = requests.get(url)
     r_json = r.json()
     for data in r_json['data']:
-        date = data['day']
-        date = datetime.strptime(date, "%Y-%m-%d").strftime("%y/%m/%d")
+        date = data['day'] # 2020-03-10
         for regional in data['regional']:
             state = regional['loc']
             if(state in state_wise_stats.keys()):
@@ -178,6 +181,7 @@ def populateIndiaRecords(url):
             else:
                 state_wise_stats[state]['lat'] = states_lat_long['India']['lat']
                 state_wise_stats[state]['long'] = states_lat_long['India']['long']
+            
             state_wise_stats[state]['recovered_csv']    = state_wise_stats[state]['recovered_csv'] + str(regional['discharged']) + ","
             state_wise_stats[state]['confirmed_csv']    = state_wise_stats[state]['confirmed_csv'] + str(regional['confirmedCasesIndian'] + regional['confirmedCasesForeign']) + ","
             state_wise_stats[state]['deaths_csv']       = state_wise_stats[state]['deaths_csv'] + str(regional['deaths']) + ","
@@ -410,7 +414,7 @@ def home(request):
         "data": list(model_values),
         "summary": summary_feed.json()
     }
-    return render(request, "index_test.html", context)
+    return render(request, "index.html", context)
 
 
 def home_test(request):
@@ -506,25 +510,6 @@ def home_test(request):
         "summary": summary_feed.json()
     }
     return render(request, "index_test.html", context)
-
-
-def render_country(request, name='default'):
-
-    print("{}: Fetching country specific records..".format(datetime.now()))
-    df = pd.DataFrame.from_records(
-        Record.objects.all().filter(country_region='Mauritania').values()
-    )
-    print("{}: Fetching country specific records..Done".format(datetime.now()))
-    # df.columns = ['state_province','country_region','latitude','longitude','stats_type','stats_dates_csv','stats_value_csv','latest_stats_date','latest_stats_value','added_ts']
-    print(df.shape)
-    print(df.columns)
-    print(df)
-    # print(df.query('stats_type==deaths')['latest_stats_value'])
-    latest_confirmed_count = df[df['stats_type']=='confirmed']['latest_stats_value'].item()
-    print("TIU")
-
-    return HttpResponse("Country:{}|Confirmed:{}".format(name, latest_confirmed_count))
-    return HttpResponse(name)
 
 
 def get_country_dataframes( ):
