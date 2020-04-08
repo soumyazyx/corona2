@@ -1,63 +1,10 @@
-import csv
 import pandas as pd
-import sqlalchemy
-import psycopg2
 import datetime
 import plotly
 import plotly.graph_objs as go
 # Custom imports
 from core.models import Record, Summary
 from lib.common.console import print_info
-
-
-def readTableIntoDFs(alpha3):
-
-    print(datetime.datetime.now())
-    engine = sqlalchemy.create_engine("postgresql+psycopg2://lfhryaadvfcvco:5b11e2552491ee96af5fafed86989774b5d9f954266786db2000e152a33cb68f@ec2-34-195-169-25.compute-1.amazonaws.com:5432/d5bbbijocpu6hk")
-    query = """
-    select
-    *
-    from
-    public.core_record
-    where
-    country_alpha3 = '{}'
-    """.format(alpha3)
-    df = pd.read_sql_query(query, engine)
-    print(datetime.datetime.now())
-
-
-    # df = pd.read_sql_table('core_record', engine)
-    # print(datetime.datetime.now())
-    # print(df.shape)
-
-    # df = pd.read_csv('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv')
-    # print(df.shape)
-    # print(datetime.datetime.now())
-
-    # temp = {}
-    #     temp['countries'] = {}
-    #     query = """
-    #     SELECT *
-    #         1 AS ID,
-    #         STATE_PROVINCE
-    #         COUNTRY_REGION
-    #         LATITUDE
-    #         LONGITUDE
-    #         STATS_TYPE
-    #         STATS_DATES_CSV
-    #         STATS_VALUE_CSV
-    #         LATEST_STATS_DATE
-    #         LATEST_STATS_VALUE
-    #         ADDED_TS
-    #     FROM
-    #         PUBLIC.CORE_RECORD
-    #     """
-    #     querySet = Record.objects.raw(query)
-    #     for rec in querySet:
-    #         if (not(rec.country_region in temp['countries'])):
-    #             temp['countries'][rec.country_region] = {}
-    #         temp['countries'][rec.country_region][rec.stats_type] = rec.total
-    #     return temp
 
 
 def find_trend_country(country_alpha3):
