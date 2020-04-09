@@ -390,8 +390,7 @@ def home(request):
     unemployment_dict = unemployment_df.set_index('State')['Unemployment']
     color_dict = {key: linearrrr(unemployment_dict[key]) for key in unemployment_dict.keys()}
 
-    # color_dict['USA'] = color_dict['US']
-    m = folium.Map([20.5937, 78.9629], zoom_start=1)
+    m = folium.Map()
 
     folium.GeoJson(
         geo_json_data,
