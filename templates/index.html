@@ -96,27 +96,27 @@
       </div>
       -->
       <!-- SPARK LINES -->
-      <div class="card card-body shadow-sm">
+      <div class="card card-body shadow">
         <div class="row">
           <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 text-center text-warning">
-            <div>Confirmed</div>
-            <div id="confirmed-count">--</div>
+            <div style="font-size: 1rem">Confirmed</div>
+            <div style="font-size: 1rem" id="confirmed-count">--</div>
             <div id="spark-confirmed"></div>
           </div>
           <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 text-center text-success">
-            <div>Recovered</div>
-            <div id="recovered-count">--</div>
+            <div style="font-size: 1rem">Recovered</div>
+            <div style="font-size: 1rem" id="recovered-count">--</div>
             <div id="spark-recovered"></div>
           </div>
           <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 text-center text-danger">
-            <div>Deaths</div>
-            <div id="deaths-count">--</div>
+            <div style="font-size: 1rem">Deaths</div>
+            <div style="font-size: 1rem" id="deaths-count">--</div>
             <div id="spark-deaths"></div>
           </div>
         </div> <!-- /row -->
       </div>
       <br/>
-      <div class="card card-body shadow-sm">
+      <div class="card card-body shadow">
         <div class="row">
           <div class="col-12">      
             <table id="table-count" class="table table-sm no-footer display" 
@@ -142,7 +142,7 @@
       </div> -->
       <br>      
       <!-- Choropleth map -->
-      <div class="card card-body shadow-sm">
+      <div class="card card-body shadow">
         <div class="row">
           <div class="col-12">      
             <iframe frameBorder="0" id="foo" style="width:100%;height:350px;" srcdoc='{{map_html|escape}}'></iframe>
@@ -156,7 +156,7 @@
       </div> -->
       <br/>      
       <!-- Covid globe -->
-      <div class="card card-body shadow-sm">
+      <div class="card card-body shadow">
         <div class="row"> 
           <div class="col-12 text-center">      
             <canvas id='globe' height=350 width=350></canvas>
