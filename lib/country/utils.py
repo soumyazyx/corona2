@@ -85,13 +85,12 @@ def find_trend_country(country_alpha3):
             margin={'l': 0, 'r': 0, 't': 0, 'b': 0},
             paper_bgcolor='#ffffff',
             plot_bgcolor='rgba(0,0,0,0)',
-
+            height=350,
             # title="Trend",
-            # autosize=True,
+            autosize=True,
             # xaxis_title='Time',
             # yaxis_title='Count'
             legend_orientation="h",
-            # displayModeBar=False
             xaxis1={
                 "gridcolor": "rgba(209, 187, 149, .5)",
                 "zerolinecolor": "rgba(209, 187, 149, .8)"
@@ -102,8 +101,9 @@ def find_trend_country(country_alpha3):
             },
         )
     }
+    config = {'displayModeBar': False}
 
-    div = plotly.offline.plot(data, include_plotlyjs=True, output_type='div')
+    div = plotly.offline.plot(data, include_plotlyjs=True, config=config, output_type='div')
     print(f'{datetime.datetime.now()}: Generating the plot..Done')
     return div
 

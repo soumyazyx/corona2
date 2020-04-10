@@ -1,92 +1,10 @@
+{% extends "base.html" %}
 {% load static %}
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="Soumya">
-    <meta name="keyword" content="Corona, globe, world, covid, covid19">
-    <title>Go Covid!</title>
-    
-    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" >
-    <link rel="stylesheet" href="{% static 'css/jquery.dataTables.css' %}" >
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Varela+Round&display=swap">
-    <!-- <link rel="stylesheet" href="{% static 'css/three-dots.css' %}" > -->
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-36253852-2"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'UA-36253852-2');
-    </script>
-    <style>
-    body {
-      font-family: 'Varela Round', sans-serif;
-      background: ghostwhite;
-      padding: .5rem;
-      font-size: .8rem;
-    }
-    .card {
-      padding: .5rem !important;
-      border: 0;
-    }
-    caption { 
-      caption-side: top; 
-      margin: 0;
-      padding: 0;
-    }
-    table.dataTable thead th, table.dataTable thead td {
-      border: none,
-      color:red;
-    }
-    .dataTableSearch {
-      padding: 0.375rem 0.75rem;
-      font-size: .8rem;
-      line-height: 1;
-      color: #495057;
-      background-color: #fff;
-      background-clip: padding-box;
-      border: 1px solid #ced4da;
-      border-radius: 0.25rem;
-      transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-      
-    }
-    .dataTables_filter {
-      padding: 0;
-      margin: 0;
-    }
-    .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody > table > thead > tr > th, .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody > table > thead > tr > td, .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody > table > tbody > tr > th, .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody > table > tbody > tr > td {
-      padding: 0;
-      font-size:.8rem;
-    }
-    table.dataTable thead .sorting, table.dataTable thead .sorting_asc, table.dataTable thead .sorting_desc, table.dataTable thead .sorting_asc_disabled, table.dataTable thead .sorting_desc_disabled {
-      padding: 0;     
-      font-size:.8rem; 
-    }
-    table.dataTable thead td{
-      border-bottom: 1px solid #efefef;
-    }
-    table.dataTable tfoot td{
-      border-bottom: 1px solid #efefef;
-    }
-    table.dataTable.no-footer {
-      border-bottom: 1px solid #efefef;
-    }
-    </style>
-  </head>
-  
-
-  <body>
+{% block content %}
     {{ data|json_script:"hello-data" }}
     {{ summary|json_script:"summary-data" }}
     
-    <header>
-      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark p-0 m-0">
-        <span class="navbar-brand lead text-warning p-2" href="#">COVID-19</span>        
-      </nav>
-    </header>
+    {% include "navbar.html" %}
 
     <main role="main" class="container-fluid p-0 mx-auto" style="max-width:500px">
       <div class="mt-5"></div>
@@ -235,6 +153,9 @@
           });      
           $('.dataTables_filter input').addClass('dataTableSearch');
           $.each( summary.countriesSorted_Confirmed, function(index, alpha3){
+            if(alpha3 == '---'){
+              return true;
+            }
             if(alpha3 in cntry){
               country = cntry[alpha3];
             } else {
@@ -337,5 +258,4 @@
 
       });
     </script>
-  </body>
-</html>
+{% endblock content %}

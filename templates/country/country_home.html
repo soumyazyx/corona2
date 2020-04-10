@@ -1,110 +1,48 @@
+{% extends "base.html" %}
 {% load static %}
-
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport"    content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Corona globe">
-    <meta name="author"      content="Soumya">
-    <meta name="keyword"     content="Corona, globe, world, covid, covid19">
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-36253852-2"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'UA-36253852-2');
-    </script>
-
-    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" >
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Varela+Round&display=swap">
-    <style>
-      body {
-        line-height:1;
-        padding: 1rem;
-        font-family:'Varela Round', sans-serif;
-      }
-      .separator {
-        padding: .5rem;
-        font-weight: bold;
-        color: white;
-        font-size: 1rem;
-        background-color: rgba(209, 187, 149, .8);
-      }
-      .darkred {
-        color: tomato;
-      }
-      .green {
-        color: #26c281;
-      }
-      .orange {
-        color: orange;
-      }
-      
-    </style>
-  </head>
-
-  <body>   
-    
-    {{ records|json_script:"records_dict" }}
-    
-    <div class=row>
-      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12"
-        style="
-        padding:.5rem;
-        font-weight: bold;
-        color:rgba(209, 187, 149, 1);
-        font-size: 1.5rem;
-        text-transform: uppercase;
-        letter-spacing: 2px;">
-        COVID-19
-      </div>
-    </div>    
-    
-    <div class=row>
-      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 separator">
-        <span style="letter-spacing:2px">CURRENT SITUATION</span>
-        <!-- <br>
-        <small>Last refreshed: <span id="lastrefreshed"></span></small> -->
-      </div>
-    </div>
-
-    <div class=row>
-      <div style="width:100%;background:#fff;padding:0;margin:0">
-        <iframe 
-          frameBorder="0" 
-          id="foo" 
-          style="width:100%;height:500" srcdoc='{{div_html|escape}}'></iframe>
-      </div>
-    </div>
+{% block content %}
   
-    <div class=row>
-      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 separator">
-        <span style="letter-spacing:2px">Count</span>
-      </div>
+  {{ records|json_script:"records_dict" }}   
+  {% include "navbar.html" %}
+
+  <main role="main" class="container-fluid p-0 mx-auto" style="max-width:500px">
+    <div class="mt-5"> </div>
+    <div>
+      <div class="lead">{{ country }}</div>        
     </div>
-      
-    <div class=row>
-      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-        <br>
-        <table id="table-country-records" class="table table-striped display" cellspacing="0" width="100%" >
-          <thead>
-            <tr>
-              <th width="30%">State</th>
-              <th width="25%" style="text-align:left">Cnfmd</th>
-              <th width="25%" style="text-align:left">Deaths</th>
-              <th width="20%" style="text-align:left">Recvrd</th>            
-            </tr>
-          </thead>
-          <tbody>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </body>
-  <script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script type='text/javascript' src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>  
+    
+    <!-- plotly -->
+    <div class="card card-body shadow">
+      <div class="row">
+        <div class="col-12">      
+          <iframe frameBorder="0" style="width:100%;height:370px" srcdoc='{{div_html|escape}}'></iframe>
+        </div> <!-- /col-12 -->
+      </div> <!-- /row -->
+    </div> <!-- /card-->
+    
+    <br>
+    <div class="card card-body shadow">
+      <div class="row">
+        <div class="col-12">      
+          <table id="table-country-records" class="table table-sm no-footer display" 
+            cellspacing="0" width="100%" >
+            <thead>
+              <tr class="text-left">
+                <td class="compact">State</td>
+                <td class="compact">Confirmed</td>
+                <td class="compact">Recovered</td>
+                <td class="compact">Deaths</td>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table> 
+        </div> <!-- /col-12 -->
+      </div> <!-- /row -->
+    </div> <!-- /card-->
+  </main>  
+  
+  <script src="{% static 'js/jquery-3.2.1.js' %}" ></script>
+  <script src="{% static 'js/jquery.dataTables.1.10.20.js' %}"></script>  
   <script>
     $(function() {
       handleRecordsTable();
@@ -117,19 +55,21 @@
         textContent);
       var table = $('#table-country-records').DataTable({
         "columns": [
-          { className: "dummy"},
-          { className: "orange"},
-          { className: "darkred"},
-          { className: "green"}
+          { className: "compact"},
+          { className: "text-right text-warning compact"},
+          { className: "text-right text-success compact"},
+          { className: "text-right text-danger compact"}
         ],
+        "stripeClasses": [],
         "info": false,      
         "order": [[ 1, "desc" ]],
         "paging": false,
+        "scrollY": "180px"
       });
-
+      $('.dataTables_filter input').addClass('dataTableSearch');
       $.each(records, function(state_province, record){
         if (state_province == ""){
-          state_province = '-';
+          state_province = 'No data';
         }
         confirmed_count = record.confirmed.latest_stats_value;
         recovered_count = record.recovered.latest_stats_value;
@@ -141,12 +81,7 @@
             recovered_count,
             deceased_count
           ]).draw();
-          
       }); 
-       
     }
-    
   </script>
-</html>
-
-
+{% endblock content %}
