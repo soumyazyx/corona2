@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
+    
     {{ data|json_script:"hello-data" }}
     {{ summary|json_script:"summary-data" }}
     
@@ -8,12 +9,6 @@
 
     <main role="main" class="container-fluid p-0 mx-auto" style="max-width:500px">
       <div class="mt-5"></div>
-      <!-- 
-        <div class="mt-5">
-        <div class="lead">GLOBAL SITUATION</div>      
-      </div>
-      -->
-      <!-- SPARK LINES -->
       <div class="card card-body shadow">
         <div class="row">
           <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 text-center text-warning">
@@ -31,15 +26,15 @@
             <div style="font-size: 1rem" id="deaths-count">--</div>
             <div id="spark-deaths"></div>
           </div>
-        </div> <!-- /row -->
+        </div>
       </div>
       <br/>
       <div class="card card-body shadow">
         <div class="row">
           <div class="col-12">      
-            <table id="table-count" class="table table-sm no-footer display" 
-              cellspacing="0" width="100%" >
-              
+            {{ table_html|safe  }}
+            {% comment %} <table id="table-count" class="table table-sm no-footer display" 
+              cellspacing="0" width="100%" >              
               <thead>
                 <tr class="text-left">
                   <td class="compact"></td>
@@ -49,7 +44,7 @@
                 </tr>
               </thead>
               <tbody></tbody>
-            </table> 
+            </table>  {% endcomment %}
           </div> <!-- /col-12 -->
         </div> <!-- /row -->
       </div> <!-- /card-->
@@ -58,6 +53,7 @@
       <!-- <div>
         <div class="lead">COVID MAP</div>        
       </div> -->
+      
       <br>      
       <!-- Choropleth map -->
       <div class="card card-body shadow">
@@ -96,7 +92,7 @@
         </span>
       </div>
     </footer>
-
+    
     <script src="{% static 'js/jquery-3.2.1.js' %}" ></script>
     <script src="{% static 'js/popper.1.12.9.js' %}" ></script>
     <script src="{% static 'js/bootstrap.4.0.0.js' %}"></script>
@@ -105,11 +101,12 @@
     <script src="{% static 'js/jquery.sparkline.js' %}"></script>
     <script src="{% static 'js/sparkline-chart.js' %}"></script>  
     <script src="{% static 'js/jquery.dataTables.1.10.20.js' %}"></script>  
-
-    <script type='text/javascript' src='https://d3js.org/d3.v3.min.js'></script>
-    <script type='text/javascript' src='https://d3js.org/topojson.v1.min.js'></script>
-    <script type='text/javascript' src='https://cdn.rawgit.com/BinaryMuse/planetary.js/v1.1.2/dist/planetaryjs.min.js'></script>
-    <script type='text/javascript' src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script src="{% static 'js/d3.v3.min.js' %}"></script>  
+    <script src="{% static 'js/topojson.v1.min.js' %}"></script>  
+    <script src="{% static 'js/planetaryjs.js' %}"></script>  
+    
+    <!-- <script type='text/javascript' src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script> -->
+    
     <script>
       $(function() {      
         
@@ -137,14 +134,7 @@
         }
 
         function handleCountDataTable(summary, cntry){
-          var cntry = { "AFG": "Afghanistan", "ALB": "Albania", "DZA": "Algeria", "AND": "Andorra", "AGO": "Angola", "ATG": "Antigua", "ARG": "Argentina", "ARM": "Armenia", "AUS": "Australia", "AUT": "Austria", "AZE": "Azerbaijan", "BHS": "Bahamas", "BHR": "Bahrain", "BGD": "Bangladesh", "BRB": "Barbados", "BLR": "Belarus", "BEL": "Belgium", "BLZ": "Belize", "BEN": "Benin", "BTN": "Bhutan", "BOL": "Bolivia", "BIH": "Bosnia", "BWA": "Botswana", "BRA": "Brazil", "BRN": "Brunei", "BGR": "Bulgaria", "BFA": "Burkina", "BDI": "Burundi", "CPV": "CaboVerde", "KHM": "Cambodia", "CMR": "Cameroon", "CAN": "Canada", "CAF": "Central African Republic", "TCD": "Chad", "CHL": "Chile", "CHN": "China", "COL": "Colombia", "COM": "Comoros", "COG": "Congo", "COD": "Congo", "CRI": "Costa Rica", "CIV": "Côte d'Ivoire", "HRV": "Croatia", "CUB": "Cuba", "CYP": "Cyprus", "CZE": "Czechia", "DNK": "Denmark", "DJI": "Djibouti", "DMA": "Dominica", "DOM": "Dominican Rep", "ECU": "Ecuador", "EGY": "Egypt", "SLV": "El Salvador", "GNQ": "Guinea", "ERI": "Eritrea", "EST": "Estonia", "SWZ": "Eswatini", "ETH": "Ethiopia", "FJI": "Fiji", "FIN": "Finland", "FRA": "France", "GAB": "Gabon", "GMB": "Gambia", "GEO": "Georgia", "DEU": "Germany", "GHA": "Ghana", "GRC": "Greece", "GRD": "Grenada", "GTM": "Guatemala", "GIN": "Guinea", "GNB": "Guinea Bissau", "GUY": "Guyana", "HTI": "Haiti", "HND": "Honduras", "HUN": "Hungary", "ISL": "Iceland", "IND": "India", "IDN": "Indonesia", "IRN": "Iran", "IRQ": "Iraq", "IRL": "Ireland", "ISR": "Israel", "ITA": "Italy", "JAM": "Jamaica", "JPN": "Japan", "JOR": "Jordan", "KAZ": "Kazakhstan", "KEN": "Kenya", "KIR": "Kiribati", "PRK": "S Korea", "KOR": "N Korea", "KWT": "Kuwait", "KGZ": "Kyrgyzstan", "LAO": "Lao", "LVA": "Latvia", "LBN": "Lebanon", "LSO": "Lesotho", "LBR": "Liberia", "LBY": "Libya", "LIE": "Liechten stein", "LTU": "Lithuania", "LUX": "Luxembourg", "MDG": "Madagascar", "MWI": "Malawi", "MYS": "Malaysia", "MDV": "Maldives", "MLI": "Mali", "MLT": "Malta", "MHL": "Marshall Islands", "MRT": "Mauritania", "MUS": "Mauritius", "MEX": "Mexico", "FSM": "Micronesia", "MDA": "Moldova", "MCO": "Monaco", "MNG": "Mongolia", "MNE": "Montenegro", "MAR": "Morocco", "MOZ": "Mozambique", "MMR": "Myanmar", "NAM": "Namibia", "NRU": "Nauru", "NPL": "Nepal", "NLD": "Nether lands", "NZL": "New Zealand", "NIC": "Nicaragua", "NER": "Niger", "NGA": "Nigeria", "MKD": "North Macedonia", "NOR": "Norway", "OMN": "Oman", "PAK": "Pakistan", "PLW": "Palau", "PAN": "Panama", "PNG": "Papua New Guinea", "PRY": "Paraguay", "PER": "Peru", "PHL": "Philippines", "POL": "Poland", "PRT": "Portugal", "QAT": "Qatar", "ROU": "Romania", "RUS": "Russian", "RWA": "Rwanda", "KNA": "Saint Kitts and Nevis", "LCA": "Saint Lucia", "VCT": "Saint Vincent and the Grenadines", "WSM": "Samoa", "SMR": "San Marino", "STP": "Sao Tome and Principe", "SAU": "Saudi Arabia", "SEN": "Senegal", "SRB": "Serbia", "SYC": "Seychelles", "SLE": "Sierra Leone", "SGP": "Singapore", "SVK": "Slovakia", "SVN": "Slovenia", "SLB": "Solomon", "SOM": "Somalia", "ZAF": "South Africa", "SSD": "South Sudan", "ESP": "Spain", "LKA": "Sri Lanka", "SDN": "Sudan", "SUR": "Suriname", "SWE": "Sweden", "CHE": "Switzer land", "SYR": "Syria", "TJK": "Tajikistan", "TZA": "Tanzania", "THA": "Thailand", "TLS": "Timor Leste", "TGO": "Togo", "TON": "Tonga", "TTO": "Trinidad and Tobago", "TUN": "Tunisia", "TUR": "Turkey", "TKM": "Turkmeni stan", "TUV": "Tuvalu", "UGA": "Uganda", "UKR": "Ukraine", "ARE": "UAE", "GBR": "United Kingdom", "USA": "USA", "URY": "Uruguay", "UZB": "Uzbekistan", "VUT": "Vanuatu", "VEN": "Venezuela", "VNM": "Viet Nam", "YEM": "Yemen", "ZMB": "Zambia", "ZWE": "Zimbabwe" };
           var table = $('#table-count').DataTable({
-            "columns": [
-              { className: "compact"},
-              { className: "text-right text-warning compact"},
-              { className: "text-right text-success compact"},
-              { className: "text-right text-danger compact"}
-            ],
             "stripeClasses": [],
             "info": false,      
             "order": [[ 1, "desc" ]],
@@ -152,27 +142,7 @@
             "scrollY": "180px"
           });      
           $('.dataTables_filter input').addClass('dataTableSearch');
-          $.each( summary.countriesSorted_Confirmed, function(index, alpha3){
-            if(alpha3 == '---'){
-              return true;
-            }
-            if(alpha3 in cntry){
-              country = cntry[alpha3];
-            } else {
-              country = alpha3;
-            }
-            var href_country = '<a href="/country/' + alpha3 + '">' + country + '</a>';
-            confirmed = summary.countries[alpha3].confirmed;
-            recovered = summary.countries[alpha3].recovered;
-            deaths    = summary.countries[alpha3].deaths;
-            table.row.add(
-              [
-                href_country, 
-                confirmed.toLocaleString(),                
-                recovered.toLocaleString(),
-                deaths.toLocaleString()
-              ]).draw();
-          });
+          
         }
 
         function handleGlobe(){
@@ -258,4 +228,5 @@
 
       });
     </script>
+     
 {% endblock content %}
