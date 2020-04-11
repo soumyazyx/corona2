@@ -476,7 +476,7 @@ def get_table_html(summary_json, geo_json_data):
         html += f"</tr>"
     
     table_html  = f'\
-        <table id="table-count" class="table table-sm" style="width: 100%;">\
+        <table id="table-count" class="table table-sm" style="width: 100%;display:none">\
             <thead>\
             <tr>\
                 <td></td>\
