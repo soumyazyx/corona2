@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
   
-  {{ records|json_script:"records_dict" }}   
+  {% comment %} {{ records|json_script:"records_dict" }}    {% endcomment %}
   {% include "navbar.html" %}
 
   <main role="main" class="container-fluid p-0 mx-auto" style="max-width:500px">
@@ -24,18 +24,7 @@
     <div class="card card-body shadow">
       <div class="row">
         <div class="col-12">      
-          <table id="table-country-records" class="table table-sm no-footer display" 
-            cellspacing="0" width="100%" >
-            <thead>
-              <tr class="text-left">
-                <td class="compact">State</td>
-                <td class="compact">Confirmed</td>
-                <td class="compact">Recovered</td>
-                <td class="compact">Deaths</td>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table> 
+        {{ country_table_html|safe }}
         </div> <!-- /col-12 -->
       </div> <!-- /row -->
     </div> <!-- /card-->
@@ -49,39 +38,14 @@
     });
     
     function handleRecordsTable(){
-      var records = JSON.parse(
-        document.
-        getElementById('records_dict').
-        textContent);
       var table = $('#table-country-records').DataTable({
-        "columns": [
-          { className: "compact"},
-          { className: "text-right text-warning compact"},
-          { className: "text-right text-success compact"},
-          { className: "text-right text-danger compact"}
-        ],
         "stripeClasses": [],
         "info": false,      
         "order": [[ 1, "desc" ]],
         "paging": false,
-        "scrollY": "180px"
+        "scrollY": "250px"
       });
       $('.dataTables_filter input').addClass('dataTableSearch');
-      $.each(records, function(state_province, record){
-        if (state_province == ""){
-          state_province = 'No data';
-        }
-        confirmed_count = record.confirmed.latest_stats_value;
-        recovered_count = record.recovered.latest_stats_value;
-        deceased_count  = record.deaths.latest_stats_value;
-        table.row.add(
-          [
-            state_province, 
-            confirmed_count,
-            recovered_count,
-            deceased_count
-          ]).draw();
-      }); 
     }
   </script>
 {% endblock content %}

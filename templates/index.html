@@ -31,20 +31,9 @@
       <br/>
       <div class="card card-body shadow">
         <div class="row">
-          <div class="col-12">      
-            {{ table_html|safe  }}
-            {% comment %} <table id="table-count" class="table table-sm no-footer display" 
-              cellspacing="0" width="100%" >              
-              <thead>
-                <tr class="text-left">
-                  <td class="compact"></td>
-                  <td class="compact">Confirmed</td>
-                  <td class="compact">Recovered</td>
-                  <td class="compact">Deaths</td>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>  {% endcomment %}
+          <div class="col-12" id="div-table-count" style="max-height:235px; overflow:hidden">      
+            {{ table_html|safe }}
+            
           </div> <!-- /col-12 -->
         </div> <!-- /row -->
       </div> <!-- /card-->
@@ -77,12 +66,6 @@
           </div> <!-- /col-12 -->
         </div> <!-- /row -->
       </div> <!-- /card-->
-      
-
-
-    
-
-      
     </main>
 
     <footer class="footer">
@@ -115,7 +98,7 @@
         
         handleTimeago();  
         handleSparks(summary); 
-        handleCountDataTable(summary); 
+        handleCountDataTable(); 
         handleGlobe();   
         
         // functions
@@ -125,24 +108,23 @@
         }
         
         function handleSparks(summary) {
-          $('#spark-confirmed').sparkline(summary.trend_confirmed, {height: 40,width: '100%',lineWidth: 2,fillColor: false,lineColor: "orange",spotColor: 'orange',spotRadius: 2});
-          $('#spark-recovered').sparkline(summary.trend_recovered, {height: 40,width: '100%',fillColor: false,lineColor: "#26c281",spotRadius: 2,lineWidth: 2});
-          $('#spark-deaths').sparkline(summary.trend_deaths, {height: 40,width: '100%',fillColor: false,lineColor: "tomato",spotColor: 'tomato',spotRadius: 2,lineWidth: 2});
+          $('#spark-confirmed').sparkline(summary.trend_confirmed, {height: 40,width: '100%',lineWidth: 2,fillColor: false,lineColor: "orange", spotColor:'green',spotRadius: 2});
+          $('#spark-recovered').sparkline(summary.trend_recovered, {height: 40,width: '100%',lineWidth: 2,fillColor: false,lineColor: "#26c281",spotColor:'green',spotRadius: 2});
+          $('#spark-deaths').sparkline(summary.trend_deaths,       {height: 40,width: '100%',lineWidth: 2,fillColor: false,lineColor: "tomato", spotColor:"green",spotRadius: 2});
           $("#recovered-count").text(summary.totals.total_recovered.toLocaleString())
           $("#confirmed-count").text(summary.totals.total_confirmed.toLocaleString())
           $("#deaths-count").text(summary.totals.total_deaths.toLocaleString())
         }
 
-        function handleCountDataTable(summary, cntry){
+        function handleCountDataTable(){
           var table = $('#table-count').DataTable({
             "stripeClasses": [],
             "info": false,      
             "order": [[ 1, "desc" ]],
             "paging": false,
             "scrollY": "180px"
-          });      
-          $('.dataTables_filter input').addClass('dataTableSearch');
-          $('#table-count').show();
+          });          
+          $('.dataTables_filter input').addClass('dataTableSearch');          
         }
 
         function handleGlobe(){
@@ -169,8 +151,7 @@
             scaleExtent: [100, 500]
           }));
           planet.loadPlugin(planetaryjs.plugins.drag({
-            // Dragging the globe should pause the
-            // automatic rotation until we release the mouse.
+            // Dragging the globe should pause the automatic rotation until we release the mouse.
             onDragStart: function() {
               this.plugins.autorotate.pause();
             },
