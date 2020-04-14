@@ -82,7 +82,6 @@ def home(request):
     print_info("Reading pickled data..")
     ConfirmedPickledFile = open('datasets/Confirmed.pickle', 'rb')      
     confirmed_records = pickle.load(ConfirmedPickledFile)
-    print(type(confirmed_records)) 
     print_info("Reading pickled data..Done")
 
     print_info("Fetching summary..")
