@@ -2,7 +2,7 @@ from django.conf import settings
 import json
 import csv
 import numpy as np
-
+import pickle
 import requests
 import logging
 from datetime import datetime, timezone
@@ -49,7 +49,6 @@ def sync(request):
 
     # Update summary table
     summary = updateSummaryTable()
-    print(summary)
     print_info("Syncing records from web..Done")
 
     print_info("Writing summary to local file..")
@@ -57,26 +56,38 @@ def sync(request):
         json.dump(summary, outfile)
     print_info("Writing summary to local file..Done")
 
-    return JsonResponse(summary)
 
-
-def home(request):
-    # return render(request, "index.html")
-    print_info("Processing starts..")
-    print_info("Fetching records from DB..")
-    model_values = Record.objects.all().filter(stats_type='confirmed').values(
+    # Store formatted data in a local file - to be consumed by planetaryjs
+    # Reading it real time from DB is very slow
+    print_info("Storing pickled content to local file..")
+    confirmed_records_qs = Record.objects.all().filter(stats_type='confirmed').values(
         'latitude',
         'longitude',
         'country_region',
         'latest_stats_value'
     )
-    print_info("Fetching records from DB..Done")
+    confirmed_records = list(confirmed_records_qs)
+    ConfirmedPickledFile = open('datasets/Confirmed.pickle', 'ab') 
+    pickle.dump(confirmed_records, ConfirmedPickledFile)                      
+    ConfirmedPickledFile.close() 
+    print_info("Storing pickled content to local file..Done")
+    
+    return JsonResponse(summary)
 
-    print_info("Fetching details from summary table..")
-    # summary_feed = Summary.objects.values('json_string')
-    # summary_json = json.loads(summary_feed[0]['json_string'])
+
+def home(request):
+    
+    print_info("Processing starts..")
+    
+    print_info("Reading pickled data..")
+    ConfirmedPickledFile = open('datasets/Confirmed.pickle', 'rb')      
+    confirmed_records = pickle.load(ConfirmedPickledFile)
+    print(type(confirmed_records)) 
+    print_info("Reading pickled data..Done")
+
+    print_info("Fetching summary..")
     summary_json = json.loads(open('datasets/summary.json').read())
-    print_info("Fetching details from summary table..Done")
+    print_info("Fetching summary..Done")
 
     print_info("Fetching geo-json data..")
     geo_json_data = json.loads(open('datasets/GeoJsonWorldCountries.json').read())
@@ -94,7 +105,7 @@ def home(request):
     context = {
         'map_html': choropleth_map_html,
         'table_html': table_html,
-        "data": list(model_values),
+        "data": confirmed_records,
         "summary": summary_json
     }
     print_info("Setting context variable..Done")
