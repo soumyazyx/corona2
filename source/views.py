@@ -1,17 +1,13 @@
 import json
 import datetime
-from django.db.models import Sum
-from django.shortcuts import render
-from django.core import serializers
-from django.http import HttpResponse, JsonResponse, response
+from django.http import JsonResponse
 # Custom imports
 from core.models import Summary
+from lib.common.console import print_info
 
 
 def coronafeed(request):
-
-    summary_qs = Summary.objects.all()
-    for summary in summary_qs:
-        json_string = summary.json_string
-    obj = json.loads(json_string)
-    return JsonResponse(obj)
+    print_info("Reading summary json from [datasets/summary.json]..")
+    summary_json = json.loads(open('datasets/summary.json').read())
+    print_info("Reading summary json from [datasets/summary.json]..Done")
+    return JsonResponse(summary_json)

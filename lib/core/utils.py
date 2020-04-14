@@ -124,3 +124,68 @@ def get_counts_table_html(summary_json, geo_json_data):
             <tbody>{html}</tbody>\
         </table>'
     return table_html
+
+
+def populateWorldRecords(url, stats_type, countries_df):
+
+    print("{}:Fetching content for stats_type [{}]..".format(datetime.now(), stats_type))
+    print("{}:URL in use [{}]".format(datetime.now(), url))
+    with requests.Session() as s:
+        download = s.get(url)
+    decoded_content = download.content.decode('utf-8')
+
+    rows_fetched = list(csv.reader(decoded_content.splitlines(), delimiter=','))
+    print("{}:Fetching content for stats_type [{}]..Done".format(datetime.now(), stats_type))
+
+    # Handle header row
+    header_row = rows_fetched.pop(0)  # Header is the first row.
+    header_row.pop(0)  # Remove the value 'Province/State'
+    header_row.pop(0)  # Remove the value 'Country/Region'
+    header_row.pop(0)  # Remove the value 'Lat'
+    header_row.pop(0)  # Remove the value 'Long'
+    latest_stats_date = rectifyDateFormat(header_row[-1])
+    # stats_dates_csv   = 
+    stats_dates_csv   = rectifyDateFormat(dates_csv=(",".join(header_row)))
+
+    print("{}:Creating objects..".format(datetime.now()))
+    objects_list = []
+    ignored_countries = [
+        'Diamond Princess',
+        'West Bank and Gaza',
+        'Kosovo',
+        'MS Zaandam'
+    ]
+    for row in rows_fetched[:]:
+        state_province = row.pop(0)
+        country_region = row.pop(0)
+        if (country_region in ignored_countries):
+            country_alpha3 = '---'
+        else:
+            country_alpha3 = countries_df.loc[country_region,'alpha3']
+        latitude = row.pop(0)
+        longitude = row.pop(0)
+        stats_type = stats_type
+        stats_value_csv = ",".join(row)
+        latest_stats_value = row[-1] or 0
+        # Create model Record instances
+        obj = Record(
+            state_province     = state_province,
+            country_region     = country_region,
+            country_alpha3     = country_alpha3,
+            latitude           = latitude,
+            longitude          = longitude,
+            stats_type         = stats_type,
+            latest_stats_date  = latest_stats_date,
+            latest_stats_value = latest_stats_value,
+            stats_dates_csv    = stats_dates_csv,
+            stats_value_csv    = stats_value_csv,
+        )
+        objects_list.append(obj)
+
+    print("{}:Creating objects..Done".format(datetime.now()))
+    print("{}:Total objects created = {}".format(datetime.now(), len(objects_list)))
+
+    print("{}:Inserting records for stats_type[{}]..".format(datetime.now(), stats_type))
+    Record.objects.bulk_create(objects_list)
+    print("{}:Inserting records for stats_type[{}]..Done".format(datetime.now(), stats_type))
+    return decoded_content
