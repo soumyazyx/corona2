@@ -7,12 +7,10 @@
     <meta name="description" content="">
     <meta name="author" content="Soumya">
     <meta name="keyword" content="Corona, globe, world, covid, covid19">
-    <title>Go Corona!</title>
-    
-    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" >
-    <link rel="stylesheet" href="{% static 'css/jquery.dataTables.css' %}" >
+    <title>Go Corona!</title>    
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" >
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" >
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Varela+Round&display=swap">
-    <!-- <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet"> -->
     <!-- Global site tag (gtag.js) - Google Analytics -->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-36253852-2"></script>
@@ -81,9 +79,5 @@
   <body>  
     {% block content %}
     {% endblock content %}
-
-    {% comment %} {% include "footer.html" %} {% endcomment %}
-    {% comment %} {% include "scripts.html" %} {% endcomment %}
-
   </body>
 </html>
