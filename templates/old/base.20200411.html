@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport"    content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Corona globe">
+    <meta name="author"      content="Soumya">
+    <meta name="keyword"     content="Corona, globe, world, covid, covid19">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> 
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-36253852-2"></script>
+    
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-36253852-2');
+    </script>
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" >
+    <link rel="stylesheet" href="{% static 'css/bootstrap-theme.css' %}" >
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" >
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Varela+Round&display=swap">
+    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Barlow&display=swap"> -->
+    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rokkitt"> -->
+    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Exo&display=swap"> -->
+    <style>
+      body {
+        line-height:1;
+        padding: 1rem;
+        font-family:'Varela Round', sans-serif;
+        /* font-family: 'Exo', sans-serif; */
+      }
+      .separator {
+        padding:.5rem;
+        font-weight: bold;
+        color:white;
+        font-size: 1rem;
+        background-color: rgba(209, 187, 149, .8)
+      }
+      .cardbox {
+        border-radius: 3px;
+        margin-bottom: 20px;
+        padding: 0px !important;
+      }
+      .cardbox .cardbox-item {
+        position: relative;
+        display: block;
+      }
+      .info-box {
+        padding: 5px;
+        min-height: 0;
+        text-align: center;
+        border: 0;
+        box-shadow: none;
+        text-transform: uppercase;
+      }
+      .info-box .count {
+        font-weight: bold;
+        /* letter-spacing: .2rem; */
+      }
+      .darkred {
+        color: tomato;
+      }
+      .green {
+        color: #26c281;
+      }
+      .orange {
+        color: orange;
+      }
+      td, th {
+        padding: 2px !important;
+        border-top: 1px solid #EEE !important;
+      }
+      table.dataTable thead th, table.dataTable thead td {
+        border: none
+      }
+      .btn.focus, .btn:focus {
+        box-shadow: none;
+      }
+    </style>
+  </head>
+
+  <body>  
+    {% block content %}
+    {% endblock content %}
+
+    {% comment %} {% include "footer.html" %} {% endcomment %}
+    {% comment %} {% include "scripts.html" %} {% endcomment %}
+
+  </body>
+</html>
