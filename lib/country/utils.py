@@ -9,15 +9,13 @@ from lib.common.console import print_info
 
 def find_trend_country(country_alpha3):
 
-    print_info(f"Fetching records from DB for country[{country_alpha3}]..")
-    records = Record.objects.filter(country_alpha3=country_alpha3).values_list('stats_type','stats_dates_csv','stats_value_csv')
-    print_info(f"Fetching records from DB for country[{country_alpha3}]..Done")
     trend = {
         'confirmed': {},
         'recovered': {},
         'deaths': {}
     }
-
+    print_info(f"Fetching records from DB for country[{country_alpha3}]..")
+    records = Record.objects.filter(country_alpha3=country_alpha3).values_list('stats_type', 'stats_dates_csv', 'stats_value_csv')
     for record in records:
         stats_type  = record[0]
         dates_list  = record[1].split(",")
@@ -29,15 +27,14 @@ def find_trend_country(country_alpha3):
                 trend[stats_type][date_obj] += int(value)
             else:
                 trend[stats_type][date_obj] = int(value)
+    print_info(f"Fetching records from DB for country[{country_alpha3}]..Done")
 
-    confirmed_dates_list = list(trend['confirmed'].keys());confirmed_dates_list.sort()
+    confirmed_dates_list  = list(trend['confirmed'].keys());confirmed_dates_list.sort()
     confirmed_values_list = list(trend['confirmed'].values());confirmed_values_list.sort()
-
-    recovered_dates_list = list(trend['recovered'].keys());recovered_dates_list.sort()
+    recovered_dates_list  = list(trend['recovered'].keys());recovered_dates_list.sort()
     recovered_values_list = list(trend['recovered'].values());recovered_values_list.sort()
-
-    deaths_dates_list = list(trend['deaths'].keys());deaths_dates_list.sort()
-    deaths_values_list = list(trend['deaths'].values());deaths_values_list.sort()
+    deaths_dates_list     = list(trend['deaths'].keys());deaths_dates_list.sort()
+    deaths_values_list    = list(trend['deaths'].values());deaths_values_list.sort()
 
     print_info('Generating the plot..')
 

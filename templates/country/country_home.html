@@ -30,8 +30,9 @@
     </div> <!-- /card-->
   </main>  
   
-  <script src="{% static 'js/jquery-3.2.1.js' %}" ></script>
-  <script src="{% static 'js/jquery.dataTables.1.10.20.js' %}"></script>  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js" ></script>
+  <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>  
+    
   <script>
     $(function() {
       handleRecordsTable();
@@ -42,8 +43,7 @@
         "stripeClasses": [],
         "info": false,      
         "order": [[ 1, "desc" ]],
-        "paging": false,
-        "scrollY": "250px"
+        "paging": false
       });
       $('.dataTables_filter input').addClass('dataTableSearch');
     }

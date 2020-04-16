@@ -18,7 +18,7 @@ def country_home(request, name='default'):
     cntry = {}
     for temp in geo_json_data['features']:
         cntry[temp['id']] = temp['properties']['name']
-    print(cntry[name])
+
     print_info("Fetching graph html..")
     div_html = find_trend_country(country_alpha3=name)
     print_info("Fetching graph html..Done")
