@@ -13,7 +13,7 @@ from django.core import serializers
 from django.http import HttpResponse, JsonResponse, response
 # Custom imports
 from core.models import Record, Summary
-from lib.sync.sync_utils import rectifyDateFormat, populateWorldRecords, populateIndiaRecords, findSumAcrossAllCountries, findSumAcrossEachCountry, findTrend, findCountriesSorted, updateSummaryTable, store_world_stats_table_html, store_world_choropleth_map_html
+from lib.sync.sync_utils import rectifyDateFormat, populateWorldRecords, populateIndiaRecords, findSumAcrossAllCountries, findSumAcrossEachCountry, findTrend, findCountriesSorted, updateSummaryTable, store_world_stats_table_html, store_world_choropleth_map_html, store_country_plotly_html, store_country_stats_table_html
 from lib.common.console import print_info
 from lib.common.utils import get_country_dataframes
 
@@ -73,9 +73,11 @@ def sync(request):
 
     store_world_stats_table_html()
     store_world_choropleth_map_html()
+    store_country_plotly_html()
+    # store_country_stats_table_html()
     return JsonResponse(summary)
     
-
+    
 def home(request):
     
     print_info("Processing starts..")
@@ -94,12 +96,12 @@ def home(request):
     print_info("Fetching geo-json data..Done")
 
     print_info("Fetching HTML for counts table..")
-    with open('datasets/html/world_stats_table.html') as file:
+    with open('datasets/html/world/world_stats_table.html') as file:
         table_html = file.read()
     print_info("Fetching HTML for counts table..Done")
 
     print_info("Fetching choropleth HTML from [datasets/html/world_choropleth.html]..")
-    with open('datasets/html/world_choropleth.html') as file:
+    with open('datasets/html/world/world_choropleth.html') as file:
         choropleth_map_html = file.read()
     print_info("Fetching choropleth HTML from [datasets/html/world_choropleth.html]..Done")
 
