@@ -24,9 +24,11 @@ def country_home(request, name='default'):
         div_html = file.read()
     print_info("Fetching graph html..Done")
 
-    print_info("Fetching states table html..")
-    country_table_html = fetch_country_records(country_alpha3=name)
-    print_info("Fetching states table html..Done")
+    print_info("Fetching states table html from local file..")
+    # country_table_html = fetch_country_records(country_alpha3=name)
+    with open(f'datasets/html/countries/{name}/stats.html') as file:
+        country_table_html = file.read()
+    print_info("Fetching states table html from local file..Done")
 
     context = {
         'country': cntry[name],
