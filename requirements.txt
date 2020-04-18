@@ -6,4 +6,3 @@ pandas
 datetime
 folium
 plotly
-threading
