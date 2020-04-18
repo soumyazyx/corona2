@@ -1,7 +1,10 @@
 import csv
+import time
 import json
 import folium
 import requests
+import pickle
+import threading
 import pandas as pd
 import branca.colormap as cm
 from folium import plugins
@@ -12,10 +15,27 @@ from django.db.models import Sum
 from datetime import datetime, timezone
 # Custom imports
 from core.models import Record,Summary
-from lib.common.console import print_info
+from lib.common.console import print_info, print_error, print_warn
 from lib.common.utils import get_country_dataframes
 import plotly
 import plotly.graph_objs as go
+
+def sync_all():
+
+    truncate_records()              # The github data source refreshes in every 24hrs.
+                                    # When we sync, we truncate & load afresh
+    populate_records_world()        # Get content from github source and populate records
+    populate_records_india()        # Get content from India specific source and update India records
+    populate_summary_tbl_n_file()   # Once the RECORDS table is updated, populate the SUMMARY table
+
+    # Once the RECORDS/SUMMARY tables are populated,
+    # the below methods have no other dependancies
+    # and are run via threads for performance improvement
+    thread_planetary     = threading.Thread(target=populate_planetary_file); thread_planetary.start()
+    thread_world_stats   = threading.Thread(target=store_world_stats_table_html); thread_world_stats.start()
+    thread_country_stats = threading.Thread(target=store_country_stats_table_html); thread_country_stats.start()
+    thread_choropleth    = threading.Thread(target=store_world_choropleth_map_html); thread_choropleth.start()
+    thread_plotly        = threading.Thread(target=store_country_plotly_html); thread_plotly.start()
 
 
 def rectifyDateFormat(dates_csv):
@@ -32,6 +52,25 @@ def rectifyDateFormat(dates_csv):
     return dates_csv
 
 
+def populate_records_world():
+
+    base_url      = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series'
+    deaths_url    = f'{base_url}/time_series_covid19_deaths_global.csv'
+    confirmed_url = f'{base_url}/time_series_covid19_confirmed_global.csv'
+    recovered_url = f'{base_url}/time_series_covid19_recovered_global.csv'
+
+    # Fetch the mappings between country and alpha3.
+    # It will be used to populate alpha3 column in RECORD table
+    countries_df = get_country_dataframes()
+
+    # Fetch the CSV from web
+    # The CSV contains details of all the countries
+
+    death_url_content     = populateWorldRecords(stats_type='deaths',    url=deaths_url,    countries_df=countries_df)
+    confirmed_url_content = populateWorldRecords(stats_type='confirmed', url=confirmed_url, countries_df=countries_df)
+    recovered_url_content = populateWorldRecords(stats_type='recovered', url=recovered_url, countries_df=countries_df)
+
+
 def populateWorldRecords(url, stats_type, countries_df):
 
     print_info(f"Fetching content for stats_type [{stats_type}]..")
@@ -40,7 +79,7 @@ def populateWorldRecords(url, stats_type, countries_df):
         download = s.get(url)
     decoded_content = download.content.decode('utf-8')
 
-    # local_file_name = f'datasets/{stats_type}.csv'    
+    # local_file_name = f'datasets/{stats_type}.csv'
     # print_info(f"Writing dowloaded content to file[{local_file_name}]..")
     # with open(local_file_name, "w") as outfile:
     #     outfile.write(decoded_content)
@@ -57,7 +96,7 @@ def populateWorldRecords(url, stats_type, countries_df):
     header_row.pop(0)  # Remove the value 'Lat'
     header_row.pop(0)  # Remove the value 'Long'
     latest_stats_date = rectifyDateFormat(header_row[-1])
-    # stats_dates_csv   = 
+    # stats_dates_csv   =
     stats_dates_csv   = rectifyDateFormat(dates_csv=(",".join(header_row)))
 
     print_info("Creating objects..")
@@ -101,11 +140,11 @@ def populateWorldRecords(url, stats_type, countries_df):
     print_info(f"Inserting records for stats_type[{stats_type}]..")
     Record.objects.bulk_create(objects_list)
     print_info(f"Inserting records for stats_type[{stats_type}]..Done")
-    
+
     return decoded_content
 
 
-def populateIndiaRecords(url):
+def populate_records_india(url='https://api.rootnet.in/covid19-in/stats/daily'):
 
     print_info("Handling India records..")
     Record.objects.filter(country_region='India').delete()
@@ -165,7 +204,7 @@ def populateIndiaRecords(url):
             else:
                 state_wise_stats[state]['lat'] = states_lat_long['India']['lat']
                 state_wise_stats[state]['long'] = states_lat_long['India']['long']
-            
+
             state_wise_stats[state]['recovered_csv']    = state_wise_stats[state]['recovered_csv'] + str(regional['discharged']) + ","
             state_wise_stats[state]['confirmed_csv']    = state_wise_stats[state]['confirmed_csv'] + str(regional['confirmedCasesIndian'] + regional['confirmedCasesForeign']) + ","
             state_wise_stats[state]['deaths_csv']       = state_wise_stats[state]['deaths_csv'] + str(regional['deaths']) + ","
@@ -226,33 +265,33 @@ def populateIndiaRecords(url):
     print_info("Handling India records..Done")
 
 
-def updateSummaryTable():
+def populate_summary_tbl_n_file():
 
     print_info("Computing summary from records fetched..")
-    details = {}
-    details['utc_dt'] = str(datetime.now(timezone.utc))
-    details['totals'] = findSumAcrossAllCountries()['totals']
-    details['countries'] = findSumAcrossEachCountry()['countries']
-    details['trend_deaths']    = findTrend(stats_type='deaths')
-    details['trend_confirmed'] = findTrend(stats_type='confirmed')
-    details['trend_recovered'] = findTrend(stats_type='recovered')
-    details['countriesSorted_Deaths']    = findCountriesSorted(stats_type='deaths')
-    details['countriesSorted_Recovered'] = findCountriesSorted(stats_type='recovered')
-    details['countriesSorted_Confirmed'] = findCountriesSorted(stats_type='confirmed')
+    summary = {}
+    summary['utc_dt'] = str(datetime.now(timezone.utc))
+    summary['totals'] = findSumAcrossAllCountries()['totals']
+    summary['countries'] = findSumAcrossEachCountry()['countries']
+    summary['trend_deaths']    = findTrend(stats_type='deaths')
+    summary['trend_confirmed'] = findTrend(stats_type='confirmed')
+    summary['trend_recovered'] = findTrend(stats_type='recovered')
+    summary['countriesSorted_Deaths']    = findCountriesSorted(stats_type='deaths')
+    summary['countriesSorted_Recovered'] = findCountriesSorted(stats_type='recovered')
+    summary['countriesSorted_Confirmed'] = findCountriesSorted(stats_type='confirmed')
     print_info("Computing summary from records fetched..Done")
 
-    # Truncate summary table
+    # Truncate Summary table
     print_info("Truncating summary table..")
     Summary.objects.all().delete()
     print_info("Truncating summary table..Done")
-    
+
     # Update Summary table
     print_info("Updating summary table..")
-    obj = Summary(json_string=json.dumps(details))
+    obj = Summary(json_string=json.dumps(summary))
     obj.save()
     print_info("Updating summary table..Done")
-    
-    return details
+
+    write_to_file_summary_json(summary=summary)
 
 
 def findSumAcrossAllCountries():
@@ -312,10 +351,10 @@ def findCountriesSorted(stats_type):
 def store_world_stats_table_html():
 
     print_info("Generating HTML for world stats table..")
-    
+
     summary_json = json.loads(open('datasets/summary.json').read())
     geo_json_data = json.loads(open('datasets/GeoJsonWorldCountries.json').read())
-    
+
     # Create a local simplified dict from topojson - like below
     # cntry = { "AFG": "Afghanistan", "ALB": "Albania", "DZA": "Algeria", "AND": "Andorra", "AGO": "Angola", "ATG": "Antigua", "ARG": "Argentina", "ARM": "Armenia", "AUS": "Australia", "AUT": "Austria", "AZE": "Azerbaijan", "BHS": "Bahamas", "BHR": "Bahrain", "BGD": "Bangladesh", "BRB": "Barbados", "BLR": "Belarus", "BEL": "Belgium", "BLZ": "Belize", "BEN": "Benin", "BTN": "Bhutan", "BOL": "Bolivia", "BIH": "Bosnia", "BWA": "Botswana", "BRA": "Brazil", "BRN": "Brunei", "BGR": "Bulgaria", "BFA": "Burkina", "BDI": "Burundi", "CPV": "CaboVerde", "KHM": "Cambodia", "CMR": "Cameroon", "CAN": "Canada", "CAF": "Central African Republic", "TCD": "Chad", "CHL": "Chile", "CHN": "China", "COL": "Colombia", "COM": "Comoros", "COG": "Congo", "COD": "Congo", "CRI": "Costa Rica", "CIV": "Côte d'Ivoire", "HRV": "Croatia", "CUB": "Cuba", "CYP": "Cyprus", "CZE": "Czechia", "DNK": "Denmark", "DJI": "Djibouti", "DMA": "Dominica", "DOM": "Dominican Rep", "ECU": "Ecuador", "EGY": "Egypt", "SLV": "El Salvador", "GNQ": "Guinea", "ERI": "Eritrea", "EST": "Estonia", "SWZ": "Eswatini", "ETH": "Ethiopia", "FJI": "Fiji", "FIN": "Finland", "FRA": "France", "GAB": "Gabon", "GMB": "Gambia", "GEO": "Georgia", "DEU": "Germany", "GHA": "Ghana", "GRC": "Greece", "GRD": "Grenada", "GTM": "Guatemala", "GIN": "Guinea", "GNB": "Guinea Bissau", "GUY": "Guyana", "HTI": "Haiti", "HND": "Honduras", "HUN": "Hungary", "ISL": "Iceland", "IND": "India", "IDN": "Indonesia", "IRN": "Iran", "IRQ": "Iraq", "IRL": "Ireland", "ISR": "Israel", "ITA": "Italy", "JAM": "Jamaica", "JPN": "Japan", "JOR": "Jordan", "KAZ": "Kazakhstan", "KEN": "Kenya", "KIR": "Kiribati", "PRK": "S Korea", "KOR": "N Korea", "KWT": "Kuwait", "KGZ": "Kyrgyzstan", "LAO": "Lao", "LVA": "Latvia", "LBN": "Lebanon", "LSO": "Lesotho", "LBR": "Liberia", "LBY": "Libya", "LIE": "Liechten stein", "LTU": "Lithuania", "LUX": "Luxembourg", "MDG": "Madagascar", "MWI": "Malawi", "MYS": "Malaysia", "MDV": "Maldives", "MLI": "Mali", "MLT": "Malta", "MHL": "Marshall Islands", "MRT": "Mauritania", "MUS": "Mauritius", "MEX": "Mexico", "FSM": "Micronesia", "MDA": "Moldova", "MCO": "Monaco", "MNG": "Mongolia", "MNE": "Montenegro", "MAR": "Morocco", "MOZ": "Mozambique", "MMR": "Myanmar", "NAM": "Namibia", "NRU": "Nauru", "NPL": "Nepal", "NLD": "Nether lands", "NZL": "New Zealand", "NIC": "Nicaragua", "NER": "Niger", "NGA": "Nigeria", "MKD": "North Macedonia", "NOR": "Norway", "OMN": "Oman", "PAK": "Pakistan", "PLW": "Palau", "PAN": "Panama", "PNG": "Papua New Guinea", "PRY": "Paraguay", "PER": "Peru", "PHL": "Philippines", "POL": "Poland", "PRT": "Portugal", "QAT": "Qatar", "ROU": "Romania", "RUS": "Russian", "RWA": "Rwanda", "KNA": "Saint Kitts and Nevis", "LCA": "Saint Lucia", "VCT": "Saint Vincent and the Grenadines", "WSM": "Samoa", "SMR": "San Marino", "STP": "Sao Tome and Principe", "SAU": "Saudi Arabia", "SEN": "Senegal", "SRB": "Serbia", "SYC": "Seychelles", "SLE": "Sierra Leone", "SGP": "Singapore", "SVK": "Slovakia", "SVN": "Slovenia", "SLB": "Solomon", "SOM": "Somalia", "ZAF": "South Africa", "SSD": "South Sudan", "ESP": "Spain", "LKA": "Sri Lanka", "SDN": "Sudan", "SUR": "Suriname", "SWE": "Sweden", "CHE": "Switzer land", "SYR": "Syria", "TJK": "Tajikistan", "TZA": "Tanzania", "THA": "Thailand", "TLS": "Timor Leste", "TGO": "Togo", "TON": "Tonga", "TTO": "Trinidad and Tobago", "TUN": "Tunisia", "TUR": "Turkey", "TKM": "Turkmeni stan", "TUV": "Tuvalu", "UGA": "Uganda", "UKR": "Ukraine", "ARE": "UAE", "GBR": "United Kingdom", "USA": "USA", "URY": "Uruguay", "UZB": "Uzbekistan", "VUT": "Vanuatu", "VEN": "Venezuela", "VNM": "Viet Nam", "YEM": "Yemen", "ZMB": "Zambia", "ZWE": "Zimbabwe" }
     cntry = {}
@@ -358,8 +397,8 @@ def store_world_stats_table_html():
     print_info("Generating HTML for world stats table..")
 
     print_info("Writing generated HTML in local file[datasets/html/world/world_stats_table.html]..")
-    
-    local_file_name = f'datasets/html/world/world_stats_table.html'    
+
+    local_file_name = f'datasets/html/world/world_stats_table.html'
     Path("datasets/html/world").mkdir(parents=True, exist_ok=True)
     with open(local_file_name, "w") as outfile:
         outfile.write(table_html)
@@ -374,7 +413,7 @@ def store_world_choropleth_map_html():
 
     summary_json = json.loads(open('datasets/summary.json').read())
     geo_json_data = json.loads(open('datasets/GeoJsonWorldCountries.json').read())
-    
+
     # We are directly manipulating geojson to add in confirmed/recovered/deaths
     # We need to manipulate the geojson as it is the one which choropleth consumes
     # Must be a better approach available - TBD
@@ -445,27 +484,27 @@ def store_world_choropleth_map_html():
     ).add_to(m)
     choropleth_map_html = m.get_root().render()
     print_info("Generating HTML for world choropleth map..Done")
-    
+
     print_info("Writing generated HTML in local file[datasets/html/world_choropleth.html]..")
-    local_file_name = f'datasets/html/world/world_choropleth.html'    
+    local_file_name = f'datasets/html/world/world_choropleth.html'
     Path("datasets/html/world").mkdir(parents=True, exist_ok=True)
     with open(local_file_name, "w") as outfile:
         outfile.write(choropleth_map_html)
     print_info("Writing generated HTML in local file[datasets/html/world/world_choropleth.html]..Done")
-    
+
 
 def store_country_plotly_html():
-    
+
     summary_json = json.loads(open('datasets/summary.json').read())
     geo_json_data = json.loads(open('datasets/GeoJsonWorldCountries.json').read())
-    
+
     # Create a local simplified dict from topojson - like below
     # cntry = { "AFG": "Afghanistan", "ALB": "Albania", "DZA": "Algeria", "AND": "Andorra", "AGO": "Angola", "ATG": "Antigua", "ARG": "Argentina", "ARM": "Armenia", "AUS": "Australia", "AUT": "Austria", "AZE": "Azerbaijan", "BHS": "Bahamas", "BHR": "Bahrain", "BGD": "Bangladesh", "BRB": "Barbados", "BLR": "Belarus", "BEL": "Belgium", "BLZ": "Belize", "BEN": "Benin", "BTN": "Bhutan", "BOL": "Bolivia", "BIH": "Bosnia", "BWA": "Botswana", "BRA": "Brazil", "BRN": "Brunei", "BGR": "Bulgaria", "BFA": "Burkina", "BDI": "Burundi", "CPV": "CaboVerde", "KHM": "Cambodia", "CMR": "Cameroon", "CAN": "Canada", "CAF": "Central African Republic", "TCD": "Chad", "CHL": "Chile", "CHN": "China", "COL": "Colombia", "COM": "Comoros", "COG": "Congo", "COD": "Congo", "CRI": "Costa Rica", "CIV": "Côte d'Ivoire", "HRV": "Croatia", "CUB": "Cuba", "CYP": "Cyprus", "CZE": "Czechia", "DNK": "Denmark", "DJI": "Djibouti", "DMA": "Dominica", "DOM": "Dominican Rep", "ECU": "Ecuador", "EGY": "Egypt", "SLV": "El Salvador", "GNQ": "Guinea", "ERI": "Eritrea", "EST": "Estonia", "SWZ": "Eswatini", "ETH": "Ethiopia", "FJI": "Fiji", "FIN": "Finland", "FRA": "France", "GAB": "Gabon", "GMB": "Gambia", "GEO": "Georgia", "DEU": "Germany", "GHA": "Ghana", "GRC": "Greece", "GRD": "Grenada", "GTM": "Guatemala", "GIN": "Guinea", "GNB": "Guinea Bissau", "GUY": "Guyana", "HTI": "Haiti", "HND": "Honduras", "HUN": "Hungary", "ISL": "Iceland", "IND": "India", "IDN": "Indonesia", "IRN": "Iran", "IRQ": "Iraq", "IRL": "Ireland", "ISR": "Israel", "ITA": "Italy", "JAM": "Jamaica", "JPN": "Japan", "JOR": "Jordan", "KAZ": "Kazakhstan", "KEN": "Kenya", "KIR": "Kiribati", "PRK": "S Korea", "KOR": "N Korea", "KWT": "Kuwait", "KGZ": "Kyrgyzstan", "LAO": "Lao", "LVA": "Latvia", "LBN": "Lebanon", "LSO": "Lesotho", "LBR": "Liberia", "LBY": "Libya", "LIE": "Liechten stein", "LTU": "Lithuania", "LUX": "Luxembourg", "MDG": "Madagascar", "MWI": "Malawi", "MYS": "Malaysia", "MDV": "Maldives", "MLI": "Mali", "MLT": "Malta", "MHL": "Marshall Islands", "MRT": "Mauritania", "MUS": "Mauritius", "MEX": "Mexico", "FSM": "Micronesia", "MDA": "Moldova", "MCO": "Monaco", "MNG": "Mongolia", "MNE": "Montenegro", "MAR": "Morocco", "MOZ": "Mozambique", "MMR": "Myanmar", "NAM": "Namibia", "NRU": "Nauru", "NPL": "Nepal", "NLD": "Nether lands", "NZL": "New Zealand", "NIC": "Nicaragua", "NER": "Niger", "NGA": "Nigeria", "MKD": "North Macedonia", "NOR": "Norway", "OMN": "Oman", "PAK": "Pakistan", "PLW": "Palau", "PAN": "Panama", "PNG": "Papua New Guinea", "PRY": "Paraguay", "PER": "Peru", "PHL": "Philippines", "POL": "Poland", "PRT": "Portugal", "QAT": "Qatar", "ROU": "Romania", "RUS": "Russian", "RWA": "Rwanda", "KNA": "Saint Kitts and Nevis", "LCA": "Saint Lucia", "VCT": "Saint Vincent and the Grenadines", "WSM": "Samoa", "SMR": "San Marino", "STP": "Sao Tome and Principe", "SAU": "Saudi Arabia", "SEN": "Senegal", "SRB": "Serbia", "SYC": "Seychelles", "SLE": "Sierra Leone", "SGP": "Singapore", "SVK": "Slovakia", "SVN": "Slovenia", "SLB": "Solomon", "SOM": "Somalia", "ZAF": "South Africa", "SSD": "South Sudan", "ESP": "Spain", "LKA": "Sri Lanka", "SDN": "Sudan", "SUR": "Suriname", "SWE": "Sweden", "CHE": "Switzer land", "SYR": "Syria", "TJK": "Tajikistan", "TZA": "Tanzania", "THA": "Thailand", "TLS": "Timor Leste", "TGO": "Togo", "TON": "Tonga", "TTO": "Trinidad and Tobago", "TUN": "Tunisia", "TUR": "Turkey", "TKM": "Turkmeni stan", "TUV": "Tuvalu", "UGA": "Uganda", "UKR": "Ukraine", "ARE": "UAE", "GBR": "United Kingdom", "USA": "USA", "URY": "Uruguay", "UZB": "Uzbekistan", "VUT": "Vanuatu", "VEN": "Venezuela", "VNM": "Viet Nam", "YEM": "Yemen", "ZMB": "Zambia", "ZWE": "Zimbabwe" }
     cntry = {}
     for temp in geo_json_data['features']:
         cntry[temp['id']] = temp['properties']['name']
     for country_alpha3 in cntry:
-        if country_alpha3 not in summary_json['countriesSorted_Confirmed']: 
+        if country_alpha3 not in summary_json['countriesSorted_Confirmed']:
             pass
         trend = {
             'confirmed': {},
@@ -562,27 +601,29 @@ def store_country_plotly_html():
         plotly_div = plotly.offline.plot(data, include_plotlyjs=True, config=config, output_type='div')
         print_info('Generating the plot..Done')
 
-        local_file_name = f"datasets/html/countries/{country_alpha3}/plotly.html"    
+        local_file_name = f"datasets/html/countries/{country_alpha3}/plotly.html"
         print_info(f"Writing generated plotly HTML in local file[{local_file_name}..")
         Path(f"datasets/html/countries/{country_alpha3}").mkdir(parents=True, exist_ok=True)
-        with open(local_file_name, "w") as outfile:
-            outfile.write(plotly_div)
-        print_info(f"Writing generated plotly HTML in local file[{local_file_name}]..Done")
-     
+        try:
+            with open(local_file_name, "w") as outfile:
+                outfile.write(plotly_div)
+        except Exception as e:
+            print_error(f"Writing generated plotly HTML in local file[{local_file_name}]..Failed")
+
 
 def store_country_stats_table_html():
-    
+
     print_info("Generating stats table..")
     summary_json = json.loads(open('datasets/summary.json').read())
     geo_json_data = json.loads(open('datasets/GeoJsonWorldCountries.json').read())
-    
+
     # Create a local simplified dict from topojson - like below
     # cntry = { "AFG": "Afghanistan", "ALB": "Albania", "DZA": "Algeria", ..}
     cntry = {}
     for temp in geo_json_data['features']:
         cntry[temp['id']] = temp['properties']['name']
     for country_alpha3 in cntry:
-        if country_alpha3 not in summary_json['countriesSorted_Confirmed']: 
+        if country_alpha3 not in summary_json['countriesSorted_Confirmed']:
             pass
         print_info(f"Generating stats HTML for [{country_alpha3}]..")
         records_list = []
@@ -606,24 +647,24 @@ def store_country_stats_table_html():
                 records_dict[state_province][stats_type] = {}
             records_dict[state_province][stats_type]['latest_stats_date'] = latest_stats_date
             records_dict[state_province][stats_type]['latest_stats_value'] = latest_stats_value
-        
+
         table_rows_html = ''
         for state in records_dict:
             try:
                 confirmed = records_dict[state]['confirmed']['latest_stats_value']
             except KeyError:
                 confirmed = '-'
-            
+
             try:
                 recovered = records_dict[state]['recovered']['latest_stats_value']
             except KeyError:
                 recovered = '-'
-            
+
             try:
                 deaths = records_dict[state]['deaths']['latest_stats_value']
             except KeyError:
                 deaths = '-'
-            
+
             table_rows_html += f"<tr>"
             table_rows_html += f"<td>{state}</td>"
             table_rows_html += f"<td class='text-right text-warning'>{confirmed}</td>"
@@ -645,9 +686,40 @@ def store_country_stats_table_html():
             </table>'
         print_info(f"Generating stats HTML for {country_alpha3}..Done")
 
-        local_file_name = f"datasets/html/countries/{country_alpha3}/stats.html"    
+        local_file_name = f"datasets/html/countries/{country_alpha3}/stats.html"
         print_info(f"Writing generated table HTML in local file[{local_file_name}..")
         Path(f"datasets/html/countries/{country_alpha3}").mkdir(parents=True, exist_ok=True)
         with open(local_file_name, "w") as outfile:
             outfile.write(table_html)
         print_info(f"Writing generated table HTML in local file[{local_file_name}]..Done")
+
+
+def write_to_file_summary_json(summary):
+    print_info("Writing summary to local file[summary.json]..")
+    with open("datasets/summary.json", "w") as outfile:
+        json.dump(summary, outfile)
+    print_info("Writing summary to local file[summary.json]..Done")
+
+
+def populate_planetary_file():
+    # Store formatted data in a local file - to be consumed by planetaryjs
+    # We are storing the data in file as reading data from DB is very slow
+    print_info("Storing pickled content to local file..")
+    confirmed_records_qs = Record.objects.all().filter(stats_type='confirmed').values(
+        'latitude',
+        'longitude',
+        'country_region',
+        'latest_stats_value'
+    )
+    confirmed_records = list(confirmed_records_qs)
+    ConfirmedPickledFile = open('datasets/Confirmed.pickle', 'ab')
+    pickle.dump(confirmed_records, ConfirmedPickledFile)
+    ConfirmedPickledFile.close()
+    print_info("Storing pickled content to local file..Done")
+
+
+def truncate_records():
+
+    print_info("Truncating [RECORD] table..")
+    Record.objects.all().delete()
+    print_info("Truncating [RECORD] table..Done")
