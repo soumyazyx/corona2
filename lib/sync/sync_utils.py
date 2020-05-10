@@ -23,21 +23,35 @@ import plotly.graph_objs as go
 
 def sync_all():
 
-    # truncate_records()              # The github data source refreshes in every 24hrs.
-    #                                 # When we sync, we truncate & load afresh
-    # populate_records_world()        # Get content from github source and populate records
-    # populate_records_india()        # Get content from India specific source and update India records
-    # populate_summary_tbl_n_file()   # Once the RECORDS table is updated, populate the SUMMARY table
+    # The github data source refreshes in every 24hrs.
+    truncate_records()
+    # When we sync, we truncate & load afresh
+    populate_records_world()        # Get content from github source and populate records
+    # Get content from India specific source and update India records
+    populate_records_india()
 
-    # # Once the RECORDS/SUMMARY tables are populated,
-    # # the below methods have no other dependancies
-    # # and are run via threads for performance improvement
-    # thread_planetary     = threading.Thread(target=populate_planetary_file); thread_planetary.start()
-    # thread_world_stats   = threading.Thread(target=store_world_stats_table_html); thread_world_stats.start()
-    # thread_country_stats = threading.Thread(target=store_country_stats_table_html); thread_country_stats.start()
-    # thread_choropleth    = threading.Thread(target=store_world_choropleth_map_html); thread_choropleth.start()
-    # thread_plotly        = threading.Thread(target=store_country_plotly_html); thread_plotly.start()
+    # Get content from us specific source and update US records
     populate_records_US()
+
+    # Once the RECORDS table is updated, populate the SUMMARY table
+    populate_summary_tbl_n_file()
+
+    # Once the RECORDS/SUMMARY tables are populated,
+    # the below methods have no other dependancies
+    # and are run via threads for performance improvement
+    thread_planetary = threading.Thread(target=populate_planetary_file)
+    thread_planetary.start()
+    thread_world_stats = threading.Thread(target=store_world_stats_table_html)
+    thread_world_stats.start()
+    thread_country_stats = threading.Thread(
+        target=store_country_stats_table_html)
+    thread_country_stats.start()
+    thread_choropleth = threading.Thread(
+        target=store_world_choropleth_map_html)
+    thread_choropleth.start()
+    thread_plotly = threading.Thread(target=store_country_plotly_html)
+    thread_plotly.start()
+    
 
 
 def rectifyDateFormat(dates_csv):
@@ -785,7 +799,7 @@ def populate_records_US():
     # The CSV contains details of all the countries
 
     death_url_content = populateUSRecords(
-        stats_type='deaths',    url=deaths_url,    countries_df=countries_df)
+        stats_type='deaths', url=deaths_url, countries_df=countries_df)
     confirmed_url_content = populateUSRecords(
         stats_type='confirmed', url=confirmed_url, countries_df=countries_df)
     print("*********fetching done************")
@@ -860,7 +874,7 @@ def populateUSRecords(url, stats_type, countries_df):
         row.pop(0)  # remove Combined Key 2nd entry
         # print(
         # f"state-{state_province},country-{country_region},latitude-{latitude},longitude-{longitude}")
-        stats_type = stats_type
+        # stats_type = stats_type
         stats_value_csv = ",".join(row)
         latest_stats_value = row[-1] or 0
         # Create model Record instances
@@ -882,7 +896,7 @@ def populateUSRecords(url, stats_type, countries_df):
     print_info(f"Total objects created = {len(objects_list)}")
 
     print_info(f"Inserting records for stats_type[{stats_type}]..")
-    # # Record.objects.bulk_create(objects_list)
+    Record.objects.bulk_create(objects_list)
     print_info(f"Inserting records for stats_type[{stats_type}]..Done")
 
     return decoded_content
